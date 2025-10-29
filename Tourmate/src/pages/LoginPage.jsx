@@ -10,7 +10,7 @@ const LoginPage = () => {
   return (
     <div
       className="flex items-center justify-center h-screen w-screen overflow-hidden 
-                 bg-gradient-to-br from-blue-100 via-[#EDFBFF] to-blue-50"
+                 bg-linear-to-br from-blue-100 via-[#EDFBFF] to-blue-50"
     >
       {/* Back Button */}
       <button
