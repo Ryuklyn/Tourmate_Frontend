@@ -4,7 +4,7 @@ import GuideCard from "./GuideCard";
 const GuidesSection = () => {
   const guides = [
     {
-      name: "Kate Garcia",
+      name: "Niroj Shrestha",
       location: "Rome, Italy",
       languages: "English, Italian, Spanish",
       rating: 4.9,

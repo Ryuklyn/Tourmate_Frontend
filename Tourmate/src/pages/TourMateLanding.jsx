@@ -8,7 +8,7 @@ import Footer from "../components/Dashboard/Footer";
 import "../../src/App.css";
 const TourMateLanding = () => {
   return (
-    <div className="min-h-screen bg-white">
+    <div className="h-screen w-screen bg-white">
       <Navigation />
       <HeroSection />
       <GuidesSection />
