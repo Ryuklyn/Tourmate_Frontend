@@ -1,16 +1,16 @@
 import React from "react";
 import GuideCard from "./GuideCard";
+import NirojSirImg from "../../assets/img/NirojSir.jpg";
 
 const GuidesSection = () => {
   const guides = [
     {
       name: "Niroj Shrestha",
-      location: "Rome, Italy",
-      languages: "English, Italian, Spanish",
+      location: "Lalitpur, Nepal",
+      languages: "English, Nepali, Japanese",
       rating: 4.9,
       reviews: 127,
-      image:
-        "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=300&h=300&fit=crop",
+      image: NirojSirImg,
     },
     {
       name: "Nora Kamber",

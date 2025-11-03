@@ -1,7 +1,14 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const LoginForm = () => {
+  const navigate = useNavigate();
+
+  const handleSignin = () => {
+    navigate("/");
+  };
+
   const [formData, setFormData] = useState({ email: "", password: "" });
 
   const handleChange = (e) => {
@@ -64,6 +71,7 @@ const LoginForm = () => {
       <button
         type="submit"
         className="w-full bg-blue-500 text-white py-2.5 rounded-lg font-semibold hover:bg-blue-700 transition"
+        onClick={handleSignin}
       >
         Sign In
       </button>
