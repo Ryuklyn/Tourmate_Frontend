@@ -1,11 +1,21 @@
 import React, { useState } from "react";
 import { MapPin } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const HeroSection = () => {
   const [searchQuery, setSearchQuery] = useState("");
+  const navigate = useNavigate();
+
+  const handleFindGuide = () => {
+    navigate("/find-guide");
+  };
+
+  const handleBecomeGuide = () => {
+    navigate("/signup");
+  };
 
   return (
-    <div className="relative bg-gradient-to-br from-blue-50 to-blue-100 py-20 px-4">
+    <div className="relative bg-linear-to-br from-blue-50 to-blue-100 py-20 px-4">
       <div className="absolute inset-0 opacity-10">
         <div
           className="w-full h-full"
@@ -43,10 +53,16 @@ const HeroSection = () => {
         </div>
 
         <div className="flex justify-center space-x-4">
-          <button className="bg-blue-500 text-white px-6 py-3 rounded-md hover:bg-blue-600">
+          <button
+            onClick={handleFindGuide}
+            className="bg-blue-500 text-white px-6 py-3 rounded-md hover:bg-blue-600"
+          >
             Find a Guide
           </button>
-          <button className="bg-white text-gray-700 px-6 py-3 rounded-md border border-gray-300 hover:bg-gray-50">
+          <button
+            onClick={handleBecomeGuide}
+            className="bg-white text-gray-700 px-6 py-3 rounded-md border border-gray-300 hover:bg-gray-50"
+          >
             Become a Guide
           </button>
         </div>

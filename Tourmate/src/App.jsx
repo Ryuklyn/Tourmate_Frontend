@@ -6,6 +6,7 @@ import "./App.css";
 import TourMateLanding from "./pages/TourMateLanding";
 import LoginPage from "./pages/LoginPage";
 import SignupPage from "./pages/SignupPage";
+import FindGuidePage from "./pages/FindGuidePage";
 
 function App() {
   const [count, setCount] = useState(0);
@@ -16,6 +17,7 @@ function App() {
         <Route path="/" element={<TourMateLanding />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignupPage />} />
+        <Route path="/find-guide" element={<FindGuidePage />} />
       </Routes>
     </BrowserRouter>
   );
