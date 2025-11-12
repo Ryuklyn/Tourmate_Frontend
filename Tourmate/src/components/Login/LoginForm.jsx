@@ -6,7 +6,7 @@ const LoginForm = () => {
   const navigate = useNavigate();
 
   const handleSignin = () => {
-    navigate("/");
+    navigate("/dashboard");
   };
 
   const [formData, setFormData] = useState({ email: "", password: "" });

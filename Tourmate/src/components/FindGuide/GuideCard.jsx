@@ -1,7 +1,14 @@
 import React from "react";
 import { MapPin, Clock, CheckCircle, Heart } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const GuideCard = ({ guide }) => {
+  const navigate = useNavigate();
+
+  const handleViewProfile = () => {
+    navigate("/guidedetails");
+  };
+
   return (
     <div className="bg-white shadow-md rounded-2xl overflow-hidden transition hover:shadow-lg duration-300">
       {/* Image Section */}
@@ -65,7 +72,10 @@ const GuideCard = ({ guide }) => {
 
         {/* Buttons */}
         <div className="flex items-center gap-2 mt-4">
-          <button className="flex-1 bg-linear-to-r from-blue-500 to-blue-600 text-white py-2 rounded-lg font-medium hover:from-blue-600 hover:to-blue-700 transition">
+          <button
+            onClick={handleViewProfile}
+            className="flex-1 bg-linear-to-r from-blue-500 to-blue-600 text-white py-2 rounded-lg font-medium hover:from-blue-600 hover:to-blue-700 transition"
+          >
             View Profile
           </button>
           <button className="p-2 rounded-lg bg-blue-50 hover:bg-blue-100 transition">
