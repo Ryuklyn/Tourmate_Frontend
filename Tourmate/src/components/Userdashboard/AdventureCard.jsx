@@ -2,7 +2,7 @@ import React from "react";
 
 export default function AdventureCard({ title, guide, date, image }) {
   return (
-    <div className="bg-white rounded-xl shadow-sm flex items-center justify-between p-3 border hover:shadow-md transition">
+    <div className="bg-white rounded-xl shadow-sm flex items-center justify-between p-3 hover:shadow-md transition">
       <div className="flex items-center gap-4">
         <img
           src={image}

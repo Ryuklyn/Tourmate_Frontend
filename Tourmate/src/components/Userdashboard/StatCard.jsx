@@ -2,7 +2,7 @@ import React from "react";
 
 export default function StatCard({ title, value, subtitle, icon }) {
   return (
-    <div className="bg-white p-5 rounded-xl shadow-sm border hover:shadow-md transition">
+    <div className="bg-white p-5 rounded-xl shadow-sm hover:shadow-md transition">
       <div className="flex justify-between items-center">
         <div>
           <h3 className="text-sm text-gray-500">{title}</h3>

@@ -21,7 +21,7 @@ const menuItems = [
 
 export default function Sidebar() {
   return (
-    <div className="w-60 bg-white h-[calc(100vh-56px)] shadow-sm flex flex-col justify-between border-r">
+    <div className="w-60 bg-white h-[calc(100vh-56px)] shadow-sm flex flex-col justify-between">
       <div>
         <div className="p-4 text-xs uppercase font-semibold text-gray-400">
           Traveler Menu

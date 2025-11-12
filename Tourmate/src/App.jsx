@@ -8,7 +8,8 @@ import LoginPage from "./pages/LoginPage";
 import SignupPage from "./pages/SignupPage";
 import FindGuidePage from "./pages/FindGuidePage";
 import GuideDetailsPage from "./pages/GuideDetailsPage";
-import Dashboard from "./pages/Usedashboard/Dashboard";
+import TravelerLayout from "./pages/Usedashboard/TravelerLayout";
+import TravelerOverview from "./pages/Usedashboard/TravelerOverview";
 
 function App() {
   const [count, setCount] = useState(0);
@@ -21,7 +22,12 @@ function App() {
         <Route path="/signup" element={<SignupPage />} />
         <Route path="/find-guide" element={<FindGuidePage />} />
         <Route path="/guidedetails" element={<GuideDetailsPage />} />
-        <Route path="/dashboard" element={<Dashboard />} />
+
+        {/*Traveler Guide Dashboard*/}
+        <Route path="/dashboard" element={<TravelerLayout />}>
+          <Route index element={<TravelerOverview />} />
+          <Route path="/find-guide" element={<FindGuidePage />} />
+        </Route>
       </Routes>
     </BrowserRouter>
   );
