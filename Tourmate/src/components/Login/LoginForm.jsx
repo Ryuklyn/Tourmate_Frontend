@@ -7,6 +7,7 @@ const LoginForm = () => {
 
   const handleSignin = () => {
     navigate("/dashboard");
+    console.log("TravelerLayout rendered");
   };
 
   const [formData, setFormData] = useState({ email: "", password: "" });

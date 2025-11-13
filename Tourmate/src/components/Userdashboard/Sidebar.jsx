@@ -1,4 +1,5 @@
 import React from "react";
+import { NavLink } from "react-router-dom";
 import {
   LayoutDashboard,
   Search,
@@ -10,13 +11,38 @@ import {
 } from "lucide-react";
 
 const menuItems = [
-  { icon: <LayoutDashboard size={18} />, label: "Dashboard", active: true },
-  { icon: <Search size={18} />, label: "Find Guides" },
-  { icon: <Heart size={18} />, label: "Favorites" },
-  { icon: <Calendar size={18} />, label: "Bookings" },
-  { icon: <User size={18} />, label: "Profile Settings" },
-  { icon: <PlusCircle size={18} />, label: "Become a Guide" },
-  { icon: <HelpCircle size={18} />, label: "Support" },
+  {
+    to: "/dashboard",
+    icon: <LayoutDashboard size={18} />,
+    label: "Dashboard",
+    end: true,
+  },
+  {
+    to: "/dashboard/findguide",
+    icon: <Search size={18} />,
+    label: "Find Guides",
+  },
+  { to: "/dashboard/favorites", icon: <Heart size={18} />, label: "Favorites" },
+  {
+    to: "/dashboard/bookings",
+    icon: <Calendar size={18} />,
+    label: "Bookings",
+  },
+  {
+    to: "/dashboard/profile",
+    icon: <User size={18} />,
+    label: "Profile Settings",
+  },
+  {
+    to: "/dashboard/become-guide",
+    icon: <PlusCircle size={18} />,
+    label: "Become a Guide",
+  },
+  {
+    to: "/dashboard/support",
+    icon: <HelpCircle size={18} />,
+    label: "Support",
+  },
 ];
 
 export default function Sidebar() {
@@ -29,20 +55,49 @@ export default function Sidebar() {
         <ul className="space-y-1 mt-2">
           {menuItems.map((item, i) => (
             <li key={i}>
-              <button
-                className={`flex items-center gap-3 px-4 py-2 w-full text-left rounded-lg ${
-                  item.active
-                    ? "bg-blue-600 text-white"
-                    : "text-gray-700 hover:bg-blue-50"
-                }`}
+              <NavLink
+                to={item.to}
+                end={item.end}
+                className={({ isActive }) =>
+                  `group flex items-center gap-3 px-4 py-2 w-full rounded-lg transition-all duration-200 relative font-medium ${
+                    isActive
+                      ? "bg-blue-600 text-white shadow-sm"
+                      : "text-gray-700 hover:bg-blue-50"
+                  }`
+                }
               >
-                {item.icon}
-                {item.label}
-              </button>
+                {({ isActive }) => (
+                  <>
+                    {/* ICON */}
+                    <span
+                      className={`flex items-center justify-center transition-colors duration-200 ${
+                        isActive
+                          ? "text-white"
+                          : "text-gray-700 group-hover:text-blue-600"
+                      }`}
+                    >
+                      {item.icon}
+                    </span>
+
+                    {/* LABEL */}
+                    <span
+                      className={`relative z-10 transition-colors duration-200 ${
+                        isActive
+                          ? "text-white"
+                          : "text-gray-700 group-hover:text-blue-600"
+                      }`}
+                    >
+                      {item.label}
+                    </span>
+                  </>
+                )}
+              </NavLink>
             </li>
           ))}
         </ul>
+        \
       </div>
+
       <div className="p-4 text-xs text-gray-500">
         Explore amazing destinations with local guides
       </div>

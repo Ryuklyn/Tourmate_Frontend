@@ -10,6 +10,7 @@ import FindGuidePage from "./pages/FindGuidePage";
 import GuideDetailsPage from "./pages/GuideDetailsPage";
 import TravelerLayout from "./pages/Usedashboard/TravelerLayout";
 import TravelerOverview from "./pages/Usedashboard/TravelerOverview";
+import FindGuide from "./pages/Usedashboard/FindGuide";
 
 function App() {
   const [count, setCount] = useState(0);
@@ -26,7 +27,7 @@ function App() {
         {/*Traveler Guide Dashboard*/}
         <Route path="/dashboard" element={<TravelerLayout />}>
           <Route index element={<TravelerOverview />} />
-          <Route path="/find-guide" element={<FindGuidePage />} />
+          <Route path="findguide" element={<FindGuide />} />
         </Route>
       </Routes>
     </BrowserRouter>

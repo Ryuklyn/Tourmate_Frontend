@@ -27,7 +27,6 @@ export default function Header() {
       <div className="flex items-center gap-4">
         {/* Traveler / Guide Toggle (Revamped + Fixed) */}
         <div className="relative flex bg-gray-100 rounded-full p-1 w-56">
-          {/* Animated background */}
           <motion.div
             layout
             transition={{ type: "spring", stiffness: 500, damping: 30 }}
@@ -37,12 +36,11 @@ export default function Header() {
           />
 
           {/* Traveler Button */}
-          <button
+          <motion.button
             whileTap={{ scale: 0.97 }}
             onClick={() => setActiveRole("Traveler")}
             className={`relative z-10 flex-1 text-sm font-semibold rounded-full transition-colors duration-300 
-              focus:outline-none focus-visible:outline-none focus:ring-0 focus-visible:ring-0 
-              [&:focus:not(:focus-visible)]:outline-none active:outline-none active:bg-transparent select-none
+              focus:outline-none active:outline-none select-none
               ${
                 activeRole === "Traveler"
                   ? "text-white"
@@ -50,22 +48,22 @@ export default function Header() {
               }`}
           >
             Traveler
-          </button>
+          </motion.button>
 
-          <button
+          {/* Guide Button */}
+          <motion.button
             whileTap={{ scale: 0.97 }}
             onClick={() => setActiveRole("Guide")}
             className={`relative z-10 flex-1 text-sm font-semibold rounded-full transition-colors duration-300 
-              focus:outline-none focus-visible:outline-none focus:ring-0 focus-visible:ring-0 
-              [&:focus:not(:focus-visible)]:outline-none active:outline-none active:bg-transparent select-none
-              ${
-                activeRole === "Guide"
-                  ? "text-white"
-                  : "text-gray-600 hover:text-gray-800"
-              }`}
+            focus:outline-none active:outline-none select-none
+            ${
+              activeRole === "Guide"
+                ? "text-white"
+                : "text-gray-600 hover:text-gray-800"
+            }`}
           >
             Guide
-          </button>
+          </motion.button>
         </div>
 
         {/* Notification Icon */}
