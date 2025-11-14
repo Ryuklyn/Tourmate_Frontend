@@ -11,6 +11,7 @@ import GuideDetailsPage from "./pages/GuideDetailsPage";
 import TravelerLayout from "./pages/Usedashboard/TravelerLayout";
 import TravelerOverview from "./pages/Usedashboard/TravelerOverview";
 import FindGuide from "./pages/Usedashboard/FindGuide";
+import FavoriteGuides from "./pages/Usedashboard/FavouriteGuides";
 
 function App() {
   const [count, setCount] = useState(0);
@@ -28,6 +29,7 @@ function App() {
         <Route path="/dashboard" element={<TravelerLayout />}>
           <Route index element={<TravelerOverview />} />
           <Route path="findguide" element={<FindGuide />} />
+          <Route path="favorites" element={<FavoriteGuides />} />
         </Route>
       </Routes>
     </BrowserRouter>
