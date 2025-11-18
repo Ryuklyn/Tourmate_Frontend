@@ -88,9 +88,18 @@ export default function FavoriteGuides() {
             </div>
 
             {/* Buttons */}
-            <div className="mt-5">
+            {/* <div className="mt-5">
               <button className="w-full py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
                 Book Now
+              </button>
+            </div> */}
+            <div className="mt-5 flex items-center gap-3">
+              <button className="w-full py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
+                Book Now
+              </button>
+
+              <button className="w-full py-2 bg-gray-200 text-gray-800 border rounded-lg hover:bg-gray-300 transition">
+                Profile
               </button>
             </div>
           </div>

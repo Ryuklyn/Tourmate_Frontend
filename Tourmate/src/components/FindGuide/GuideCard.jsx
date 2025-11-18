@@ -6,7 +6,7 @@ const GuideCard = ({ guide }) => {
   const navigate = useNavigate();
 
   const handleViewProfile = () => {
-    navigate("/guidedetails");
+    navigate("/dashboard/guideprofile");
   };
 
   return (

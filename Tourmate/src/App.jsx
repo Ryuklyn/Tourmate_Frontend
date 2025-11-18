@@ -14,6 +14,7 @@ import FindGuide from "./pages/Usedashboard/FindGuide";
 import FavoriteGuides from "./pages/Usedashboard/FavouriteGuides";
 import Bookings from "./pages/Usedashboard/Bookings";
 import BookingDetails from "./pages/Usedashboard/BookingDetails";
+import GuideProfile from "./pages/Usedashboard/GuideProfile";
 
 function App() {
   const [count, setCount] = useState(0);
@@ -34,6 +35,7 @@ function App() {
           <Route path="favorites" element={<FavoriteGuides />} />
           <Route path="bookings" element={<Bookings />} />
           <Route path="bookingsdetails" element={<BookingDetails />} />
+          <Route path="guideprofile" element={<GuideProfile />} />
         </Route>
       </Routes>
     </BrowserRouter>
