@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { MapPin } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import WorldMap from "../../assets/img/Map.jpg";
 
 const HeroSection = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -16,13 +17,21 @@ const HeroSection = () => {
 
   return (
     <div className="relative bg-linear-to-br from-blue-50 to-blue-100 py-20 px-4">
-      <div className="absolute inset-0 opacity-10">
+      <div className="absolute inset-0">
+        {/* <div
+          className="w-full h-full"
+          style={{
+            backgroundImage: "url(" + Map + ")",
+            backgroundSize: "100px 100px",
+          }}
+        ></div> */}
         <div
           className="w-full h-full"
           style={{
-            backgroundImage:
-              'url("data:image/svg+xml,%3Csvg width="100" height="100" xmlns="http://www.w3.org/2000/svg"%3E%3Cpath d="M0 0h100v100H0z" fill="none"/%3E%3Cpath d="M50 10c-5 0-10 5-10 10s5 10 10 10 10-5 10-10-5-10-10-10z" fill="%234299e1"/%3E%3C/svg%3E")',
-            backgroundSize: "100px 100px",
+            backgroundImage: `url(${WorldMap})`,
+            backgroundSize: "100%",
+            backgroundRepeat: "no-repeat",
+            height: "100%",
           }}
         ></div>
       </div>

@@ -2,13 +2,15 @@ import React from "react";
 import { Outlet } from "react-router-dom";
 import Sidebar from "../../components/Userdashboard/Sidebar";
 import Header from "../../components/Userdashboard/Header";
+import AltHeader from "../../components/Userdashboard/AltHeader";
 
 export default function TravelerLayout() {
   return (
     <div className="min-h-screen w-screen bg-gray-50 text-gray-900">
       {/* ✅ Fixed Header */}
       <header className="fixed top-0 left-0 w-full z-50 bg-white shadow">
-        <Header />
+        {/* <Header /> */}
+        <AltHeader />
       </header>
 
       <div className="flex pt-16">

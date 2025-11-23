@@ -81,14 +81,16 @@ export default function Bookings() {
       </p>
 
       {/* Tabs */}
-      <div className="flex gap-3 mb-6">
-        <button className="px-4 py-2 rounded-full bg-blue-600 text-white">
+      <div className="flex items-center bg-gray-100 p-1 rounded-full w-max mb-6">
+        <button className="px-4 py-2 rounded-full bg-blue-600 text-white font-medium shadow-sm">
           Upcoming ({bookings.length})
         </button>
-        <button className="px-4 py-2 rounded-full bg-gray-200 text-gray-700">
+
+        <button className="px-4 py-2 rounded-full text-gray-700 hover:bg-white transition font-medium">
           Past (0)
         </button>
-        <button className="px-4 py-2 rounded-full bg-gray-200 text-gray-700">
+
+        <button className="px-4 py-2 rounded-full text-gray-700 hover:bg-white transition font-medium">
           Cancelled (0)
         </button>
       </div>

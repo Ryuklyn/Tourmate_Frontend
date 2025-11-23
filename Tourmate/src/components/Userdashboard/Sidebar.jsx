@@ -8,6 +8,7 @@ import {
   User,
   PlusCircle,
   HelpCircle,
+  Package,
 } from "lucide-react";
 
 const menuItems = [
@@ -27,6 +28,11 @@ const menuItems = [
     to: "/dashboard/bookings",
     icon: <Calendar size={18} />,
     label: "Bookings",
+  },
+  {
+    to: "/dashboard/tour-packages",
+    icon: <Package size={18} />,
+    label: "Tour Packages",
   },
   {
     to: "/dashboard/profile",
@@ -93,7 +99,6 @@ export default function Sidebar() {
             </li>
           ))}
         </ul>
-        \
       </div>
 
       <div className="p-4 text-xs text-gray-500">
