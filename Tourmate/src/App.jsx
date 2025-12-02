@@ -11,7 +11,7 @@ import GuideDetailsPage from "./pages/GuideDetailsPage";
 import TravelerLayout from "./pages/Usedashboard/TravelerLayout";
 import TravelerOverview from "./pages/Usedashboard/TravelerOverview";
 import FindGuide from "./pages/Usedashboard/FindGuide";
-import FavoriteGuides from "./pages/Usedashboard/FavouriteGuides";
+import FavoriteGuides from "./pages/Usedashboard/FavouritePage";
 import Bookings from "./pages/Usedashboard/Bookings";
 import BookingDetails from "./pages/Usedashboard/BookingDetails";
 import GuideProfile from "./pages/Usedashboard/GuideProfile";
@@ -24,6 +24,13 @@ import Form4 from "./pages/BecomeGuide/Form4";
 import ReviewForm from "./pages/BecomeGuide/ReviewForm";
 import SubmitForm from "./pages/BecomeGuide/SubmitForm";
 import Support from "./pages/Usedashboard/Support";
+import GuideLayout from "./pages/Guidedashboard/GuideLayout";
+import GuideOverview from "./components/Guidedashboard/GuideOverview";
+import EarningsOverview from "./pages/Guidedashboard/EarningsOverview";
+import GuideProfileManage from "./pages/Guidedashboard/GuideProfileManage";
+import GuideBookings from "./pages/Guidedashboard/GuideBookings";
+import GuideReview from "./pages/Guidedashboard/GuideReview";
+import Availability from "./pages/Guidedashboard/Availability";
 
 function App() {
   const [count, setCount] = useState(0);
@@ -54,6 +61,16 @@ function App() {
           <Route path="become-guide/form4" element={<Form4 />} />
           <Route path="become-guide/review-form" element={<ReviewForm />} />
           <Route path="become-guide/submit-form" element={<SubmitForm />} />
+        </Route>
+
+        {/*GuideDashboard*/}
+        <Route path="/dashboard/guide" element={<GuideLayout />}>
+          <Route index element={<GuideOverview />} />
+          <Route path="profile" element={<GuideProfileManage />} />
+          <Route path="bookings" element={<GuideBookings />} />
+          <Route path="earnings" element={<EarningsOverview />} />
+          <Route path="reviews" element={<GuideReview />} />\
+          <Route path="availability" element={<Availability />} />
         </Route>
       </Routes>
     </BrowserRouter>

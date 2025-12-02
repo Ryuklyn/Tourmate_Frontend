@@ -122,7 +122,7 @@ export default function ReviewForm() {
         {/* --------------------------- AGREEMENT --------------------------- */}
         <div className="bg-blue-50 border border-blue-200 p-4 rounded-lg mb-8">
           <label className="flex items-start gap-3 cursor-pointer">
-            <input type="checkbox" className="mt-1" />
+            <input type="checkbox" className="mt-1 accent-blue-500" />
             <span className="text-gray-700 text-sm leading-relaxed">
               I agree to the{" "}
               <span className="text-blue-600 underline cursor-pointer">
