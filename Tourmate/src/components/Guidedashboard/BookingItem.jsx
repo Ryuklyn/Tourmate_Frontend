@@ -3,7 +3,7 @@ import React from "react";
 export default function BookingItem({ initials, name, tour, datePrice }) {
   return (
     <div
-      className="flex items-center justify-between bg-white p-4 rounded-xl2 border"
+      className="flex items-center justify-between bg-white p-4 rounded-xl border"
       style={{ borderColor: "#E2E8F0", borderWidth: "1px" }}
     >
       <div className="flex items-center gap-4">

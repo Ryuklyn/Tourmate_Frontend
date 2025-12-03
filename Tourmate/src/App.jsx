@@ -31,6 +31,7 @@ import GuideProfileManage from "./pages/Guidedashboard/GuideProfileManage";
 import GuideBookings from "./pages/Guidedashboard/GuideBookings";
 import GuideReview from "./pages/Guidedashboard/GuideReview";
 import Availability from "./pages/Guidedashboard/Availability";
+import SettingsPage from "./pages/Guidedashboard/SettingsPage";
 
 function App() {
   const [count, setCount] = useState(0);
@@ -71,6 +72,7 @@ function App() {
           <Route path="earnings" element={<EarningsOverview />} />
           <Route path="reviews" element={<GuideReview />} />\
           <Route path="availability" element={<Availability />} />
+          <Route path="settings" element={<SettingsPage />} />
         </Route>
       </Routes>
     </BrowserRouter>

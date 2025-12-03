@@ -61,7 +61,7 @@ const GuideBookings = () => {
       </div>
 
       {/* Tabs */}
-      <div className="flex mt-6 space-x-4 pb-2">
+      {/* <div className="flex mt-6 space-x-4 pb-2">
         {[
           { key: "upcoming", label: "Upcoming (4)" },
           { key: "past", label: "Past Tours (2)" },
@@ -72,13 +72,35 @@ const GuideBookings = () => {
             onClick={() => setActiveTab(tab.key)}
             className={`px-2 pb-2 text-sm font-medium ${
               activeTab === tab.key
-                ? "text-white-600 bg-green-300 rounded-full"
+                ? "text-white bg-[#0faf94] rounded-full"
                 : "text-gray-500 hover:text-gray-700"
             }`}
           >
             {tab.label}
           </button>
         ))}
+      </div> */}
+
+      <div className="w-full flex justify-left mt-6">
+        <div className="bg-gray-200 px-2 py-2 rounded-lg flex space-x-4 pb-2">
+          {[
+            { key: "upcoming", label: "Upcoming (4)" },
+            { key: "past", label: "Past Tours (2)" },
+            { key: "cancelled", label: "Cancelled (0)" },
+          ].map((tab) => (
+            <button
+              key={tab.key}
+              onClick={() => setActiveTab(tab.key)}
+              className={`px-3 py-1.5 text-sm font-medium transition ${
+                activeTab === tab.key
+                  ? "text-white bg-[#0faf94] rounded-full shadow-sm"
+                  : "text-black hover:text-gray-800"
+              }`}
+            >
+              {tab.label}
+            </button>
+          ))}
+        </div>
       </div>
 
       {/* Booking List */}
@@ -96,7 +118,7 @@ const GuideBookings = () => {
               <span
                 className={`text-xs px-2 py-1 rounded-full font-medium ${
                   item.status === "confirmed"
-                    ? "bg-green-100 text-green-600"
+                    ? "bg-green-100 text-[#0faf94]"
                     : "bg-yellow-100 text-yellow-600"
                 }`}
               >
@@ -119,7 +141,7 @@ const GuideBookings = () => {
             </div>
 
             <div className="flex items-center gap-3">
-              <button className="px-4 py-2 border rounded-lg text-gray-600 hover:bg-gray-100">
+              <button className="px-4 py-2 border-2 border-[#0faf94] rounded-lg text-gray-600 hover:bg-gray-100">
                 View Details
               </button>
               <button className="px-4 py-2 bg-red-50 text-red-600 rounded-lg hover:bg-red-100">

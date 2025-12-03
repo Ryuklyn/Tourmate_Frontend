@@ -24,7 +24,7 @@ export default function EarningsOverview() {
   ];
 
   const statusColor = {
-    completed: "bg-green-100 text-green-600",
+    completed: "bg-green-100 text-[#0faf94]",
     pending: "bg-yellow-100 text-yellow-600",
   };
 
@@ -39,8 +39,8 @@ export default function EarningsOverview() {
         {/* This Month */}
         <div className="border border-gray-300 rounded-xl p-5 shadow-sm bg-white">
           <p className="text-gray-500">This Month</p>
-          <h2 className="text-3xl font-bold mt-2">$3,240</h2>
-          <p className="text-green-600 text-sm mt-1">+15% from last month</p>
+          <h2 className="text-3xl font-bold mt-2 text-[#0faf94]">$3,240</h2>
+          <p className="text-gray-500 text-sm mt-1">+15% from last month</p>
         </div>
 
         {/* Total Earnings */}
@@ -54,7 +54,7 @@ export default function EarningsOverview() {
         <div className="border border-gray-300 rounded-xl p-5 shadow-sm bg-white">
           <p className="text-gray-500">Pending Payout</p>
           <h2 className="text-3xl font-bold mt-2">$1,120</h2>
-          <p className="text-blue-600 text-sm mt-1">Available in 3 days</p>
+          <p className="text-[#0faf94] text-sm mt-1">Available in 3 days</p>
         </div>
       </div>
 

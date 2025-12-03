@@ -144,7 +144,7 @@ const GuideReview = () => {
 
                 <button
                   onClick={() => handleResponse(review.id)}
-                  className="mt-2 px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg font-medium"
+                  className="mt-2 px-4 py-2 bg-[#0faf94] hover:bg-[#0e8c7d] text-white rounded-lg font-medium"
                 >
                   Send Response
                 </button>

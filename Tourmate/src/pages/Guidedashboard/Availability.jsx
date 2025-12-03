@@ -105,7 +105,7 @@ const Availability = () => {
 
           <button
             onClick={() => setShowModal(true)}
-            className="w-full mt-6 bg-emerald-600 text-white py-2 rounded-lg hover:bg-emerald-700 font-semibold"
+            className="w-full mt-6 bg-[#0faf94] text-white py-2 rounded-lg hover:bg-emerald-700 font-semibold"
           >
             Block Date Range
           </button>
@@ -146,7 +146,7 @@ const Availability = () => {
           {blockedDates.map((d) => (
             <div
               key={d.id}
-              className="flex justify-between items-center border rounded-xl bg-white p-4"
+              className="flex justify-between items-center border border-gray-300 rounded-xl bg-white p-4"
             >
               <div>
                 <p className="font-semibold">{d.range}</p>
@@ -154,7 +154,7 @@ const Availability = () => {
               </div>
               <button
                 onClick={() => removeBlockedDate(d.id)}
-                className="text-red-500 hover:bg-red-100 px-3 py-1 rounded-md text-sm"
+                className="text-red-500 bg-red-100 border-2 border-red-300 px-3 py-1 rounded-md text-sm"
               >
                 Remove
               </button>
@@ -165,7 +165,7 @@ const Availability = () => {
 
       {/* Block Modal */}
       {showModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-30 flex justify-center items-center z-50">
+        <div className="fixed inset-0 bg-black/20 backdrop-blur-sm flex justify-center items-center z-50">
           <div className="bg-white p-6 rounded-xl w-full max-w-md shadow-lg">
             <div className="flex justify-between items-center mb-3">
               <h2 className="text-lg font-semibold flex items-center gap-2">
@@ -209,7 +209,7 @@ const Availability = () => {
 
             <button
               onClick={handleAddBlockedDate}
-              className="w-full bg-emerald-600 text-white mt-5 py-2 rounded-lg font-semibold hover:bg-emerald-700"
+              className="w-full bg-[#0faf94] text-white mt-5 py-2 rounded-lg font-semibold hover:bg-emerald-700"
             >
               Add Block
             </button>

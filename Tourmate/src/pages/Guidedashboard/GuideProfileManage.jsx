@@ -18,7 +18,7 @@ export default function GuideProfileManage() {
             <div className="flex flex-col items-center">
               <div className="relative w-40 h-40 rounded-full border-2 border-gray-200 flex items-center justify-center bg-gray-100">
                 <Camera className="text-gray-400 w-10 h-10" />
-                <button className="absolute bottom-2 right-2 bg-green-600 text-white p-2 rounded-full shadow hover:bg-green-700">
+                <button className="absolute bottom-2 right-2 bg-[#0faf94] text-white p-2 rounded-full shadow hover:bg-green-700">
                   <Plus size={18} />
                 </button>
               </div>
@@ -111,7 +111,7 @@ export default function GuideProfileManage() {
               />
             </div>
 
-            <button className="mt-4 text-green-600 font-medium hover:underline flex items-center gap-1 border border-green-600 px-3 py-1 rounded-lg w-max">
+            <button className="mt-4 text-[#0faf94] font-medium hover:underline flex items-center gap-1 border-2 border-[#0faf94] px-3 py-1 rounded-lg w-max">
               <Plus size={18} /> Add Language
             </button>
           </div>
@@ -139,7 +139,7 @@ export default function GuideProfileManage() {
               ))}
             </div>
 
-            <button className="text-green-600 font-medium hover:underline flex items-center gap-1 border border-green-600 px-3 py-1 rounded-lg w-max">
+            <button className="text-[#0faf94] font-medium hover:underline flex items-center gap-1 border-2 border-[#0faf94] px-3 py-1 rounded-lg w-max">
               <Plus size={18} /> Add Certification
             </button>
           </div>
@@ -147,10 +147,10 @@ export default function GuideProfileManage() {
 
         {/* Buttons */}
         <div className="flex justify-end gap-4 mt-6">
-          <button className="px-6 py-3 bg-gray-200 rounded-lg hover:bg-gray-300">
+          <button className="px-6 py-3 bg-white rounded-lg hover:bg-gray-300 border-2 border-[#0faf94] text-gray-500">
             Cancel
           </button>
-          <button className="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700">
+          <button className="px-6 py-3 bg-[#0faf94] text-white rounded-lg hover:bg-green-700">
             Save Changes
           </button>
         </div>

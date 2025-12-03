@@ -21,15 +21,15 @@ export default function GuideOverview() {
           title="Active Tours"
           value="8"
           subtitle="This month"
-          icon={<Map className="w-6 h-6 text-green-600" />}
+          icon={<Map className="w-6 h-6 text-[#0faf94]" />}
         />
 
         <StatCard
           title="Monthly Earnings"
           value="$3,240"
-          icon={<DollarSign className="w-6 h-6 text-blue-600" />}
+          icon={<DollarSign className="w-6 h-6 text-[#0faf94]" />}
           extra={
-            <span className="text-green-600 text-sm">
+            <span className="text-[#0faf94] text-sm">
               ▲ +12% from last month
             </span>
           }
@@ -39,14 +39,14 @@ export default function GuideOverview() {
           title="Total Travelers"
           value="156"
           subtitle="All time"
-          icon={<Users className="w-6 h-6 text-purple-600" />}
+          icon={<Users className="w-6 h-6 text-[#0faf94]" />}
         />
 
         <StatCard
           title="Rating"
           value="4.9"
           subtitle="From 89 reviews"
-          icon={<Star className="w-6 h-6 text-yellow-500" />}
+          icon={<Star className="w-6 h-6 text-[#0faf94]" />}
         />
       </section>
 
@@ -55,7 +55,7 @@ export default function GuideOverview() {
         <div className="bg-white rounded-xl p-5 border border-[#E2E8F0]">
           {/* Section Header */}
           <div className="flex items-center gap-3 mb-4">
-            <Clock size={20} className="text-gray-600" />
+            <Clock size={20} className="text-[#0faf94]" />
             <h3 className="text-lg font-semibold text-[#0F172A]">
               Pending Booking Requests
             </h3>

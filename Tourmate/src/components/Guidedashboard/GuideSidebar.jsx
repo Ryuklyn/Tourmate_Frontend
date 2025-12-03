@@ -43,7 +43,7 @@ const guideMenuItems = [
     label: "Availability",
   },
   {
-    to: "/guide/settings",
+    to: "/dashboard/guide/settings",
     icon: <Settings size={18} />,
     label: "Settings",
   },
@@ -53,7 +53,7 @@ export default function GuideSidebar() {
   return (
     <div className="w-60 bg-white h-[calc(100vh-56px)] shadow-sm flex flex-col justify-between">
       <div>
-        <div className="p-4 text-2xl font-bold text-[#0FAF94]"></div>
+        <div className="p-4 text-2xl font-bold text-[#0faf94]"></div>
 
         <ul className="space-y-1 mt-2">
           {guideMenuItems.map((item, index) => (

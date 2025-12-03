@@ -52,12 +52,12 @@ const AvailabilityCalendar = () => {
     <div className="border border-gray-300 rounded-xl bg-white p-6 w-full shadow-sm">
       {/* Header */}
       <div className="flex items-center mb-5">
-        <CalendarDays className="w-6 h-6 text-green-600 mr-2" />
+        <CalendarDays className="w-6 h-6 text-[#0faf94] mr-2" />
         <h2 className="text-xl font-semibold">Availability Calendar</h2>
       </div>
 
       {/* Calendar */}
-      <Calendar
+      {/* <Calendar
         onChange={setValue}
         value={value}
         calendarType="gregory"
@@ -67,13 +67,37 @@ const AvailabilityCalendar = () => {
         nextLabel={<ChevronRight className="w-5 h-5" />}
         prevLabel={<ChevronLeft className="w-5 h-5" />}
         className="w-full custom-calendar"
-        navigationLabel={({ date }) => (
-          <span className="text-lg font-semibold">
-            {date.toLocaleString("default", { month: "long" })}{" "}
-            {date.getFullYear()}
-          </span>
-        )}
+       <div className="flex justify-center items-center">
+  <span className="text-lg font-semibold">
+    {date.toLocaleString("default", { month: "long" })} {date.getFullYear()}
+  </span>
+</div>
+
         tileClassName={({ activeStartDate, date, view }) =>
+          view === "month"
+            ? "text-center p-2 rounded-md transition hover:bg-gray-100 cursor-pointer"
+            : ""
+        }
+      /> */}
+      <Calendar
+        onChange={setValue}
+        value={value}
+        calendarType="gregory"
+        prev2Label={null}
+        next2Label={null}
+        formatDay={(locale, date) => date.getDate()}
+        nextLabel={<ChevronRight className="w-5 h-5" />}
+        prevLabel={<ChevronLeft className="w-5 h-5" />}
+        navigationLabel={({ date }) => (
+          <div className="flex justify-center items-center w-full">
+            <span className="text-lg font-semibold">
+              {date.toLocaleString("default", { month: "long" })}{" "}
+              {date.getFullYear()}
+            </span>
+          </div>
+        )}
+        className="w-full custom-calendar"
+        tileClassName={({ view }) =>
           view === "month"
             ? "text-center p-2 rounded-md transition hover:bg-gray-100 cursor-pointer"
             : ""
