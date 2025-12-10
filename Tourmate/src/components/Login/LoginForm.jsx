@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import { handleLoginGoogle } from "../../services/auth";
 
 const LoginForm = () => {
   const navigate = useNavigate();
@@ -76,13 +77,29 @@ const LoginForm = () => {
       >
         Sign In
       </button>
-
+      <button
+      type="submit"
+            onClick={handleLoginGoogle}
+            style={{
+              backgroundColor: "#4285F4",
+              color: "white",
+              padding: "10px 20px",
+              border: "none",
+              borderRadius: "5px",
+              cursor: "pointer",
+              fontSize: "16px",
+              marginBottom: "20px",
+            }}
+          >
+            Login with Google
+          </button>
       <p className="text-center text-sm text-gray-600 mt-4">
         Don’t have an account?{" "}
         <Link to="/signup" className="text-blue-600 hover:underline">
           Sign up now
         </Link>
       </p>
+      
     </form>
   );
 };

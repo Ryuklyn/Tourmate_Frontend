@@ -1,4 +1,5 @@
 import React from "react";
+import { handleLoginGoogle } from "../../services/auth";
 
 // Assuming you have a SocialButton component like this:
 const SocialButton = ({ icon, text }) => (
@@ -34,8 +35,8 @@ const SocialLoginButtons = () => {
           </svg>
         }
         text="Google"
+        onClick={handleLoginGoogle}
       />
-
       {/* Facebook Button */}
       <SocialButton
         icon={

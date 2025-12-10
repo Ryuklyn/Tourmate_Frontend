@@ -32,6 +32,7 @@ import GuideBookings from "./pages/Guidedashboard/GuideBookings";
 import GuideReview from "./pages/Guidedashboard/GuideReview";
 import Availability from "./pages/Guidedashboard/Availability";
 import SettingsPage from "./pages/Guidedashboard/SettingsPage";
+import OAuth from "./components/Login/OAuth";
 
 function App() {
   const [count, setCount] = useState(0);
@@ -44,6 +45,8 @@ function App() {
         <Route path="/signup" element={<SignupPage />} />
         <Route path="/find-guide" element={<FindGuidePage />} />
         <Route path="/guidedetails" element={<GuideDetailsPage />} />
+        <Route path="/oauth2/redirect" element={<OAuth />} />
+
 
         {/*Traveler Guide Dashboard*/}
         <Route path="/dashboard" element={<TravelerLayout />}>
