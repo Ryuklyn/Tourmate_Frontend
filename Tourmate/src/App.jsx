@@ -32,6 +32,12 @@ import GuideBookings from "./pages/Guidedashboard/GuideBookings";
 import GuideReview from "./pages/Guidedashboard/GuideReview";
 import Availability from "./pages/Guidedashboard/Availability";
 import SettingsPage from "./pages/Guidedashboard/SettingsPage";
+import AdminLayout from "./pages/Admin/AdminLayout";
+import Dashboard from "./pages/Admin/Dashboard";
+import UserManage from "./pages/Admin/UserManage";
+import GuideApproval from "./pages/Admin/GuideApproval";
+import FinancialManagement from "./pages/Admin/FinancialManagement";
+import Support1 from "./pages/Admin/Support";
 
 function App() {
   const [count, setCount] = useState(0);
@@ -73,6 +79,14 @@ function App() {
           <Route path="reviews" element={<GuideReview />} />\
           <Route path="availability" element={<Availability />} />
           <Route path="settings" element={<SettingsPage />} />
+        </Route>
+
+        <Route path="/dashboard/admin" element={<AdminLayout />}>
+          <Route index element={<Dashboard />} />
+          <Route path="usermanage" element={<UserManage />} />
+          <Route path="guideapproval" element={<GuideApproval />} />
+          <Route path="finance" element={<FinancialManagement />} />
+          <Route path="review" element={<Support1 />} />
         </Route>
       </Routes>
     </BrowserRouter>
