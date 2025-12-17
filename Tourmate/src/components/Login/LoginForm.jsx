@@ -15,10 +15,14 @@ const LoginForm = () => {
   // Handle login form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Login data:", formData); // You can replace this with actual login logic
+    debugger;
     const loginStatus = await doLogin(formData.email, formData.password);
-    if(loginStatus){
+
+    if (loginStatus.error) {
+      alert(loginStatus.error);
+    } else {
       navigate("/dashboard");
+
     }
   };
 

@@ -61,7 +61,7 @@ function App() {
           <Route path="favorites" element={<FavoriteGuides />} />
           <Route path="bookings" element={<Bookings />} />
           <Route path="bookingsdetails" element={<BookingDetails />} />
-          <Route path="guideprofile" element={<GuideProfile />} />
+          <Route path="guideprofile/:guideId" element={<GuideProfile />} />
           <Route path="profile" element={<ProfileSettings />} />
           <Route path="support" element={<Support />} />
           <Route path="become-guide" element={<PreGuide />} />
@@ -79,7 +79,7 @@ function App() {
           <Route path="profile" element={<GuideProfileManage />} />
           <Route path="bookings" element={<GuideBookings />} />
           <Route path="earnings" element={<EarningsOverview />} />
-          <Route path="reviews" element={<GuideReview />} />\
+          <Route path="reviews" element={<GuideReview />} />
           <Route path="availability" element={<Availability />} />
           <Route path="settings" element={<SettingsPage />} />
         </Route>
