@@ -1,31 +1,32 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import { handleLoginGoogle } from "../../services/auth";
+import { doLogin, handleLoginGoogle } from "../../services/auth";
 
 const LoginForm = () => {
+  const [formData, setFormData] = useState({ email: "", password: "" });
   const navigate = useNavigate();
 
-  const handleSignin = () => {
-    navigate("/dashboard");
-    console.log("TravelerLayout rendered");
-  };
-
-  const [formData, setFormData] = useState({ email: "", password: "" });
-
+  // Handle form data changes
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  // Handle login form submission
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Login data:", formData);
+    console.log("Login data:", formData); // You can replace this with actual login logic
+    const loginStatus = await doLogin(formData.email, formData.password);
+    if(loginStatus){
+      navigate("/dashboard");
+    }
   };
+
 
   return (
     <form onSubmit={handleSubmit} className="space-y-5">
       <div>
-        <label className="block text-sm font-medium text-gray-700 text-left ">
+        <label className="block text-sm font-medium text-gray-700 text-left">
           Email Address
         </label>
         <input
@@ -56,50 +57,26 @@ const LoginForm = () => {
         <label className="flex items-center gap-2 text-gray-600">
           <input type="checkbox" /> Remember me
         </label>
-        {/* <button className="text-blue-600 hover:underline font-medium">
-          Forget Password?
-        </button> */}
         <Link to="#A" className="text-blue-600 hover:underline">
           Forget Password?
         </Link>
       </div>
 
-      {/* <button
-        type="submit"
-        className="w-full bg-black text-white py-2.5 rounded-lg font-semibold hover:bg-gray-800 transition"
-      >
-        Sign In
-      </button> */}
+      {/* Sign In Button */}
       <button
         type="submit"
         className="w-full bg-blue-500 text-white py-2.5 rounded-lg font-semibold hover:bg-blue-700 transition"
-        onClick={handleSignin}
       >
         Sign In
       </button>
-      <button
-      type="submit"
-            onClick={handleLoginGoogle}
-            style={{
-              backgroundColor: "#4285F4",
-              color: "white",
-              padding: "10px 20px",
-              border: "none",
-              borderRadius: "5px",
-              cursor: "pointer",
-              fontSize: "16px",
-              marginBottom: "20px",
-            }}
-          >
-            Login with Google
-          </button>
+
+
       <p className="text-center text-sm text-gray-600 mt-4">
         Don’t have an account?{" "}
         <Link to="/signup" className="text-blue-600 hover:underline">
           Sign up now
         </Link>
       </p>
-      
     </form>
   );
 };
