@@ -3,8 +3,11 @@ import { useState } from "react";
 import { Mail, Lock } from "lucide-react";
 import InputField from "./InputField";
 import Button from "./Button";
+import { registerUser } from "../../services/user";
+import { useNavigate } from "react-router-dom";
 
 const SignupForm = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -23,7 +26,7 @@ const SignupForm = () => {
     }));
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async() => {
     if (formData.password !== formData.confirmPassword) {
       alert("Passwords do not match!");
       return;
@@ -32,17 +35,20 @@ const SignupForm = () => {
       alert("Please agree to the Terms of Service and Privacy Policy");
       return;
     }
-    console.log("Account created:", formData);
-    alert("Account created successfully!");
-    setFormData({
-      firstName: "",
-      lastName: "",
-      email: "",
-      purpose: "Find Amazing tours (Traveler)",
-      password: "",
-      confirmPassword: "",
-      agreeToTerms: false,
-    });
+    const registerStatus = registerUser(formData)
+    if (registerStatus){
+      setFormData({
+        firstName: "",
+        lastName: "",
+        email: "",
+        purpose: "Find Amazing tours (Traveler)",
+        password: "",
+        confirmPassword: "",
+        agreeToTerms: false,
+      });
+      navigate("/login");
+    }
+
   };
 
   return (
