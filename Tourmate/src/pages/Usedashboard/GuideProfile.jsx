@@ -4,6 +4,7 @@ import BookingSidebar from "../Usedashboard/GuideDetailComp/BookingSidebar";
 import TourPackages from "../Usedashboard/GuideDetailComp/TourPackage";
 import Mustang from "../../assets/img/Mustang.jpg";
 import Reviews from "./GuideDetailComp/Reviews";
+import ReviewsSection from "../../components/GuideDetais/ReviewSection";
 
 export default function GuideProfile() {
   return (
