@@ -31,6 +31,7 @@ import GuideBookings from "./pages/Guidedashboard/GuideBookings";
 import GuideReview from "./pages/Guidedashboard/GuideReview";
 import Availability from "./pages/Guidedashboard/Availability";
 import SettingsPage from "./pages/Guidedashboard/SettingsPage";
+import OAuth from "./components/Login/OAuth";
 import AdminLayout from "./pages/Admin/AdminLayout";
 import Dashboard from "./pages/Admin/Dashboard";
 import UserManage from "./pages/Admin/UserManage";
@@ -48,6 +49,7 @@ function App() {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignupPage />} />
         <Route path="/find-guide" element={<FindGuidePage />} />
+        <Route path="/oauth2/redirect" element={<OAuth />} />
 
         {/*Traveler Guide Dashboard*/}
         <Route path="/dashboard" element={<TravelerLayout />}>
