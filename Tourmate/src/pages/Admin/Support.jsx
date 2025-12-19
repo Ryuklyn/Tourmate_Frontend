@@ -1,6 +1,13 @@
 import { useState } from "react";
 import ViewMessage from "../../components/Admin/View.jsx";
-import { Filter, Mail, MessageSquare, Eye } from "lucide-react";
+import {
+  Filter,
+  Mail,
+  MessageSquare,
+  Eye,
+  ChevronLeft,
+  ChevronRight,
+} from "lucide-react";
 import NirojSir from "../../assets/img/NirojSir.jpg";
 
 const initialMessages = [
@@ -229,6 +236,24 @@ export default function Support() {
             ))}
           </tbody>
         </table>
+      </div>
+      {/* ---------- FOOTER / PAGINATION ---------- */}
+      <div className="flex justify-between items-center p-4 text-sm text-gray-500">
+        <p>Showing 1 to 5 of 5 entries</p>
+
+        <div className="flex items-center gap-2">
+          <button className="p-2 border border-gray-200 rounded-lg hover:bg-gray-100">
+            <ChevronLeft />
+          </button>
+
+          <button className="px-3 py-1 rounded-lg bg-orange-500 text-white">
+            1
+          </button>
+
+          <button className="p-2 border border-gray-200 rounded-lg hover:bg-gray-100">
+            <ChevronRight />
+          </button>
+        </div>
       </div>
       {selectedMessage && (
         <ViewMessage

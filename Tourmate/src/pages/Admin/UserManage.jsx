@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Search,
   Filter,
@@ -6,10 +6,45 @@ import {
   ChevronLeft,
   ChevronRight,
   Star,
+  Eye,
+  Mail,
+  Ban,
 } from "lucide-react";
+import TravelerDetailsModal from "../../components/Admin/TravelerDetailsModal";
+import SendEmailModal from "../../components/Admin/SendEmailModal";
+import SuspendUserModal from "../../components/Admin/SuspendUserModal";
 
 export default function UserManage() {
   const [activeTab, setActiveTab] = useState("travelers");
+  const [openMenuIndex, setOpenMenuIndex] = useState(null);
+  const [selectedUser, setSelectedUser] = useState(null);
+  const [modalType, setModalType] = useState(null);
+
+  // -----------------------------
+  // Status color helper
+  // -----------------------------
+  const getStatusClasses = (status) => {
+    switch (status) {
+      case "Active":
+      case "Verified":
+        return "bg-green-100 text-green-800";
+      case "Pending":
+        return "bg-yellow-100 text-yellow-800";
+      case "Suspended":
+        return "bg-red-100 text-red-800";
+      default:
+        return "bg-gray-100 text-gray-800";
+    }
+  };
+
+  // -----------------------------
+  // Close dropdown on outside click
+  // -----------------------------
+  useEffect(() => {
+    const handleClickOutside = () => setOpenMenuIndex(null);
+    document.addEventListener("click", handleClickOutside);
+    return () => document.removeEventListener("click", handleClickOutside);
+  }, []);
 
   // -----------------------------
   // Travelers Data
@@ -73,7 +108,7 @@ export default function UserManage() {
       rating: 4.9,
       tours: 156,
       earnings: "$12,450",
-      status: "verified",
+      status: "Verified",
       img: "https://i.pravatar.cc/100?img=12",
     },
     {
@@ -83,7 +118,7 @@ export default function UserManage() {
       rating: 4.8,
       tours: 142,
       earnings: "$11,200",
-      status: "verified",
+      status: "Verified",
       img: "https://i.pravatar.cc/100?img=22",
     },
     {
@@ -93,7 +128,7 @@ export default function UserManage() {
       rating: 4.9,
       tours: 138,
       earnings: "$10,800",
-      status: "verified",
+      status: "Verified",
       img: "https://i.pravatar.cc/100?img=32",
     },
     {
@@ -103,7 +138,7 @@ export default function UserManage() {
       rating: 4.7,
       tours: 125,
       earnings: "$9,650",
-      status: "pending",
+      status: "Pending",
       img: "https://i.pravatar.cc/100?img=42",
     },
     {
@@ -113,7 +148,7 @@ export default function UserManage() {
       rating: 4.5,
       tours: 89,
       earnings: "$7,200",
-      status: "suspended",
+      status: "Suspended",
       img: "https://i.pravatar.cc/100?img=52",
     },
   ];
@@ -126,8 +161,8 @@ export default function UserManage() {
           onClick={() => setActiveTab("travelers")}
           className={`px-4 py-2 rounded-lg font-medium transition ${
             activeTab === "travelers"
-              ? "bg-white shadow text-gray-900"
-              : "text-gray-600 hover:text-gray-800"
+              ? "bg-red-400 text-white font-bold shadow"
+              : "text-gray-600"
           }`}
         >
           Travelers (5)
@@ -137,28 +172,11 @@ export default function UserManage() {
           onClick={() => setActiveTab("guides")}
           className={`px-4 py-2 rounded-lg font-medium transition ${
             activeTab === "guides"
-              ? "bg-white shadow text-gray-900"
-              : "text-gray-600 hover:text-gray-800"
+              ? "bg-red-400 text-white font-bold shadow"
+              : "text-gray-600"
           }`}
         >
           Guides (5)
-        </button>
-      </div>
-
-      {/* ---------- SEARCH + FILTER ---------- */}
-      <div className="flex justify-between items-center mt-6">
-        <div className="relative w-80">
-          <Search className="absolute left-3 top-2.5 text-gray-400 w-5 h-5" />
-          <input
-            type="text"
-            placeholder={`Search ${activeTab}...`}
-            className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-300"
-          />
-        </div>
-
-        <button className="flex items-center gap-2 border border-gray-200 px-4 py-2 rounded-lg bg-white hover:bg-gray-100">
-          <Filter className="w-5 h-5" />
-          <span>Filter by status</span>
         </button>
       </div>
 
@@ -166,117 +184,127 @@ export default function UserManage() {
       <div className="mt-6 bg-white rounded-xl shadow border border-gray-200 overflow-hidden">
         <table className="w-full">
           <thead className="bg-gray-50 border-b border-gray-200">
-            {activeTab === "travelers" ? (
-              <tr className="text-left text-gray-600 text-sm">
-                <th className="p-4">Traveler</th>
-                <th className="p-4">Join Date</th>
-                <th className="p-4">Bookings</th>
-                <th className="p-4">Total Spent</th>
-                <th className="p-4">Status</th>
-                <th className="p-4">Actions</th>
-              </tr>
-            ) : (
-              <tr className="text-left text-gray-600 text-sm">
-                <th className="p-4">Guide</th>
-                <th className="p-4">Email</th>
-                <th className="p-4">Rating</th>
-                <th className="p-4">Tours</th>
-                <th className="p-4">Earnings</th>
-                <th className="p-4">Status</th>
-                <th className="p-4">Actions</th>
-              </tr>
-            )}
+            <tr className="text-left text-gray-600 text-sm">
+              <th className="p-4">
+                {activeTab === "travelers" ? "Traveler" : "Guide"}
+              </th>
+              <th className="p-4">
+                {activeTab === "travelers" ? "Join Date" : "Email"}
+              </th>
+              <th className="p-4">
+                {activeTab === "travelers" ? "Bookings" : "Rating"}
+              </th>
+              <th className="p-4">
+                {activeTab === "travelers" ? "Spent" : "Tours"}
+              </th>
+              <th className="p-4">
+                {activeTab === "travelers" ? "Status" : "Earnings"}
+              </th>
+              <th className="p-4">Actions</th>
+            </tr>
           </thead>
 
           <tbody>
-            {activeTab === "travelers"
-              ? travelers.map((t, idx) => (
-                  <tr
-                    key={idx}
-                    className="border-b border-gray-200 hover:bg-gray-50 transition text-sm"
+            {(activeTab === "travelers" ? travelers : guides).map(
+              (item, idx) => (
+                <tr
+                  key={idx}
+                  className="border-b border-gray-200 hover:bg-gray-50 text-sm"
+                >
+                  <td className="p-4 flex items-center gap-3">
+                    <img
+                      src={item.img}
+                      alt={item.name}
+                      className="w-10 h-10 rounded-full"
+                    />
+                    <div>
+                      <p className="font-medium">{item.name}</p>
+                      <p className="text-xs text-gray-500">
+                        {item.email || item.location}
+                      </p>
+                    </div>
+                  </td>
+
+                  <td className="p-4">{item.joinDate || item.email}</td>
+
+                  <td className="p-4">
+                    <div className="inline-flex items-center gap-2">
+                      {item.rating && (
+                        <Star className="w-4 h-4 text-yellow-500 fill-yellow-500" />
+                      )}
+                      <span>{item.bookings ?? item.rating}</span>
+                    </div>
+                  </td>
+
+                  <td className="p-4">{item.spent || item.tours}</td>
+
+                  {/* ✅ STATUS WITH BG */}
+                  <td className="p-4">
+                    <span
+                      className={`px-3 py-1 rounded-full text-xs font-semibold inline-block ${getStatusClasses(
+                        item.status
+                      )}`}
+                    >
+                      {item.status}
+                    </span>
+                  </td>
+
+                  {/* ---------- ACTION DROPDOWN ---------- */}
+                  <td
+                    className="p-4 relative"
+                    onClick={(e) => e.stopPropagation()}
                   >
-                    <td className="p-4 flex items-center gap-3">
-                      <img
-                        src={t.img}
-                        alt={t.name}
-                        className="w-10 h-10 rounded-full object-cover"
-                      />
-                      <div>
-                        <p className="font-medium text-gray-900">{t.name}</p>
-                        <p className="text-gray-500 text-xs">{t.email}</p>
+                    <MoreHorizontal
+                      className="w-6 h-6 cursor-pointer text-gray-600 hover:text-gray-800"
+                      onClick={() =>
+                        setOpenMenuIndex(openMenuIndex === idx ? null : idx)
+                      }
+                    />
+
+                    {openMenuIndex === idx && (
+                      <div className="absolute right-4 top-10 w-44 bg-white border border-gray-200 rounded-xl shadow-lg z-20">
+                        <button
+                          onClick={() => {
+                            setSelectedUser(item);
+                            setModalType("view");
+                          }}
+                          className="flex items-center gap-3 w-full px-4 py-2 text-sm hover:bg-gray-50"
+                        >
+                          <Eye className="w-4 h-4" />
+                          View Details
+                        </button>
+
+                        <button
+                          onClick={() => {
+                            setSelectedUser(item);
+                            setModalType("email");
+                          }}
+                          className="flex items-center gap-3 w-full px-4 py-2 text-sm hover:bg-gray-50"
+                        >
+                          <Mail className="w-4 h-4" />
+                          Send Email
+                        </button>
+
+                        <button
+                          onClick={() => {
+                            setSelectedUser(item);
+                            setModalType("suspend");
+                          }}
+                          className="flex items-center gap-3 w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50"
+                        >
+                          <Ban className="w-4 h-4" />
+                          Suspend
+                        </button>
                       </div>
-                    </td>
-
-                    <td className="p-4 text-gray-700">{t.joinDate}</td>
-                    <td className="p-4 text-gray-700">{t.bookings}</td>
-                    <td className="p-4 text-gray-700">{t.spent}</td>
-
-                    <td className="p-4">
-                      <span
-                        className={`px-3 py-1 rounded-full text-xs font-medium ${
-                          t.status === "Active"
-                            ? "bg-green-100 text-green-700"
-                            : "bg-red-100 text-red-700"
-                        }`}
-                      >
-                        {t.status}
-                      </span>
-                    </td>
-
-                    <td className="p-4">
-                      <MoreHorizontal className="w-6 h-6 text-gray-600 cursor-pointer hover:text-gray-800" />
-                    </td>
-                  </tr>
-                ))
-              : guides.map((g, idx) => (
-                  <tr
-                    key={idx}
-                    className="border-b border-gray-200 hover:bg-gray-50 transition text-sm"
-                  >
-                    <td className="p-4 flex items-center gap-3">
-                      <img
-                        src={g.img}
-                        alt={g.name}
-                        className="w-10 h-10 rounded-full object-cover"
-                      />
-                      <div>
-                        <p className="font-medium text-gray-900">{g.name}</p>
-                        <p className="text-gray-500 text-xs">{g.location}</p>
-                      </div>
-                    </td>
-
-                    <td className="p-4 text-gray-700">{g.email}</td>
-
-                    <td className="p-4 text-gray-700 flex items-center gap-1">
-                      <Star className="w-4 h-4 text-yellow-500 fill-yellow-500" />
-                      {g.rating}
-                    </td>
-
-                    <td className="p-4 text-gray-700">{g.tours}</td>
-                    <td className="p-4 text-gray-700">{g.earnings}</td>
-
-                    <td className="p-4">
-                      <span
-                        className={`px-3 py-1 rounded-full text-xs font-medium ${
-                          g.status === "verified"
-                            ? "bg-green-100 text-green-700"
-                            : g.status === "pending"
-                            ? "bg-yellow-100 text-yellow-700"
-                            : "bg-red-100 text-red-700"
-                        }`}
-                      >
-                        {g.status}
-                      </span>
-                    </td>
-
-                    <td className="p-4">
-                      <MoreHorizontal className="w-6 h-6 text-gray-600 cursor-pointer hover:text-gray-800" />
-                    </td>
-                  </tr>
-                ))}
+                    )}
+                  </td>
+                </tr>
+              )
+            )}
           </tbody>
         </table>
       </div>
+
       {/* ---------- FOOTER / PAGINATION ---------- */}
       <div className="flex justify-between items-center p-4 text-sm text-gray-500">
         <p>Showing 1 to 5 of 5 entries</p>
@@ -295,6 +323,27 @@ export default function UserManage() {
           </button>
         </div>
       </div>
+
+      {modalType === "view" && (
+        <TravelerDetailsModal
+          user={selectedUser}
+          onClose={() => setModalType(null)}
+        />
+      )}
+
+      {modalType === "email" && (
+        <SendEmailModal
+          user={selectedUser}
+          onClose={() => setModalType(null)}
+        />
+      )}
+
+      {modalType === "suspend" && (
+        <SuspendUserModal
+          user={selectedUser}
+          onClose={() => setModalType(null)}
+        />
+      )}
     </div>
   );
 }
