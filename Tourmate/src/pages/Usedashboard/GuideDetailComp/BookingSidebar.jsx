@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { Calendar, Users, Clock, Heart, ShieldCheck } from "lucide-react";
 import { toggleFavourite } from "../../../services/guideData";
+import { bookGuide } from "../../../services/booking";
 
 export default function BookingSidebar({ guide, onToggleFavourite }) {
-  const [date, setDate] = useState("");
-  const [hours, setHours] = useState(3);
-  const [groupSize, setGroupSize] = useState(2);
+  const today = new Date().toISOString().split("T")[0];
+  const [date, setDate] = useState(today);  const [hours, setHours] = useState(1);
+  const [groupSize, setGroupSize] = useState(1);
   const [favourite, setFavourite] = useState(false);
 
   // Initialize favourite state from guide prop
@@ -21,13 +22,30 @@ export default function BookingSidebar({ guide, onToggleFavourite }) {
     }
   };
 
-  const total = 45 * hours * groupSize;
+  const total = guide.price * hours * groupSize;
+  const handleBookNow = async () => {
+    if (!date) {
+      alert("Please select a date");
+      return;
+    }
 
+    const res = await bookGuide({
+      guideId: guide.guideId,
+      hours,
+      groupSize,
+    });
+
+    if (res.success) {
+      alert("Booking request sent successfully!");
+    } else {
+      alert(res.error);
+    }
+  };
   return (
     <div className="bg-white rounded-xl shadow-md p-6 sticky top-6">
       {/* Price Top */}
       <div className="text-center">
-        <h2 className="text-3xl font-bold text-blue-600 mb-1">$45</h2>
+        <h2 className="text-3xl font-bold text-blue-600 mb-1">${guide.price}</h2>
         <p className="text-gray-500 mb-6">per hour</p>
       </div>
 
@@ -76,7 +94,7 @@ export default function BookingSidebar({ guide, onToggleFavourite }) {
       {/* Price Summary */}
       <div className="text-gray-700 text-sm">
         <p>
-          $45 × {hours}h × {groupSize} people
+          ${guide.price} × {hours}h × {groupSize} people
           <span className="float-right">${total}</span>
         </p>
       </div>
@@ -86,7 +104,10 @@ export default function BookingSidebar({ guide, onToggleFavourite }) {
       </h3>
 
       {/* Buttons */}
-      <button className="w-full py-3 bg-gradient-to-r from-blue-400 to-blue-600 text-white rounded-lg font-semibold">
+      <button
+        className="w-full py-3 bg-gradient-to-r from-blue-400 to-blue-600 text-white rounded-lg font-semibold"
+        onClick={handleBookNow}
+      >
         Book Now
       </button>
 
