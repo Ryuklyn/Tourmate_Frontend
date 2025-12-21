@@ -1,33 +1,50 @@
-/* --- Calendar Layout --- */
-.custom-calendar {
-  @apply w-full text-sm;
+@reference "tailwindcss";
+
+@layer components {
+  /* --- Calendar Layout --- */
+  .custom-calendar {
+    @apply w-full text-sm;
+  }
+
+  /* Calendar navigation */
+  .custom-calendar .react-calendar__navigation {
+    @apply flex justify-between items-center mb-3;
+  }
+
+  .custom-calendar .react-calendar__navigation button {
+    @apply text-gray-700 font-semibold hover:bg-gray-100 p-2 rounded-lg transition;
+  }
+
+  /* Weekdays */
+  .custom-calendar .react-calendar__month-view__weekdays__weekday {
+    @apply uppercase text-[11px] text-gray-500 font-semibold text-center pb-2;
+  }
+
+  /* Days */
+  .custom-calendar .react-calendar__tile {
+    @apply text-center py-2 rounded-xl transition hover:bg-gray-100;
+  }
+
+  /* Today */
+  .custom-calendar .react-calendar__tile--now {
+    @apply bg-[#0faf94] text-white font-bold;
+    background-color: rgba(15, 175, 148, 0.15);
+  }
 }
 
-/* Calendar navigation */
-.custom-calendar .react-calendar__navigation {
-  @apply flex justify-between items-center mb-3;
-}
-
-.custom-calendar .react-calendar__navigation button {
-  @apply text-gray-700 font-semibold hover:bg-gray-100 p-2 rounded-lg transition;
-}
-
-/* Weekdays */
-.custom-calendar .react-calendar__month-view__weekdays__weekday {
-  @apply uppercase text-[11px] text-gray-500 font-semibold text-center pb-2;
-}
-
-/* Days */
-.custom-calendar .react-calendar__tile {
-  @apply text-center py-2 rounded-xl transition hover:bg-gray-100;
-}
-
-/* Today */
-.custom-calendar .react-calendar__tile--now {
-  @apply bg-green-100 text-green-700 font-bold;
-}
-
-/* Selected */
+/* Selected (Active date) */
 .custom-calendar .react-calendar__tile--active {
-  @apply bg-green-500 text-white font-semibold hover:bg-green-600;
+  background-color: #0faf94;
+  color: white;
+  font-weight: 600;
+}
+
+/* .custom-calendar .react-calendar__tile--active:hover {
+  background-color: #0faf94;
+} */
+
+/* Neighboring month days */
+.custom-calendar .react-calendar__month-view__days__day--neighboringMonth {
+  color: #9ca3af;
+  opacity: 0.5;
 }

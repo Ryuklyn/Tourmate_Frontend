@@ -57,7 +57,9 @@ button {
 /* button:hover {
   border-color: #646cff;
 } */
-
+.react-calendar__month-view__weekdays__weekday {
+  text-align: center;
+}
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;

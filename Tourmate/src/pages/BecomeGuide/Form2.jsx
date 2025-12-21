@@ -75,30 +75,6 @@ export default function Form2() {
           className="w-full mt-4 p-4 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
         />
 
-        {/* PHONE VERIFICATION */}
-        <div className="mt-6 p-5  rounded-xl border border-blue-200">
-          <p className="font-medium text-gray-700 mb-3">Phone Verification</p>
-
-          {/* OTP INPUT */}
-          <input
-            type="text"
-            placeholder="Enter OTP Code *"
-            className="w-full p-4 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
-          />
-
-          {/* SEND CODE BUTTON */}
-          <button
-            onClick={handleSendCode}
-            className={`w-full mt-3 py-3 rounded-lg font-medium transition ${
-              otpSent
-                ? "bg-green-600 text-white"
-                : "bg-blue-600 hover:bg-blue-700 text-white"
-            }`}
-          >
-            {otpSent ? "✔ Code Sent" : "Send Verification Code"}
-          </button>
-        </div>
-
         {/* BUTTONS */}
         <div className="mt-8 flex justify-between">
           <button

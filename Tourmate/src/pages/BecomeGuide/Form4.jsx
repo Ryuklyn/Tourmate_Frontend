@@ -93,24 +93,6 @@ export default function Form4() {
               onChange={(e) => setConfirmAcc(e.target.value)}
             />
           </div>
-
-          {/* QR Code Upload */}
-          <div>
-            <label className="block font-medium text-gray-700 mb-2">
-              Payment QR Code (Optional)
-            </label>
-
-            <div className="mt-2 border-2 border-dashed border-gray-300 bg-gray-50 rounded-xl p-10 flex flex-col items-center justify-center cursor-pointer hover:border-blue-500 transition">
-              <Upload size={40} className="text-gray-600" />
-              <p className="mt-2 text-gray-600 text-[14px]">
-                Click to upload a file
-              </p>
-            </div>
-
-            <p className="mt-2 text-sm text-gray-500">
-              Upload a QR code for alternative payment methods if available
-            </p>
-          </div>
         </div>
 
         {/* BUTTONS */}
