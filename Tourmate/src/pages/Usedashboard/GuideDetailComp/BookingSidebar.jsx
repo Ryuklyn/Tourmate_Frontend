@@ -1,10 +1,25 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Calendar, Users, Clock, Heart, ShieldCheck } from "lucide-react";
+import { toggleFavourite } from "../../../services/guideData";
 
-export default function BookingSidebar() {
+export default function BookingSidebar({ guide, onToggleFavourite }) {
   const [date, setDate] = useState("");
   const [hours, setHours] = useState(3);
   const [groupSize, setGroupSize] = useState(2);
+  const [favourite, setFavourite] = useState(false);
+
+  // Initialize favourite state from guide prop
+  useEffect(() => {
+    setFavourite(guide?.favorited ?? false);
+  }, [guide]);
+
+  const handleToggleFavourite = async () => {
+    const res = await toggleFavourite(guide.guideId);
+    if (res.success) {
+      setFavourite(prev => !prev); // toggle locally
+      if (onToggleFavourite) onToggleFavourite(guide.guideId);
+    }
+  };
 
   const total = 45 * hours * groupSize;
 
@@ -56,7 +71,6 @@ export default function BookingSidebar() {
         onChange={(e) => setGroupSize(Number(e.target.value))}
       />
 
-      {/* Divider Line */}
       <hr className="border-gray-300 my-5" />
 
       {/* Price Summary */}
@@ -72,15 +86,18 @@ export default function BookingSidebar() {
       </h3>
 
       {/* Buttons */}
-      <button className="w-full py-3 bg-linear-to-r from-blue-400 to-blue-600 text-white rounded-lg font-semibold">
+      <button className="w-full py-3 bg-gradient-to-r from-blue-400 to-blue-600 text-white rounded-lg font-semibold">
         Book Now
       </button>
 
-      <button className="w-full py-3 bg-gray-100 rounded-lg mt-3 flex items-center justify-center gap-2">
-        <Heart size={18} /> Save Guide
+      <button
+        className="w-full py-3 bg-gray-100 rounded-lg mt-3 flex items-center justify-center gap-2"
+        onClick={handleToggleFavourite}
+      >
+        <Heart size={18} className={favourite ? "text-red-500 fill-red-500" : ""} />
+        {favourite ? "Saved" : "Save Guide"}
       </button>
 
-      {/* Verified Footer */}
       <div className="text-xs text-gray-500 mt-4 flex items-center gap-2">
         <ShieldCheck size={15} className="text-green-600" /> Verified guide •
         24/7 support

@@ -1,6 +1,7 @@
 import React from "react";
 import { MapPin, Clock, CheckCircle, Heart } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { toggleFavourite } from "../../services/guideData";
 
 // const GuideCard = ({ guide }) => {
 //   const navigate = useNavigate();
@@ -88,11 +89,11 @@ import { useNavigate } from "react-router-dom";
 // };
 
 
-const GuideCard = ({ guide }) => {
+const GuideCard = ({ guide, onToggleFavourite }) => {
   const navigate = useNavigate();
   const imageSrc = guide.profilePic
-  ? `data:image/jpeg;base64,${guide.profilePic}`
-  : "/default-avatar.png";
+    ? `data:image/jpeg;base64,${guide.profilePic}`
+    : "/default-avatar.png";
   const handleViewProfile = () => {
     navigate(`/dashboard/guideprofile/${guide.guideId}`);
   };
@@ -106,11 +107,19 @@ const GuideCard = ({ guide }) => {
           <CheckCircle size={14} className="inline mr-1" />
           Verified
         </div>
+        {/* Rating Badge */}
+        <div className="absolute top-3 right-3 flex items-center bg-white text-yellow-500 text-sm font-semibold px-2 py-1 rounded-full shadow-sm">
+          ⭐ <span className="ml-1 text-gray-700">{guide.averageRating}</span>
+        </div>
       </div>
 
       <div className="p-4">
         <h3 className="font-semibold text-lg">{guide.fullName}</h3>
-
+        {/* Location */}
+        <div className="flex items-center text-gray-500 text-sm mt-1">
+          <MapPin size={14} className="mr-1 text-blue-500" />
+          {guide.location}
+        </div>
         <p className="text-gray-600 text-sm mt-2 line-clamp-2">
           {guide.bio}
         </p>
@@ -141,11 +150,16 @@ const GuideCard = ({ guide }) => {
             View Profile
           </button>
 
-          <button className="p-2 rounded-lg bg-blue-50">
+          <button
+            className="p-2 rounded-lg bg-blue-50"
+            onClick={() => onToggleFavourite(guide.guideId)}
+          >
             <Heart
               size={18}
               className={
-                guide.favorited ? "text-red-500 fill-red-500" : "text-blue-600"
+                guide.favorited
+                  ? "text-red-500 fill-red-500"
+                  : "text-blue-600"
               }
             />
           </button>

@@ -19,7 +19,7 @@ export const registerUser = async (newUser) => {
   }
 };
 
-export const getUserData = async (userId) => {
+export const getUserData = async () => {
     const token = localStorage.getItem("AUTH_TOKEN");
     try {
       const response = await axios.get(`${CONFIG.API_URL}/user/getDetails`,
@@ -45,7 +45,7 @@ export const getUserData = async (userId) => {
       const token = localStorage.getItem("AUTH_TOKEN");
   
       const response = await axios.put(
-        `${CONFIG.API_URL}/user/update?userId=${userId}`,
+        `${CONFIG.API_URL}/user/update/${userId}`,
         userData,
         {
           headers: { Authorization: `Bearer ${token}` } // include token
@@ -91,7 +91,7 @@ export const getUserData = async (userId) => {
       formData.append("file", file);
       formData.append("userId", userId);
   
-      const res = await axios.post(
+      const res = await axios.put(
         `${CONFIG.API_URL}/user/change-profile-pic`,
         formData,
         {

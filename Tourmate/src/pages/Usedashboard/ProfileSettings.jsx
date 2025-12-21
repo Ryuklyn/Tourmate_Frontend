@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Camera,
   Globe,
@@ -13,6 +13,8 @@ import {
   Check,
 } from "lucide-react";
 import AvatarImg from "../../assets/img/Avatar.jpg";
+import {  } from "../../services/user";
+import { updateProfile,getUserData, changeProfilePic } from "../../services/user";
 
 export default function ProfileSettings() {
   const [profileImage, setProfileImage] = useState(AvatarImg);
@@ -23,20 +25,62 @@ export default function ProfileSettings() {
     firstName: "John",
     lastName: "Doe",
     email: "john@example.com",
-    phone: "+1 (555) 123-4567",
+    phoneNumber: "+1 (555) 123-4567",
     bio: "Traveler, photographer, and adventure lover.",
     language: "English",
     currency: "USD",
   });
+  useEffect(() => {
+    const fetchUser = async () => {
+      const res = await getUserData();
+      if (res.success) {
+        const data = res.data;
+        setForm({
+          firstName: data.firstName || "",
+          lastName: data.lastName || "",
+          email: data.email || "",
+          phoneNumber: data.phoneNumber || "",
+          bio: data.bio || "",
+        });
+        
+        if (data.profilePic) {
+          const imageSrc = data.profilePic
+    ? `data:image/jpeg;base64,${data.profilePic}`
+    : "/default-avatar.png";
+    setProfileImage(imageSrc);
+        }
+      }
+    };
+    fetchUser();
+  }, []);
 
+  const handleSaveProfile = async () => {
+    const res = await updateProfile(form);
+    if (res.success) {
+      alert("Profile updated successfully");
+      setIsEditing(false);
+    } else {
+      alert("Error updating profile: " + res.error);
+    }
+  };
+  const handleImageUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+  
+    // Update preview
+    setProfileImage(URL.createObjectURL(file));
+  
+    const userId = localStorage.getItem("userId");
+    const res = await changeProfilePic(file, userId);
+    if (!res.success) {
+      alert("Failed to upload profile picture: " + res.error);
+    }
+  };
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleImageUpload = (e) => {
-    const file = e.target.files[0];
-    if (file) setProfileImage(URL.createObjectURL(file));
-  };
+
 
   const inputBase =
     "w-full px-4 py-2 rounded-lg border bg-gray-100 text-gray-600";
@@ -126,7 +170,7 @@ export default function ProfileSettings() {
             value={form.email}
             icon={<Mail className="w-4 h-4" />}
             onChange={handleChange}
-            disabled={!isEditing}
+            disabled={true}
             activeStyle={inputActive}
             disabledStyle={inputBase}
             className="mt-6"
@@ -134,8 +178,8 @@ export default function ProfileSettings() {
 
           <Field
             label="Phone Number"
-            name="phone"
-            value={form.phone}
+            name="phoneNumber"
+            value={form.phoneNumber}
             icon={<Phone className="w-4 h-4" />}
             onChange={handleChange}
             disabled={!isEditing}
@@ -167,12 +211,12 @@ export default function ProfileSettings() {
           {isEditing && (
             <div className="mt-8 flex gap-4">
               <button
-                onClick={() => setIsEditing(false)}
-                className="flex items-center gap-2 px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition"
-              >
-                <Check className="w-4 h-4" />
-                Save Changes
-              </button>
+              onClick={() => {setIsEditing(false);
+                handleSaveProfile();}}
+              className="flex items-center gap-2 px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition"
+            >
+              <Check className="w-4 h-4" /> Save Changes
+            </button>
 
               <button
                 onClick={() => setIsEditing(false)}
@@ -217,8 +261,8 @@ export default function ProfileSettings() {
 
             {isEditing && (
               <button className="mt-6 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
-                Save Preferences
-              </button>
+              Save Preferences
+            </button>
             )}
           </div>
 
@@ -266,7 +310,7 @@ function Field({
         name={name}
         disabled={disabled}
         placeholder={placeholder}
-        value={value}
+        value={value|| ""}
         onChange={onChange}
         className={disabled ? disabledStyle : activeStyle}
       />

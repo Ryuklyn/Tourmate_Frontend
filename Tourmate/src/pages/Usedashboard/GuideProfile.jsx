@@ -14,19 +14,19 @@ export default function GuideProfile() {
   const [guide, setGuide] = useState(null);
   const fetchGuide = async () => {
     try {
-      const res = await getGuideById(guideId);  
+      const res = await getGuideById(guideId);
       setGuide(res.data);
     } catch (error) {
       console.error("Failed to fetch guide:", error);
     }
   };
-  
+
 
   useEffect(() => {
     fetchGuide();
   }, [guideId]);
 
-  if (!guide){
+  if (!guide) {
     return <div className="p-10 text-center">Loading...</div>;
   }
 
@@ -46,13 +46,15 @@ export default function GuideProfile() {
           {/* Left Section */}
           <div className="flex-1">
             <GuideHeader guide={guide} />
-            <TourPackages guideId = {guideId}/>
-            <Reviews guideId={ guideId}/>
+            <TourPackages guideId={guideId} />
+            <Reviews guideId={guideId} />
           </div>
 
           {/* Right Section (Booking) */}
           <div className="w-full lg:w-1/3">
-            <BookingSidebar />
+            <BookingSidebar
+              guide={guide}
+            />
           </div>
         </div>
       </div>
