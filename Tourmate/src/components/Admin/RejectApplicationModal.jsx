@@ -1,6 +1,9 @@
+import { useState } from "react";
 import { X } from "lucide-react";
 
-function RejectApplicationModal({ onClose, onReject }) {
+export default function RejectApplicationModal({ onClose, onReject }) {
+  const [reason, setReason] = useState("");
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
       <div className="bg-white rounded-xl w-full max-w-md p-6 relative shadow-lg">
@@ -17,12 +20,14 @@ function RejectApplicationModal({ onClose, onReject }) {
           Reject Application
         </h2>
         <p className="text-sm text-gray-500 mt-1">
-          Please provide a reason for rejecting Maria Garcia's application.
+          Please provide a reason for rejecting the application.
         </p>
 
         {/* Textarea */}
         <textarea
           rows={5}
+          value={reason}
+          onChange={(e) => setReason(e.target.value)}
           placeholder="Enter rejection reason..."
           className="mt-4 w-full rounded-xl border border-orange-400 focus:ring-2 focus:ring-orange-400 focus:outline-none p-3 resize-none"
         />
@@ -36,8 +41,9 @@ function RejectApplicationModal({ onClose, onReject }) {
             Cancel
           </button>
           <button
-            onClick={onReject}
-            className="px-4 py-2 rounded-lg bg-red-500 text-white hover:bg-red-600"
+            onClick={() => onReject(reason)}
+            disabled={!reason.trim()}
+            className="px-4 py-2 rounded-lg bg-red-500 text-white hover:bg-red-600 disabled:opacity-50"
           >
             Reject Application
           </button>
@@ -46,4 +52,3 @@ function RejectApplicationModal({ onClose, onReject }) {
     </div>
   );
 }
-export default RejectApplicationModal;

@@ -20,13 +20,24 @@ import {
   Info,
 } from "lucide-react";
 import RejectApplicationModal from "./RejectApplicationModal";
+import { decideGuide } from "../../services/admin";
 
-export default function GuideReviewModal({ guide, onClose }) {
+export default function GuideReviewModal({ guide, onClose, onDecision }) {
   const [activeTab, setActiveTab] = useState("personal");
   const [zoomImage, setZoomImage] = useState(null);
   const [imageLoaded, setImageLoaded] = useState(false);
   const [showRejectModal, setShowRejectModal] = useState(false);
+  const handleDecision = async (action, reason = "") => {
+    const res = await decideGuide(guide.guideId, action, reason);
 
+    if (res.success) {
+      alert(`Guide ${action}d successfully`);
+      onDecision?.(guide.guideId, action); // 🔥 notify parent
+      onClose();
+    } else {
+      alert("Failed to process guide decision: " + res.error);
+    }
+  };
   const tabs = [
     { key: "personal", label: "Personal", icon: <User size={18} /> },
     { key: "identity", label: "Identity", icon: <CreditCard size={18} /> },
@@ -51,7 +62,7 @@ export default function GuideReviewModal({ guide, onClose }) {
             Guide Application Review
           </h2>
           <p className="text-gray-600 mb-6">
-            Complete application details for {guide.name}
+            Complete application details for {guide.fullName}
           </p>
 
           {/* Tabs */}
@@ -60,11 +71,10 @@ export default function GuideReviewModal({ guide, onClose }) {
               <button
                 key={tab.key}
                 onClick={() => setActiveTab(tab.key)}
-                className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition ${
-                  activeTab === tab.key
-                    ? "bg-[#0faf94] text-white shadow"
-                    : "text-gray-600 hover:text-gray-800"
-                }`}
+                className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition ${activeTab === tab.key
+                  ? "bg-[#0faf94] text-white shadow"
+                  : "text-gray-600 hover:text-gray-800"
+                  }`}
               >
                 {tab.icon}
                 {tab.label}
@@ -91,13 +101,12 @@ export default function GuideReviewModal({ guide, onClose }) {
                     )}
 
                     <img
-                      src={guide.profilePic}
+                      src={`data:image/jpeg;base64,${guide.profilePic}`}
                       alt="Profile"
                       onLoad={() => setImageLoaded(true)}
-                      onClick={() => setZoomImage(guide.profilePic)}
-                      className={`w-48 h-48 rounded-full object-cover cursor-zoom-in shadow ${
-                        imageLoaded ? "block" : "hidden"
-                      }`}
+                      onClick={() => setZoomImage(`data:image/jpeg;base64,${guide.profilePic}`)}
+                      className={`w-48 h-48 rounded-full object-cover cursor-zoom-in shadow ${imageLoaded ? "block" : "hidden"
+                        }`}
                     />
                   </div>
 
@@ -110,7 +119,7 @@ export default function GuideReviewModal({ guide, onClose }) {
                         Full Name
                       </div>
                       <p className="font-semibold text-gray-900">
-                        {guide.personal.fullName}
+                        {guide.fullName}
                       </p>
                     </div>
 
@@ -121,7 +130,7 @@ export default function GuideReviewModal({ guide, onClose }) {
                         Email Address
                       </div>
                       <p className="font-semibold text-gray-900">
-                        {guide.personal.email}
+                        {guide.email}
                       </p>
                     </div>
 
@@ -132,7 +141,7 @@ export default function GuideReviewModal({ guide, onClose }) {
                         Phone Number
                       </div>
                       <p className="font-semibold text-gray-900">
-                        {guide.personal.phone}
+                        {guide.phoneNumber}
                       </p>
                     </div>
 
@@ -143,7 +152,7 @@ export default function GuideReviewModal({ guide, onClose }) {
                         Location
                       </div>
                       <p className="font-semibold text-gray-900">
-                        {guide.personal.location}
+                        {guide.location}
                       </p>
                     </div>
 
@@ -154,7 +163,7 @@ export default function GuideReviewModal({ guide, onClose }) {
                         Languages Spoken
                       </div>
                       <div className="flex gap-2 flex-wrap">
-                        {guide.personal.languages.map((lang, i) => (
+                        {guide.languages.map((lang, i) => (
                           <span
                             key={i}
                             className="px-3 py-1 rounded-full bg-gray-100 text-sm font-medium"
@@ -172,7 +181,7 @@ export default function GuideReviewModal({ guide, onClose }) {
                         Experience Level
                       </div>
                       <span className="inline-block px-3 py-1 rounded-full bg-orange-100 text-orange-600 text-sm font-semibold">
-                        {guide.personal.experienceLevel}
+                        {guide.experience}
                       </span>
                     </div>
                   </div>
@@ -200,7 +209,7 @@ export default function GuideReviewModal({ guide, onClose }) {
                         Government ID Number
                       </div>
                       <p className="font-semibold text-gray-900">
-                        {guide.identity.idNumber}
+                        {guide.governmentNumber}
                       </p>
                     </div>
 
@@ -211,7 +220,7 @@ export default function GuideReviewModal({ guide, onClose }) {
                         Date of Birth
                       </div>
                       <p className="font-semibold text-gray-900">
-                        {guide.identity.dob}
+                        {guide.dob}
                       </p>
                     </div>
                   </div>
@@ -229,15 +238,14 @@ export default function GuideReviewModal({ guide, onClose }) {
 
                     <div
                       className="relative rounded-xl overflow-hidden shadow cursor-zoom-in"
-                      onClick={() => setZoomImage(guide.identity.idPhoto)}
+                      onClick={() => setZoomImage(`data:image/jpeg;base64,${guide.governmentPic}`)}
                     >
                       <img
-                        src={guide.identity.idPhoto}
+                        src={`data:image/jpeg;base64,${guide.governmentPic}`}
                         alt="Government ID"
                         onLoad={() => setImageLoaded(true)}
-                        className={`w-full object-cover ${
-                          imageLoaded ? "block" : "hidden"
-                        }`}
+                        className={`w-full object-cover ${imageLoaded ? "block" : "hidden"
+                          }`}
                       />
 
                       <ZoomIn
@@ -281,7 +289,7 @@ export default function GuideReviewModal({ guide, onClose }) {
                       ))}
                     </div> */}
                     <div className="flex gap-2 flex-wrap">
-                      {guide.skills.specializations.map((s) => (
+                      {guide.categories.map((s) => (
                         <span
                           key={s}
                           className="px-3 py-1 rounded-full bg-gray-100 text-sm font-medium"
@@ -301,7 +309,7 @@ export default function GuideReviewModal({ guide, onClose }) {
 
                     <div className="flex items-baseline gap-2">
                       <span className="text-4xl font-bold text-orange-500">
-                        {guide.skills.hourlyRate}
+                        {guide.price}
                       </span>
                       <span className="text-gray-500">per hour</span>
                     </div>
@@ -319,7 +327,7 @@ export default function GuideReviewModal({ guide, onClose }) {
                   </div>
 
                   <div className="rounded-xl border border-gray-200 bg-gray-50 p-5 text-gray-700 leading-relaxed">
-                    {guide.skills.bio}
+                    {guide.bio}
                   </div>
                 </div>
               </div>
@@ -343,7 +351,7 @@ export default function GuideReviewModal({ guide, onClose }) {
                       <span>Bank Name</span>
                     </div>
                     <p className="text-base font-semibold text-gray-900">
-                      {guide.bank.bankName}
+                      {guide.bankName}
                     </p>
                   </div>
 
@@ -354,7 +362,7 @@ export default function GuideReviewModal({ guide, onClose }) {
                       <span>Bank Account Number</span>
                     </div>
                     <p className="text-base font-mono tracking-wide text-gray-900">
-                      {guide.bank.accountNumber}
+                      {guide.accountNumber}
                     </p>
                   </div>
                 </div>
@@ -388,13 +396,17 @@ export default function GuideReviewModal({ guide, onClose }) {
             {showRejectModal && (
               <RejectApplicationModal
                 onClose={() => setShowRejectModal(false)}
-                onReject={() => {
+                onReject={(reason) => {
+                  handleDecision("reject", reason);
                   setShowRejectModal(false);
                 }}
               />
             )}
 
-            <button className="px-4 py-2 rounded-lg bg-[#0faf94] text-white hover:bg-green-700">
+            <button
+              onClick={() => handleDecision("approve")}
+              className="px-4 py-2 rounded-lg bg-[#0faf94] text-white hover:bg-green-700"
+            >
               Approve
             </button>
           </div>
