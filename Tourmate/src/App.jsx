@@ -38,6 +38,7 @@ import UserManage from "./pages/Admin/UserManage";
 import GuideApproval from "./pages/Admin/GuideApproval";
 import FinancialManagement from "./pages/Admin/FinancialManagement";
 import Support1 from "./pages/Admin/Support";
+import { BecomeGuideProvider } from "./pages/BecomeGuide/BecomeGuideContext";
 
 function App() {
   const [count, setCount] = useState(0);
@@ -62,12 +63,22 @@ function App() {
           <Route path="profile" element={<ProfileSettings />} />
           <Route path="support" element={<Support />} />
           <Route path="become-guide" element={<PreGuide />} />
-          <Route path="become-guide/form1" element={<Form1 />} />
-          <Route path="become-guide/form2" element={<Form2 />} />
-          <Route path="become-guide/form3" element={<Form3 />} />
-          <Route path="become-guide/form4" element={<Form4 />} />
-          <Route path="become-guide/review-form" element={<ReviewForm />} />
-          <Route path="become-guide/submit-form" element={<SubmitForm />} />
+          <Route
+            path="become-guide/*"
+            element={
+              <BecomeGuideProvider>
+                <Routes>
+                  <Route index element={<PreGuide />} />
+                  <Route path="form1" element={<Form1 />} />
+                  <Route path="form2" element={<Form2 />} />
+                  <Route path="form3" element={<Form3 />} />
+                  <Route path="form4" element={<Form4 />} />
+                  <Route path="review-form" element={<ReviewForm />} />
+                  <Route path="submit-form" element={<SubmitForm />} />
+                </Routes>
+              </BecomeGuideProvider>
+            }
+          />
         </Route>
 
         {/*GuideDashboard*/}

@@ -1,81 +1,112 @@
-import React, { useState } from "react";
-import { Upload, X } from "lucide-react";
+import React, { useEffect, useState } from "react";
+import { X } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import StepProgress from "./StepProgress";
+import CONFIG from "../../../config";
+import axios from "axios";
+import { useBecomeGuide } from "./BecomeGuideContext";
 
 export default function Form3() {
   const navigate = useNavigate();
+  const { updateForm } = useBecomeGuide();
 
-  // States
-  const [specializations, setSpecializations] = useState("");
+  /* ------------------ STATES ------------------ */
   const [hourlyRate, setHourlyRate] = useState("");
   const [bio, setBio] = useState("");
 
-  const allSpeciality = [
-    "Historical Tours",
-    "Cultural Experiences",
-    "Adventure Tours",
-    "Food & Culinary Tours",
-    "Nature & Wildlife Tours",
-    "City Sightseeing",
-    "Photography Tours",
-    "Custom Private Tours",
-    "Hiking & Trekking",
-    "Religious & Spiritual Tours",
-    "Eco-Tourism",
-    "Luxury Tours",
-  ];
+  const [enumMap, setEnumMap] = useState([]); 
+  // [{ label: "Adventure Tour", value: "ADVENTURE_TOUR" }]
 
   const [selectedSpeciality, setSelectedSpeciality] = useState([]);
   const [open, setOpen] = useState(false);
 
+  /* ------------------ FETCH ENUMS ------------------ */
+  useEffect(() => {
+    const token = localStorage.getItem("AUTH_TOKEN");
+
+    const fetchEnums = async () => {
+      try {
+        const res = await axios.get(
+          `${CONFIG.API_URL}/user/enums/categories`,
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+
+        const mapped = res.data.map(v => ({
+          value: v,
+          label: v
+            .toLowerCase()
+            .replace(/_/g, " ")
+            .replace(/\b\w/g, c => c.toUpperCase()),
+        }));
+
+        setEnumMap(mapped);
+      } catch (err) {
+        console.error("Failed to fetch categories", err);
+      }
+    };
+
+    fetchEnums();
+  }, []);
+
+  /* ------------------ TOGGLE ------------------ */
   const toggleSpeciality = (spec) => {
-    if (selectedSpeciality.includes(spec)) {
-      setSelectedSpeciality(selectedSpeciality.filter((s) => s !== spec));
-    } else {
-      setSelectedSpeciality([...selectedSpeciality, spec]);
-    }
+    setSelectedSpeciality(prev =>
+      prev.includes(spec)
+        ? prev.filter(s => s !== spec)
+        : [...prev, spec]
+    );
+  };
+
+  /* ------------------ SUBMIT ------------------ */
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    updateForm("skills", {
+      specialities: selectedSpeciality.map(s => s.value), // ✅ ENUM VALUES
+      hourlyRate,
+      bio,
+    });
+
+    navigate("/dashboard/become-guide/form4");
   };
 
   return (
-    <div className="bg-[#f5f9ff] min-h-screen flex flex-col items-center w-full py-10 px-4">
-      {/* ------------------ STEP PROGRESS ------------------ */}
+    <div className="bg-[#f5f9ff] min-h-screen flex flex-col items-center py-10 px-4">
       <StepProgress
         steps={["Personal Info", "Verification", "Skills", "Banking"]}
-        activeStep={3} // change dynamically
+        activeStep={3}
       />
-      <div className="max-w-3xl w-full bg-white rounded-2xl shadow-xl p-10 mt-6 relative">
-        {/* ------------------ HEADING ------------------ */}
-        <h1 className="text-3xl font-bold text-gray-900">Skills & Expertise</h1>
+
+      <div className="max-w-3xl w-full bg-white rounded-2xl shadow-xl p-10 mt-6">
+        <h1 className="text-3xl font-bold">Skills & Expertise</h1>
         <p className="text-gray-500 mt-1 mb-8">
           Tell us about your specialties and experience
         </p>
 
-        {/* ------------------ FORM AREA ------------------ */}
-        <div className="space-y-6">
-          {/* Tour Specializations */}
-          <div className="relative w-full">
-            <label className="block font-medium text-gray-700 mb-2">
+        <form onSubmit={handleSubmit} className="space-y-6">
+          {/* ------------------ SPECIALITIES ------------------ */}
+          <div className="relative">
+            <label className="block font-medium mb-2">
               Tour Specializations
             </label>
+
             <div
               onClick={() => setOpen(!open)}
-              className="flex items-center justify-between w-full border rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 outline-none cursor-pointer"
+              className="border rounded-lg px-4 py-3 cursor-pointer flex justify-between"
             >
               <span className="text-gray-600">
-                {selectedSpeciality.length > 0
-                  ? selectedSpeciality.join(", ")
+                {selectedSpeciality.length
+                  ? selectedSpeciality.map(s => s.label).join(", ")
                   : "Select your specialties..."}
               </span>
-              {/* <span className="text-gray-500">{open ? "▲" : "▼"}</span> */}
-              <span className="text-gray-500">{open ? "▲" : "▼"}</span>
+              <span>{open ? "▲" : "▼"}</span>
             </div>
 
             {open && (
-              <div className="absolute z-10 mt-1 w-full bg-white border rounded-lg shadow-lg max-h-60 overflow-y-auto">
-                {allSpeciality.map((spec) => (
+              <div className="absolute z-10 mt-1 w-full bg-white border rounded-lg shadow max-h-60 overflow-y-auto">
+                {enumMap.map(spec => (
                   <div
-                    key={spec}
+                    key={spec.value}
                     onClick={() => toggleSpeciality(spec)}
                     className={`px-4 py-2 cursor-pointer hover:bg-blue-50 ${
                       selectedSpeciality.includes(spec)
@@ -83,19 +114,19 @@ export default function Form3() {
                         : ""
                     }`}
                   >
-                    {spec}
+                    {spec.label}
                   </div>
                 ))}
               </div>
             )}
 
             <div className="flex flex-wrap gap-2 mt-3">
-              {selectedSpeciality.map((spec) => (
+              {selectedSpeciality.map(spec => (
                 <div
-                  key={spec}
-                  className="flex items-center bg-blue-100 text-blue-700 px-3 py-1 rounded-full"
+                  key={spec.value}
+                  className="flex items-center bg-blue-100 px-3 py-1 rounded-full"
                 >
-                  <span>{spec}</span>
+                  <span>{spec.label}</span>
                   <X
                     size={16}
                     className="ml-2 cursor-pointer"
@@ -106,55 +137,54 @@ export default function Form3() {
             </div>
           </div>
 
-          {/* Hourly Rate */}
+          {/* ------------------ RATE ------------------ */}
           <div>
-            <label className="block font-medium text-gray-700 mb-2">
-              Hourly Rate (USD) <span className="text-red-500">*</span>
+            <label className="block font-medium mb-2">
+              Hourly Rate (USD) 
             </label>
             <input
               type="number"
-              placeholder="e.g., 50"
-              className="w-full border rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 outline-none"
+              className="w-full border rounded-lg px-4 py-3"
               value={hourlyRate}
               onChange={(e) => setHourlyRate(e.target.value)}
             />
           </div>
 
-          {/* Professional Bio */}
+          {/* ------------------ BIO ------------------ */}
           <div>
-            <label className="block font-medium text-gray-700 mb-2">
-              Professional Bio <span className="text-red-500">*</span>
+            <label className="block font-medium mb-2">
+              Professional Bio
             </label>
             <textarea
               rows="5"
               maxLength={500}
-              placeholder="Tell travelers about yourself, your experience, and what makes your tours special..."
-              className="w-full border rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 outline-none"
+              className="w-full border rounded-lg px-4 py-3"
               value={bio}
               onChange={(e) => setBio(e.target.value)}
             />
             <p className="text-right text-gray-400 text-sm">
-              {bio.length}/500 characters
+              {bio.length}/500
             </p>
           </div>
-        </div>
 
-        {/* ------------------ BUTTONS ------------------ */}
-        <div className="flex justify-between mt-10">
-          <button
-            onClick={() => navigate("/dashboard/become-guide/form2")}
-            className="px-6 py-3 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-100 transition"
-          >
-            Back
-          </button>
+          {/* ------------------ BUTTONS ------------------ */}
+          <div className="flex justify-between mt-10">
+            <button
+              type="button"
+              onClick={() => navigate("/dashboard/become-guide/form2")}
+              className="px-6 py-3 border rounded-lg"
+            >
+              Back
+            </button>
 
-          <button
-            onClick={() => navigate("/dashboard/become-guide/form4")}
-            className="px-8 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition"
-          >
-            Continue
-          </button>
-        </div>
+            <button
+              type="submit"
+              className="px-8 py-3 bg-blue-600 text-white rounded-lg"
+            >
+              Continue
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   );
