@@ -1,22 +1,26 @@
+import { deleteTourById } from "../../../services/tour/tourData";
 import Modal from "./Modal";
-import { useNavigate } from "react-router-dom";
 
-export default function DeleteTourModal({ onClose }) {
-  const navigate = useNavigate();
+export default function DeleteTourModal({ tour, onClose, onDeleted }) {
+  const handleDelete = async () => {
+    if (!tour) return;
 
-  const handleDelete = () => {
-    // ❌ Delete logic / API call here
-    console.log("Tour deleted");
-    // ❌ Close overlay
-    onClose();
+    const confirmed = window.confirm("Are you sure you want to delete this tour?");
+    if (!confirmed) return;
 
-    // ❌ Navigate back
-    navigate("/dashboard/guide/tourpackages");
+    const res = await deleteTourById(tour.id);
+    if (res.success) {
+      onDeleted(tour.id); // notify parent to remove from state
+      onClose();
+    } else {
+      alert(res.message);
+    }
   };
+
   return (
     <Modal
       title="Delete Tour"
-      subtitle="Are you sure you want to delete this tour?"
+      subtitle={`Are you sure you want to delete "${tour?.name}"?`}
       onClose={onClose}
     >
       <div className="flex justify-end gap-3">
