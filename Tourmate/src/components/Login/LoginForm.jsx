@@ -15,7 +15,6 @@ const LoginForm = () => {
   // Handle login form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-    debugger;
     const loginStatus = await doLogin(formData.email, formData.password);
 
     if (loginStatus.error) {
