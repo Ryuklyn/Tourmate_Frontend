@@ -8,6 +8,7 @@ import {
   Star,
   Clock,
   Settings,
+  Package,
 } from "lucide-react";
 
 const guideMenuItems = [
@@ -26,6 +27,11 @@ const guideMenuItems = [
     to: "/dashboard/guide/bookings",
     icon: <Calendar size={18} />,
     label: "Bookings",
+  },
+  {
+    to: "/dashboard/guide/tourpackages",
+    icon: <Package size={18} />,
+    label: "Tour Packages",
   },
   {
     to: "/dashboard/guide/earnings",

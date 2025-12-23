@@ -39,6 +39,7 @@ import GuideApproval from "./pages/Admin/GuideApproval";
 import FinancialManagement from "./pages/Admin/FinancialManagement";
 import Support1 from "./pages/Admin/Support";
 import { BecomeGuideProvider } from "./pages/BecomeGuide/BecomeGuideContext";
+import GuideTourPackage from "./pages/Guidedashboard/GuideTourPackages";
 
 function App() {
   const [count, setCount] = useState(0);
@@ -86,6 +87,7 @@ function App() {
           <Route index element={<GuideOverview />} />
           <Route path="profile" element={<GuideProfileManage />} />
           <Route path="bookings" element={<GuideBookings />} />
+          <Route path="tourpackages" element={<GuideTourPackage />} />
           <Route path="earnings" element={<EarningsOverview />} />
           <Route path="reviews" element={<GuideReview />} />
           <Route path="availability" element={<Availability />} />
