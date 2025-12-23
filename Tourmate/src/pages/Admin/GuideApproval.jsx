@@ -270,7 +270,7 @@ import {
   XCircle,
 } from "lucide-react";
 import GuideReviewModal from "../../components/Admin/GuideReviewModel";
-import { decideGuide, getPendingGuideRequest } from "../../services/admin";
+import { decideGuide, getPendingGuideRequest } from "../../services/admin/guideRegistration";
 
 export default function GuideApproval() {
   const [selectedGuide, setSelectedGuide] = useState(null);

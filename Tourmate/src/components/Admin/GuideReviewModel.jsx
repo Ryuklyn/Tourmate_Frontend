@@ -20,7 +20,7 @@ import {
   Info,
 } from "lucide-react";
 import RejectApplicationModal from "./RejectApplicationModal";
-import { decideGuide } from "../../services/admin";
+import { decideGuide } from "../../services/admin/guideRegistration";
 
 export default function GuideReviewModal({ guide, onClose, onDecision }) {
   const [activeTab, setActiveTab] = useState("personal");

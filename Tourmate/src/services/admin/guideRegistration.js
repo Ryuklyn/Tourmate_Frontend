@@ -1,5 +1,5 @@
 import axios from "axios";
-import CONFIG from "../../config";
+import CONFIG from "../../../config";
 
 export const getPendingGuideRequest = async (guideId) => {
     const token = localStorage.getItem("AUTH_TOKEN");

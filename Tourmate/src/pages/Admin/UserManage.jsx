@@ -1,7 +1,7 @@
+// 
+
 import React, { useState, useEffect } from "react";
 import {
-  Search,
-  Filter,
   MoreHorizontal,
   ChevronLeft,
   ChevronRight,
@@ -13,6 +13,7 @@ import {
 import TravelerDetailsModal from "../../components/Admin/TravelerDetailsModal";
 import SendEmailModal from "../../components/Admin/SendEmailModal";
 import SuspendUserModal from "../../components/Admin/SuspendUserModal";
+import { getGuides, getUsers } from "../../services/admin/UserManagement";
 
 export default function UserManage() {
   const [activeTab, setActiveTab] = useState("travelers");
@@ -20,22 +21,50 @@ export default function UserManage() {
   const [selectedUser, setSelectedUser] = useState(null);
   const [modalType, setModalType] = useState(null);
 
+  const [travelers, setTravelers] = useState([]);
+  const [guides, setGuides] = useState([]);
+  const [loading, setLoading] = useState(true);
+
   // -----------------------------
   // Status color helper
   // -----------------------------
   const getStatusClasses = (status) => {
     switch (status) {
-      case "Active":
-      case "Verified":
+      case "ACTIVE":
+      case "VERIFIED":
         return "bg-green-100 text-green-800";
-      case "Pending":
+      case "PENDING":
         return "bg-yellow-100 text-yellow-800";
-      case "Suspended":
+      case "SUSPENDED":
         return "bg-red-100 text-red-800";
       default:
         return "bg-gray-100 text-gray-800";
     }
   };
+
+  // -----------------------------
+  // Fetch data
+  // -----------------------------
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+
+      const usersRes = await getUsers();
+      const guidesRes = await getGuides();
+
+      if (usersRes.success) {
+        setTravelers(usersRes.data.data);
+      }
+
+      if (guidesRes.success) {
+        setGuides(guidesRes.data.data);
+      }
+
+      setLoading(false);
+    };
+
+    fetchData();
+  }, []);
 
   // -----------------------------
   // Close dropdown on outside click
@@ -46,112 +75,7 @@ export default function UserManage() {
     return () => document.removeEventListener("click", handleClickOutside);
   }, []);
 
-  // -----------------------------
-  // Travelers Data
-  // -----------------------------
-  const travelers = [
-    {
-      name: "Sarah Wilson",
-      email: "sarah@email.com",
-      joinDate: "Jan 15, 2024",
-      bookings: 8,
-      spent: "$2,450",
-      status: "Active",
-      img: "https://i.pravatar.cc/100?img=10",
-    },
-    {
-      name: "James Chen",
-      email: "james@email.com",
-      joinDate: "Feb 3, 2024",
-      bookings: 5,
-      spent: "$1,200",
-      status: "Active",
-      img: "https://i.pravatar.cc/100?img=20",
-    },
-    {
-      name: "Emma Davis",
-      email: "emma@email.com",
-      joinDate: "Mar 12, 2024",
-      bookings: 12,
-      spent: "$4,100",
-      status: "Active",
-      img: "https://i.pravatar.cc/100?img=30",
-    },
-    {
-      name: "Alex Murphy",
-      email: "alex@email.com",
-      joinDate: "Apr 8, 2024",
-      bookings: 3,
-      spent: "$890",
-      status: "Suspended",
-      img: "https://i.pravatar.cc/100?img=40",
-    },
-    {
-      name: "Lisa Park",
-      email: "lisa@email.com",
-      joinDate: "May 20, 2024",
-      bookings: 7,
-      spent: "$2,100",
-      status: "Active",
-      img: "https://i.pravatar.cc/100?img=50",
-    },
-  ];
-
-  // -----------------------------
-  // Guides Data
-  // -----------------------------
-  const guides = [
-    {
-      name: "Marco Rivera",
-      email: "marco@email.com",
-      location: "Rome, Italy",
-      rating: 4.9,
-      tours: 156,
-      earnings: "$12,450",
-      status: "Verified",
-      img: "https://i.pravatar.cc/100?img=12",
-    },
-    {
-      name: "Yuki Tanaka",
-      email: "yuki@email.com",
-      location: "Tokyo, Japan",
-      rating: 4.8,
-      tours: 142,
-      earnings: "$11,200",
-      status: "Verified",
-      img: "https://i.pravatar.cc/100?img=22",
-    },
-    {
-      name: "Pierre Dubois",
-      email: "pierre@email.com",
-      location: "Paris, France",
-      rating: 4.9,
-      tours: 138,
-      earnings: "$10,800",
-      status: "Verified",
-      img: "https://i.pravatar.cc/100?img=32",
-    },
-    {
-      name: "Ana Santos",
-      email: "ana@email.com",
-      location: "Barcelona, Spain",
-      rating: 4.7,
-      tours: 125,
-      earnings: "$9,650",
-      status: "Pending",
-      img: "https://i.pravatar.cc/100?img=42",
-    },
-    {
-      name: "John Smith",
-      email: "john@email.com",
-      location: "New York, USA",
-      rating: 4.5,
-      tours: 89,
-      earnings: "$7,200",
-      status: "Suspended",
-      img: "https://i.pravatar.cc/100?img=52",
-    },
-  ];
+  const data = activeTab === "travelers" ? travelers : guides;
 
   return (
     <div className="p-6 bg-gray-50 min-h-screen">
@@ -159,119 +83,123 @@ export default function UserManage() {
       <div className="bg-gray-300/20 p-2 rounded-lg inline-flex gap-4">
         <button
           onClick={() => setActiveTab("travelers")}
-          className={`px-4 py-2 rounded-lg font-medium transition ${
-            activeTab === "travelers"
-              ? "bg-red-400 text-white font-bold shadow"
-              : "text-gray-600"
-          }`}
+          className={`px-4 py-2 rounded-lg font-medium transition ${activeTab === "travelers"
+            ? "bg-red-400 text-white font-bold shadow"
+            : "text-gray-600"
+            }`}
         >
-          Travelers (5)
+          Travelers ({travelers.length})
         </button>
 
         <button
           onClick={() => setActiveTab("guides")}
-          className={`px-4 py-2 rounded-lg font-medium transition ${
-            activeTab === "guides"
-              ? "bg-red-400 text-white font-bold shadow"
-              : "text-gray-600"
-          }`}
+          className={`px-4 py-2 rounded-lg font-medium transition ${activeTab === "guides"
+            ? "bg-red-400 text-white font-bold shadow"
+            : "text-gray-600"
+            }`}
         >
-          Guides (5)
+          Guides ({guides.length})
         </button>
       </div>
 
       {/* ---------- TABLE ---------- */}
-      <div className="mt-6 bg-white rounded-xl shadow border border-gray-200 overflow-hidden">
-        <table className="w-full">
-          <thead className="bg-gray-50 border-b border-gray-200">
-            <tr className="text-left text-gray-600 text-sm">
-              <th className="p-4">
-                {activeTab === "travelers" ? "Traveler" : "Guide"}
-              </th>
-              <th className="p-4">
-                {activeTab === "travelers" ? "Join Date" : "Email"}
-              </th>
-              <th className="p-4">
-                {activeTab === "travelers" ? "Bookings" : "Rating"}
-              </th>
-              <th className="p-4">
-                {activeTab === "travelers" ? "Spent" : "Tours"}
-              </th>
-              <th className="p-4">
-                {activeTab === "travelers" ? "Status" : "Earnings"}
-              </th>
-              <th className="p-4">Actions</th>
-            </tr>
-          </thead>
+      <div className="mt-6 bg-white rounded-xl shadow border border-gray-200 overflow-visible">
+        {loading ? (
+          <div className="p-6 text-center text-gray-500">Loading...</div>
+        ) : (
+          <table className="w-full">
+            <thead className="bg-gray-50 border-b border-gray-200">
+              <tr className="text-left text-gray-600 text-sm">
+                <th className="p-4">
+                  {activeTab === "travelers" ? "Traveler" : "Guide"}
+                </th>
+                <th className="p-4">Email</th>
+                <th className="p-4">
+                  {activeTab === "travelers" ? "Bookings" : "Rating"}
+                </th>
+                <th className="p-4">
+                  {activeTab === "travelers" ? "Spent" : "Tours"}
+                </th>
+                <th className="p-4">Status</th>
+                <th className="p-4">Actions</th>
+              </tr>
+            </thead>
 
-          <tbody>
-            {(activeTab === "travelers" ? travelers : guides).map(
-              (item, idx) => (
+            <tbody>
+              {data.map((item, idx) => (
                 <tr
                   key={idx}
                   className="border-b border-gray-200 hover:bg-gray-50 text-sm"
                 >
                   <td className="p-4 flex items-center gap-3">
                     <img
-                      src={item.img}
-                      alt={item.name}
+                      src={
+                        item.profilePic
+                          ? `data:image/jpeg;base64,${item.profilePic}`
+                          : "https://i.pravatar.cc/100"
+                      }
                       className="w-10 h-10 rounded-full"
                     />
                     <div>
-                      <p className="font-medium">{item.name}</p>
-                      <p className="text-xs text-gray-500">
-                        {item.email || item.location}
+                      <p className="font-medium">
+                        {activeTab === "travelers"
+                          ? `${item.firstName} ${item.lastName}`
+                          : item.fullName}
                       </p>
+                      <p className="text-xs text-gray-500">{item.email}</p>
                     </div>
                   </td>
 
-                  <td className="p-4">{item.joinDate || item.email}</td>
+                  <td className="p-4">{item.email}</td>
 
                   <td className="p-4">
-                    <div className="inline-flex items-center gap-2">
-                      {item.rating && (
+                    {activeTab === "travelers" ? (
+                      item.bookings
+                    ) : (
+                      <div className="flex items-center gap-1">
                         <Star className="w-4 h-4 text-yellow-500 fill-yellow-500" />
-                      )}
-                      <span>{item.bookings ?? item.rating}</span>
-                    </div>
+                        {item.rating.toFixed(1)}
+                      </div>
+                    )}
                   </td>
 
-                  <td className="p-4">{item.spent || item.tours}</td>
-
-                  {/* ✅ STATUS WITH BG */}
+                  <td className="p-4">
+                    {activeTab === "travelers"
+                      ? `Rs. ${item.spent}`
+                      : item.tours}
+                  </td>
                   <td className="p-4">
                     <span
-                      className={`px-3 py-1 rounded-full text-xs font-semibold inline-block ${getStatusClasses(
-                        item.status
+                      className={`px-3 py-1 rounded-full text-xs font-semibold ${getStatusClasses(
+                        activeTab === "travelers" ? item.role : item.status
                       )}`}
                     >
-                      {item.status}
+                      {activeTab === "travelers" ? item.role : item.status}
                     </span>
                   </td>
 
-                  {/* ---------- ACTION DROPDOWN ---------- */}
+                  {/* ---------- ACTIONS ---------- */}
                   <td
                     className="p-4 relative"
                     onClick={(e) => e.stopPropagation()}
                   >
                     <MoreHorizontal
-                      className="w-6 h-6 cursor-pointer text-gray-600 hover:text-gray-800"
+                      className="w-6 h-6 cursor-pointer"
                       onClick={() =>
                         setOpenMenuIndex(openMenuIndex === idx ? null : idx)
                       }
                     />
 
                     {openMenuIndex === idx && (
-                      <div className="absolute right-4 top-10 w-44 bg-white border border-gray-200 rounded-xl shadow-lg z-20">
+                      <div className="absolute right-4 top-10 w-44 bg-white border rounded-xl shadow-lg z-20">
                         <button
                           onClick={() => {
                             setSelectedUser(item);
                             setModalType("view");
                           }}
-                          className="flex items-center gap-3 w-full px-4 py-2 text-sm hover:bg-gray-50"
+                          className="flex items-center gap-3 w-full px-4 py-2 hover:bg-gray-50"
                         >
-                          <Eye className="w-4 h-4" />
-                          View Details
+                          <Eye className="w-4 h-4" /> View Details
                         </button>
 
                         <button
@@ -279,10 +207,9 @@ export default function UserManage() {
                             setSelectedUser(item);
                             setModalType("email");
                           }}
-                          className="flex items-center gap-3 w-full px-4 py-2 text-sm hover:bg-gray-50"
+                          className="flex items-center gap-3 w-full px-4 py-2 hover:bg-gray-50"
                         >
-                          <Mail className="w-4 h-4" />
-                          Send Email
+                          <Mail className="w-4 h-4" /> Send Email
                         </button>
 
                         <button
@@ -290,40 +217,32 @@ export default function UserManage() {
                             setSelectedUser(item);
                             setModalType("suspend");
                           }}
-                          className="flex items-center gap-3 w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50"
+                          className={`flex items-center gap-3 w-full px-4 py-2 ${(activeTab === "travelers"
+                              ? item.role === "SUSPENDED"
+                              : item.status === "SUSPENDED")
+                              ? "text-green-600 hover:bg-green-50"
+                              : "text-red-600 hover:bg-red-50"
+                            }`}
                         >
                           <Ban className="w-4 h-4" />
-                          Suspend
+                          {(activeTab === "travelers"
+                            ? item.role === "SUSPENDED"
+                            : item.status === "SUSPENDED")
+                            ? "Unsuspend"
+                            : "Suspend"}
                         </button>
+
                       </div>
                     )}
                   </td>
                 </tr>
-              )
-            )}
-          </tbody>
-        </table>
+              ))}
+            </tbody>
+          </table>
+        )}
       </div>
 
-      {/* ---------- FOOTER / PAGINATION ---------- */}
-      <div className="flex justify-between items-center p-4 text-sm text-gray-500">
-        <p>Showing 1 to 5 of 5 entries</p>
-
-        <div className="flex items-center gap-2">
-          <button className="p-2 border border-gray-200 rounded-lg hover:bg-gray-100">
-            <ChevronLeft />
-          </button>
-
-          <button className="px-3 py-1 rounded-lg bg-orange-500 text-white">
-            1
-          </button>
-
-          <button className="p-2 border border-gray-200 rounded-lg hover:bg-gray-100">
-            <ChevronRight />
-          </button>
-        </div>
-      </div>
-
+      {/* ---------- MODALS ---------- */}
       {modalType === "view" && (
         <TravelerDetailsModal
           user={selectedUser}
@@ -341,7 +260,12 @@ export default function UserManage() {
       {modalType === "suspend" && (
         <SuspendUserModal
           user={selectedUser}
+          type={activeTab}   // "travelers" | "guides"
           onClose={() => setModalType(null)}
+          onSuccess={() => {
+            setModalType(null);
+            window.location.reload(); // or refetch users
+          }}
         />
       )}
     </div>
