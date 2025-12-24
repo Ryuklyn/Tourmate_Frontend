@@ -357,7 +357,7 @@ export default function GuideTourPackage() {
                   <Clock className="w-4 h-4" /> {tour.duration}
                 </span>
                 <span className="flex items-center gap-1">
-                  <Users className="w-4 h-4" /> Max {tour.maxGuests}
+                  <Users className="w-4 h-4" /> Max Gueste: {tour.maxGuests}
                 </span>
               </div>
 
@@ -399,8 +399,15 @@ export default function GuideTourPackage() {
       )}
 
       {editTour && (
-        <EditTourModal tour={editTour} onClose={() => setEditTour(null)} />
+        <EditTourModal
+          tour={editTour}
+          onClose={() => setEditTour(null)}
+          onUpdated={(updated) =>
+            setTours(prev => prev.map(t => t.id === updated.id ? updated : t))
+          }
+        />
       )}
+
 
       {deleteTour && (
         <DeleteTourModal

@@ -60,3 +60,19 @@ export const createTour = async (formData) => {
     return { success: false, message: err.response?.data?.message || err.message };
   }
 };
+
+export const editTour = async (tourId,formData) => {
+  try {
+    const token = localStorage.getItem("AUTH_TOKEN"); // or your auth logic
+    const res = await axios.put(`${CONFIG.API_URL}/guide/tour/${tourId}/edit`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return res.data;
+  } catch (err) {
+    console.error(err);
+    return { success: false, message: err.response?.data?.message || err.message };
+  }
+};
