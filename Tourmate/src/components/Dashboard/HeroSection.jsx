@@ -18,13 +18,6 @@ const HeroSection = () => {
   return (
     <div className="relative bg-linear-to-br from-blue-50 to-blue-100 py-20 px-4">
       <div className="absolute inset-0">
-        {/* <div
-          className="w-full h-full"
-          style={{
-            backgroundImage: "url(" + Map + ")",
-            backgroundSize: "100px 100px",
-          }}
-        ></div> */}
         <div
           className="w-full h-full"
           style={{

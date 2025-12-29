@@ -68,7 +68,10 @@ button {
   a:hover {
     color: #747bff;
   }
-  button {
+  /* button {
+    background-color: #f9f9f9;
+  } */
+  .default-button {
     background-color: #f9f9f9;
   }
 }
