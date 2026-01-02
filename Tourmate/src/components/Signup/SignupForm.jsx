@@ -26,7 +26,7 @@ const SignupForm = () => {
     }));
   };
 
-  const handleSubmit = async() => {
+  const handleSubmit = async () => {
     if (formData.password !== formData.confirmPassword) {
       alert("Passwords do not match!");
       return;
@@ -35,8 +35,8 @@ const SignupForm = () => {
       alert("Please agree to the Terms of Service and Privacy Policy");
       return;
     }
-    const registerStatus = registerUser(formData)
-    if (registerStatus){
+    const registerStatus = registerUser(formData);
+    if (registerStatus) {
       setFormData({
         firstName: "",
         lastName: "",
@@ -48,7 +48,6 @@ const SignupForm = () => {
       });
       navigate("/login");
     }
-
   };
 
   return (
@@ -80,7 +79,7 @@ const SignupForm = () => {
         onChange={handleChange}
       />
 
-      <div className="mb-4">
+      {/* <div className="mb-4">
         <label className="block text-sm font-medium text-gray-700 mb-1">
           I want to
         </label>
@@ -94,7 +93,7 @@ const SignupForm = () => {
           <option>List my tours (Tour Guide)</option>
           <option>Explore destinations</option>
         </select>
-      </div>
+      </div> */}
 
       <InputField
         label="Password"
