@@ -159,16 +159,6 @@ export default function Form1() {
               />
             </div>
 
-            {/* <div>
-              <label className="block text-gray-700 font-medium mb-1">
-                Languages You Speak
-              </label>
-              <input
-                type="text"
-                className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
-                placeholder="Select languages..."
-              />
-            </div> */}
             <div className="relative w-full">
               {/* Label */}
               <label className="block text-gray-700 font-medium mb-1">
