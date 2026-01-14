@@ -39,6 +39,7 @@ import GuideApproval from "./pages/Admin/GuideApproval";
 import FinancialManagement from "./pages/Admin/FinancialManagement";
 import Support1 from "./pages/Admin/Support";
 import GuideTourPackage from "./pages/Guidedashboard/GuideTourPackages";
+import FindTour from "./pages/Usedashboard/FindTour";
 
 function App() {
   const [count, setCount] = useState(0);
@@ -56,6 +57,7 @@ function App() {
         <Route path="/dashboard" element={<TravelerLayout />}>
           <Route index element={<TravelerOverview />} />
           <Route path="findguide" element={<FindGuide />} />
+          <Route path="findtour" element={<FindTour />} />
           <Route path="favorites" element={<FavoriteGuides />} />
           <Route path="bookings" element={<Bookings />} />
           <Route path="bookingsdetails" element={<BookingDetails />} />

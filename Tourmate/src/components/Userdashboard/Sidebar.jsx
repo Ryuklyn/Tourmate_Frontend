@@ -30,7 +30,7 @@ const menuItems = [
     label: "Bookings",
   },
   {
-    to: "/dashboard/tour-packages",
+    to: "/dashboard/findtour",
     icon: <Package size={18} />,
     label: "Tour Packages",
   },
