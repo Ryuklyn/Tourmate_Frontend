@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Calendar, Users, Clock, Heart, ShieldCheck } from "lucide-react";
-import { toggleFavourite } from "../../../services/guideData";
+import { toggleFavouriteGuide } from "../../../services/guideData";
 import { bookGuide } from "../../../services/booking";
 
 export default function BookingSidebar({ guide, onToggleFavourite }) {
@@ -15,7 +15,7 @@ export default function BookingSidebar({ guide, onToggleFavourite }) {
   }, [guide]);
 
   const handleToggleFavourite = async () => {
-    const res = await toggleFavourite(guide.guideId);
+    const res = await toggleFavouriteGuide(guide.guideId);
     if (res.success) {
       setFavourite(prev => !prev); // toggle locally
       if (onToggleFavourite) onToggleFavourite(guide.guideId);

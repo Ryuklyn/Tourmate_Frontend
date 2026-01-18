@@ -7,66 +7,23 @@ import Pokhara from "../../assets/img/Pokhara.jpg";
 import Chitwan from "../../assets/img/Chitwan.jpg";
 import Lumbini from "../../assets/img/Lumbini.jpg";
 
-/* ================= TOUR DATA ================= */
-const tours = [
-  {
-    title: "Kathmandu Heritage Tour",
-    location: "Kathmandu, Nepal",
-    duration: "6 hours",
-    price: "$120",
-    bookings: 18,
-    status: "Active",
-    image: Patan,
-    description: "Explore UNESCO heritage sites of Kathmandu valley.",
-  },
-  {
-    title: "Everest Base Camp Trek (12 Days)",
-    location: "Solukhumbu, Nepal",
-    duration: "12 days",
-    price: "$1450",
-    bookings: 22,
-    status: "Active",
-    image: Everest,
-    description: "Adventure trek to the base of Mount Everest.",
-  },
-  {
-    title: "Pokhara Adventure & Lakeside Tour",
-    location: "Pokhara, Nepal",
-    duration: "8 hours",
-    price: "$150",
-    bookings: 14,
-    status: "Active",
-    image: Pokhara,
-    description: "Lakeside walk, boating and adventure activities.",
-  },
-  {
-    title: "Chitwan Jungle Safari",
-    location: "Chitwan, Nepal",
-    duration: "2 days",
-    price: "$250",
-    bookings: 10,
-    status: "Draft",
-    image: Chitwan,
-    description: "Wildlife safari in Chitwan National Park.",
-  },
-  //   {
-  //     title: "Lumbini Buddhist Pilgrimage Tour",
-  //     location: "Lumbini, Nepal",
-  //     duration: "1 day",
-  //     price: "$180",
-  //     bookings: 10,
-  //     status: "Active",
-  //     image: Lumbini,
-  //     description: "Visit the birthplace of Lord Buddha.",
-  //   },
-];
-
-const TourList = () => {
+const TourList = ({tours, onToggleFavourite}) => {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-      {tours.map((tour, i) => (
-        <TourCard key={i} tour={tour} />
-      ))}
+
+     <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
+      {tours.length > 0 ? (
+        tours.map((tour) => (
+          <TourCard
+            key={tour.id}
+            tour={tour}
+            onToggleFavourite={onToggleFavourite}
+          />
+        ))
+      ) : (
+        <p className="text-gray-500 col-span-full text-center mt-6">
+          No guides found matching your filters.
+        </p>
+      )}
     </div>
   );
 };

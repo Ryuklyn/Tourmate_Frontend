@@ -3,7 +3,7 @@ import axios from "axios";
 import FilterSidebar from "../../components/FindGuide/FilterSidebar";
 import GuideList from "../../components/FindGuide/GuideList";
 import CONFIG from "../../../config";
-import { toggleFavourite } from "../../services/guideData";
+import { toggleFavouriteGuide } from "../../services/guideData";
 
 const FindGuide = () => {
   const [filters, setFilters] = useState({
@@ -38,7 +38,6 @@ const FindGuide = () => {
             page: filters.page,
             size: filters.size,
             sortBy: filters.sortBy,
-            sortBy: filters.sortBy,
             sortDir: filters.sortDir,
             rating: filters.rating,
 
@@ -58,15 +57,16 @@ const FindGuide = () => {
 
   // Favorite toggle handler
   const handleToggleFavourite = async (guideId) => {
-    // Optimistic update
-    setGuides((prev) =>
-      prev.map((g) =>
-        g.guideId === guideId ? { ...g, favorited: !g.favorited } : g
-      )
-    );
 
-    const res = await toggleFavourite(guideId);
 
+    const res = await toggleFavouriteGuide(guideId);
+    if (res.success) {
+      setGuides((prev) =>
+        prev.map((g) =>
+          g.guideId === guideId ? { ...g, favorited: !g.favorited } : g
+        )
+      );
+    }
     if (!res.success) {
       // Rollback if API fails
       setGuides((prev) =>

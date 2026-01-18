@@ -1,19 +1,50 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Star } from "lucide-react";
+import axios from "axios";
+import { displayName } from "../../services/enumFormatter";
+import CONFIG from "../../../config";
 
-const FilterSidebarTour = () => {
+const FilterSidebarTour = ({ filters, setFilters }) => {
   const [selectedRating, setSelectedRating] = useState(0);
+  const [languagesEnum, setLanguagesEnum] = useState([]);
+  const [categoriesEnum, setCategoriesEnum] = useState([]);
+  // Fetch enums from backend
+  useEffect(() => {
+    const token = localStorage.getItem("AUTH_TOKEN");
+    const fetchEnums = async () => {
+      try {
+        const [langsRes, catsRes] = await Promise.all([
+          axios.get(`${CONFIG.API_URL}/user/enums/languages`, {
+            headers: { Authorization: `Bearer ${token}` },
+          }),
+          axios.get(`${CONFIG.API_URL}/user/enums/categories`, {
+            headers: { Authorization: `Bearer ${token}` },
+          }),
+        ]);
+
+        setLanguagesEnum(langsRes.data);   // ["ENGLISH", "NEPALI", ...]
+        setCategoriesEnum(catsRes.data);   // ["CITY_TOUR", "FOOD_TOUR", ...]
+      } catch (err) {
+        console.error("Failed to fetch enums", err);
+      }
+    };
+    fetchEnums();
+  }, []);
 
   const handleStarClick = (rating) => {
     setSelectedRating(rating);
   };
-
+  const toggleItem = (item, listName) => {
+    const list = filters[listName];
+    const updated = list.includes(item) ? list.filter((i) => i !== item) : [...list, item];
+    setFilters({ ...filters, [listName]: updated, page: 0 });
+  };
   return (
     <div className="w-64 bg-white rounded-2xl shadow-md p-5 h-fit">
       <h3 className="font-semibold text-lg mb-4 text-gray-800">Filters</h3>
 
       {/* Location */}
-      <div className="mb-5">
+      {/* <div className="mb-5">
         <label className="block text-sm font-medium text-gray-700">
           Location
         </label>
@@ -22,20 +53,36 @@ const FilterSidebarTour = () => {
           placeholder="Enter city or country"
           className="w-full mt-1 border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
         />
-      </div>
+      </div> */}
 
       {/* Price Range */}
       <div className="mb-5">
-        <label className="block text-sm font-medium text-gray-700 mb-1">
-          Price Range
-        </label>
-        <input
-          type="range"
-          min="0"
-          max="200"
-          className="w-full accent-blue-500"
-        />
-        <p className="text-sm text-gray-500 mt-1">$0 - $200/hour</p>
+        <label className="block text-sm font-medium text-gray-700 mb-1">Price Range</label>
+        <div className="flex items-center gap-2">
+          <input
+            type="number"
+            min="0"
+            value={filters.minPrice}
+            onChange={(e) =>
+              setFilters({ ...filters, minPrice: Number(e.target.value), page: 0 })
+            }
+            className="w-1/2 border border-gray-300 rounded-md px-2 py-1 focus:outline-none focus:ring-2 focus:ring-blue-400"
+            placeholder="Min $"
+          />
+          <input
+            type="number"
+            min={filters.minPrice}
+            value={filters.maxPrice}
+            onChange={(e) =>
+              setFilters({ ...filters, maxPrice: Number(e.target.value), page: 0 })
+            }
+            className="w-1/2 border border-gray-300 rounded-md px-2 py-1 focus:outline-none focus:ring-2 focus:ring-blue-400"
+            placeholder="Max $"
+          />
+        </div>
+        <p className="text-sm text-gray-500 mt-1">
+          ${filters.minPrice} - ${filters.maxPrice}/hour
+        </p>
       </div>
 
       {/* Rating Filter */}
@@ -65,39 +112,53 @@ const FilterSidebarTour = () => {
       </div>
 
       {/* Languages */}
-      {/* <div className="mb-5">
+      <div className="mb-5">
         <h4 className="font-medium mb-2 text-gray-800">Languages</h4>
-        {["English", "Spanish", "French", "German", "Italian", "Japanese"].map(
-          (lang) => (
-            <label key={lang} className="flex items-center space-x-2 mb-1">
-              <input type="checkbox" className="accent-blue-500" />
-              <span className="text-sm text-gray-700">{lang}</span>
-            </label>
-          )
-        )}
-      </div> */}
+        {languagesEnum.map((lang) => (
+          <label key={lang} className="flex items-center space-x-2 mb-1">
+            <input
+              type="checkbox"
+              checked={filters.languages.includes(lang)}
+              onChange={() => toggleItem(lang, "languages")}
+              className="accent-blue-500"
+            />
+            <span className="text-sm text-gray-700">{displayName(lang)}</span>
+          </label>
+        ))}
+      </div>
 
-      {/* Tour Types */}
+      {/* Categories */}
       <div className="mb-5">
         <h4 className="font-medium mb-2 text-gray-800">Tour Types</h4>
-        {[
-          "Cultural Experience",
-          "City Tour",
-          "Adventure",
-          "Food Tours",
-          "History",
-          "Art",
-          "Photography",
-        ].map((type) => (
-          <label key={type} className="flex items-center space-x-2 mb-1">
-            <input type="checkbox" className="accent-blue-500" />
-            <span className="text-sm text-gray-700">{type}</span>
+        {categoriesEnum.map((cat) => (
+          <label key={cat} className="flex items-center space-x-2 mb-1">
+            <input
+              type="checkbox"
+              checked={filters.categories.includes(cat)}
+              onChange={() => toggleItem(cat, "categories")}
+              className="accent-blue-500"
+            />
+            <span className="text-sm text-gray-700">{displayName(cat)}</span>
           </label>
         ))}
       </div>
 
       {/* Clear Filters */}
-      <button className="mt-4 text-sm text-blue-600 hover:underline">
+      <button
+        className="mt-4 text-sm text-blue-600 hover:underline"
+        onClick={() =>
+          setFilters({
+            ...filters,
+            location: "",
+            minPrice: 0,
+            maxPrice: 100000,
+            rating: 0,
+            languages: [],
+            categories: [],
+            page: 0,
+          })
+        }
+      >
         Clear All Filters
       </button>
     </div>

@@ -1,10 +1,13 @@
 import React from "react";
 import { MapPin, Clock, CheckCircle, Heart, Star, Users } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { displayName } from "../../services/enumFormatter";
 
-const TourCard = ({ tour }) => {
+const TourCard = ({ tour, onToggleFavourite }) => {
   const navigate = useNavigate();
-
+  const imageSrc = tour.tourPic
+    ? `data:image/jpeg;base64,${tour.tourPic}`
+    : "/default-avatar.png";
   const handleViewPackage = () => {
     navigate("/dashboard/tour-details");
   };
@@ -14,7 +17,7 @@ const TourCard = ({ tour }) => {
       {/* Image */}
       <div className="relative">
         <img
-          src={tour.image}
+          src={imageSrc}
           alt={tour.title}
           className="w-full h-56 object-cover"
         />
@@ -32,17 +35,22 @@ const TourCard = ({ tour }) => {
           <Star size={14} className="text-yellow-500 fill-yellow-500" />
           <span className="text-gray-800">4.8</span>
         </div>
+        
         <button
           type="button"
           className="absolute bottom-3 right-3 z-20 w-15 h-15 bg-white rounded-full! shadow-md flex items-center justify-center"
+          onClick={() => onToggleFavourite(tour.id)}
         >
-          <Heart size={18} className="text-gray-900" />
+          <Heart size={18} className={
+                tour.favorited
+                  ? "text-red-500 fill-red-500"
+                  : "text-gray-900"
+              } />
         </button>
       </div>
-
       {/* Content */}
       <div className="p-5">
-        <h3 className="text-lg font-semibold text-gray-900">{tour.title}</h3>
+        <h3 className="text-lg font-semibold text-gray-900">{tour.name}</h3>
 
         <div className="flex items-center text-sm text-gray-500 mt-1">
           <MapPin size={14} className="mr-1 text-blue-500" />
@@ -65,13 +73,17 @@ const TourCard = ({ tour }) => {
         </div>
 
         {/* Tags */}
+
+                {/* Categories → Tags */}
         <div className="flex flex-wrap gap-2 mt-4">
-          <span className="px-3 py-1 text-xs rounded-full bg-blue-100 text-blue-600 font-medium">
-            Adventure
-          </span>
-          <span className="px-3 py-1 text-xs rounded-full bg-blue-100 text-blue-600 font-medium">
-            Cultural
-          </span>
+          {tour.categories.map((tag, i) => (
+            <span
+              key={i}
+              className="px-3 py-1 text-xs rounded-full bg-blue-100 text-blue-600 font-medium"
+            >
+              {displayName(tag)}
+            </span>
+          ))}
         </div>
 
         {/* Price */}
@@ -87,6 +99,7 @@ const TourCard = ({ tour }) => {
           >
             View Package
           </button>
+
         </div>
       </div>
     </div>

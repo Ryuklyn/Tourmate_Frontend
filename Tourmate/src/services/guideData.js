@@ -82,7 +82,7 @@ export const getToursByGuide = async (guideId) => {
   }
 };
 
-export const toggleFavourite = async (guideId) => {
+export const toggleFavouriteGuide = async (guideId) => {
   const token = localStorage.getItem("AUTH_TOKEN");
 
   try {

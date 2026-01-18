@@ -76,3 +76,52 @@ export const editTour = async (tourId,formData) => {
     return { success: false, message: err.response?.data?.message || err.message };
   }
 };
+
+
+export const toggleFavouriteTour = async (tourId) => {
+  const token = localStorage.getItem("AUTH_TOKEN");
+
+  try {
+    const res = await axios.post(
+      `${CONFIG.API_URL}/traveller/favourites/tour/${tourId}`,
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    return {
+      success: true,
+      favorited: res.data?.data?.favorited, // may be undefined
+    };
+  } catch (error) {
+    console.error("Error toggling favourite:", error);
+    return {
+      success: false,
+      error: error.response?.data?.message || "Toggle failed",
+    };
+  }
+};
+
+export const getFavouritedTours = async () => {
+  const token = localStorage.getItem("AUTH_TOKEN");
+  try {
+      const response = await axios.get(`${CONFIG.API_URL}/traveller/favourites/tours`,
+          {
+              headers: { Authorization: `Bearer ${token}` }
+          });
+          console.log(response.data);
+      return {
+          success: true,
+          data: response.data,
+      };
+  } catch (error) {
+      console.error("Error fetching guides:", error);
+      return {
+          success: false,
+          error: error.message || "Unknown error",
+      };
+  }
+};
