@@ -1,20 +1,23 @@
+/* Import your custom styles */
 @import url("./assets/styles/calendar.css");
+
 @import "tailwindcss";
 
+/* Optional: define global styles using Tailwind classes */
+body {
+  font-family: "Sora", system-ui, sans-serif;
+}
+
+/* @layer base {
+  body {
+    font-family: theme(fontFamily.sora);
+  }
+} */
+
 */ :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  /* line-height: 1.5; */
+  /* font-family: system-ui, Avenir, Helvetica, Arial, sans-serif; */
   font-weight: 400;
   width: 100%;
-
-  /* color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale; */
 }
 
 button:focus,
@@ -68,7 +71,10 @@ button {
   a:hover {
     color: #747bff;
   }
-  button {
+  /* button {
+    background-color: #f9f9f9;
+  } */
+  .default-button {
     background-color: #f9f9f9;
   }
 }

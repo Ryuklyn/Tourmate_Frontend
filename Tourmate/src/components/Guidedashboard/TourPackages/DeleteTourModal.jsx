@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { deleteTourById } from "../../../services/tour/tourData";
 import Modal from "./Modal";
 
@@ -16,6 +17,9 @@ export default function DeleteTourModal({ tour, onClose, onDeleted }) {
       alert(res.message);
     }
   };
+  useEffect(() => {
+    console.log(tour);
+  })
 
   return (
     <Modal

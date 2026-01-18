@@ -1,251 +1,372 @@
-// import { useState } from "react";
-// import Modal from "./Modal";
-// import { useNavigate } from "react-router-dom";
-
-// export default function EditTourModal({ tour, onClose }) {
-//   const navigate = useNavigate();
-//   const [image, setImage] = useState(tour.image);
-
-//   const handleImage = (e) => {
-//     const file = e.target.files[0];
-//     if (file) setImage(URL.createObjectURL(file));
-//   };
-
-//   const handleSaveChanges = (e) => {
-//     e.preventDefault();
-
-//     // ✅ Update logic / API call here
-//     console.log("Tour updated");
-
-//     // ✅ Close overlay
-//     onClose();
-
-//     // ✅ Navigate back
-//     navigate("/dashboard/guide/tourpackages");
-//   };
-
-//   return (
-//     <Modal
-//       title="Edit Tour"
-//       subtitle="Make changes to your tour package."
-//       onClose={onClose}
-//     >
-//       <form onSubmit={handleSaveChanges} className="space-y-4">
-//         <input
-//           defaultValue={tour.title}
-//           className="w-full border border-gray-400 rounded-lg px-3 py-2"
-//           required
-//         />
-
-//         <div className="grid grid-cols-2 gap-3">
-//           <input
-//             defaultValue={tour.location}
-//             className="border border-gray-400 rounded-lg px-3 py-2"
-//             required
-//           />
-//           <input
-//             defaultValue={tour.duration}
-//             className="border border-gray-400 rounded-lg px-3 py-2"
-//             required
-//           />
-//         </div>
-
-//         <div className="grid grid-cols-2 gap-3">
-//           <input
-//             defaultValue={tour.max}
-//             type="number"
-//             className="border border-gray-400 rounded-lg px-3 py-2"
-//             required
-//           />
-//           <input
-//             defaultValue={tour.price.replace("$", "")}
-//             type="number"
-//             className="border border-gray-400 rounded-lg px-3 py-2"
-//             required
-//           />
-//         </div>
-
-//         <select
-//           defaultValue={tour.status}
-//           className="w-full border border-gray-400 rounded-lg px-3 py-2"
-//         >
-//           <option value="Draft">Draft</option>
-//           <option value="Active">Active</option>
-//         </select>
-
-//         {/* Image Upload */}
-//         <label className="border-2 border-gray-400 border-dashed rounded-lg p-4 cursor-pointer block">
-//           <img
-//             src={image}
-//             alt="Tour"
-//             className="h-40 w-full object-cover rounded-lg"
-//           />
-//           <input type="file" accept="image/*" hidden onChange={handleImage} />
-//         </label>
-
-//         <textarea
-//           defaultValue={tour.description}
-//           rows="3"
-//           className="w-full border border-gray-400 rounded-lg px-3 py-2"
-//         />
-
-//         <div className="flex justify-end gap-3 pt-4">
-//           <button
-//             type="button"
-//             onClick={onClose}
-//             className="px-4 py-2 border border-gray-200 rounded-lg"
-//           >
-//             Cancel
-//           </button>
-
-//           <button
-//             type="submit"
-//             className="px-4 py-2 bg-emerald-500 hover:bg-emerald-600 text-white rounded-lg"
-//           >
-//             Save Changes
-//           </button>
-//         </div>
-//       </form>
-//     </Modal>
-//   );
-// }
-
-
-
+import { Upload, Trash2 } from "lucide-react";
 import { useState } from "react";
 import Modal from "./Modal";
 import { editTour } from "../../../services/tour/tourData";
+import { useNavigate } from "react-router-dom";
 
 export default function EditTourModal({ tour, onClose, onUpdated }) {
-  const [form, setForm] = useState({
-    name: tour.name || "",
-    location: tour.location || "",
-    duration: tour.duration || "",
-    maxGuests: tour.maxGuests || "",
-    price: tour.price || "",
-    status: tour.status || "DRAFTED",
-    description: tour.description || "",
-  });
+  const navigate = useNavigate();
 
+  // ===== BASIC INFO =====
+  const [name, setName] = useState(tour.name || "");
+  const [location, setLocation] = useState(tour.location || "");
+  const [duration, setDuration] = useState(tour.duration || "");
+  const [maxGuests, setMaxGuests] = useState(tour.maxGuests || "");
+  const [price, setPrice] = useState(tour.price || "");
+  const [status, setStatus] = useState(tour.status || "DRAFTED");
+  const [description, setDescription] = useState(tour.description || "");
+
+  // ===== IMAGE =====
   const [imageFile, setImageFile] = useState(null);
   const [preview, setPreview] = useState(
     tour.tourPic ? `data:image/jpeg;base64,${tour.tourPic}` : ""
   );
 
-  const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
+  // ===== UI =====
+  const [step, setStep] = useState("basic");
+  const [loading, setLoading] = useState(false);
 
-  const handleImage = (e) => {
+  // ===== ITINERARY =====
+  const [itineraries, setItineraries] = useState(tour.itineraries || []);
+  const [stop, setStop] = useState({
+    time: "",
+    title: "",
+    description: ""
+  });
+
+  // ===== DETAILS =====
+  const [included, setIncluded] = useState(tour.included || []);
+  const [notIncluded, setNotIncluded] = useState(tour.notIncluded || []);
+  const [importantInformation, setImportantInformation] =
+    useState(tour.importantInformation || []);
+
+  const [includedInput, setIncludedInput] = useState("");
+  const [excludedInput, setExcludedInput] = useState("");
+  const [infoInput, setInfoInput] = useState("");
+
+  // ===== HANDLERS =====
+  const handleImageChange = (e) => {
     const file = e.target.files[0];
-    if (file) {
-      setImageFile(file);
-      setPreview(URL.createObjectURL(file));
-    }
+    if (!file) return;
+    setImageFile(file);
+    setPreview(URL.createObjectURL(file));
+  };
+  const addStop = () => {
+    if (!stop.time || !stop.title) return;
+
+    setItineraries([
+      ...itineraries,
+      {
+        ...stop,
+        stepNumber: itineraries.length + 1
+      }
+    ]);
+
+    setStop({ time: "", title: "", description: "" });
   };
 
-  const handleSubmit = async (e) => {
+  const removeStop = (index) => {
+    const updated = itineraries
+      .filter((_, i) => i !== index)
+      .map((item, i) => ({ ...item, stepNumber: i + 1 }));
+  
+    setItineraries(updated);
+  };
+
+  const addItem = (value, setter, reset) => {
+    if (!value.trim()) return;
+    setter((prev) => [...prev, value.trim()]);
+    reset("");
+  };
+
+  const removeItem = (setter, index) => {
+    setter((prev) => prev.filter((_, i) => i !== index));
+  };
+
+  // ===== SUBMIT =====
+  const handleSaveChanges = async (e) => {
     e.preventDefault();
+    setLoading(true);
+
+    const updatedTour = {
+      name,
+      location,
+      duration,
+      maxGuests: Number(maxGuests),
+      price: Number(price),
+      status,
+      description,
+      itineraries,
+      included,
+      notIncluded,
+      importantInformation,
+    };
 
     const formData = new FormData();
-    formData.append("tour", JSON.stringify(form));
+    formData.append("tour", JSON.stringify(updatedTour));
+    if (imageFile) formData.append("tourPic", imageFile);
 
-    if (imageFile) {
-      formData.append("tourPic", imageFile);
-    }
-
-    const res = await editTour(tour.id, formData);
-
-    if (res.status === "success") {
-      onUpdated(res.data); // update card instantly
-      onClose();
-    } else {
-      alert(res.message || "Update failed");
+    try {
+      const res = await editTour(tour.id, formData);
+      if (res.status === "success") {
+        onUpdated?.(res.data);
+        onClose();
+        navigate("/dashboard/guide/tourpackages");
+      } else {
+        alert(res.message || "Update failed");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Failed to update tour");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <Modal title="Edit Tour" subtitle="Update your tour details" onClose={onClose}>
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <input
-          name="name"
-          value={form.name}
-          onChange={handleChange}
-          className="w-full border rounded-lg px-3 py-2"
-          required
-        />
+    <Modal
+      title="Edit Tour"
+      subtitle="Update your tour package details."
+      onClose={onClose}
+    >
+      <div className="flex flex-col h-[62vh]">
 
-        <div className="grid grid-cols-2 gap-3">
-          <input
-            name="location"
-            value={form.location}
-            onChange={handleChange}
-            className="border rounded-lg px-3 py-2"
-            required
-          />
-          <input
-            name="duration"
-            value={form.duration}
-            onChange={handleChange}
-            className="border rounded-lg px-3 py-2"
-            required
-          />
+        {/* ===== TABS (MATCHED) ===== */}
+        <div className="flex bg-gray-100 rounded-lg p-1 mb-4 text-sm shrink-0">
+          {["basic", "itinerary", "details"].map((tab) => (
+            <button
+              key={tab}
+              type="button"
+              onClick={() => setStep(tab)}
+              className={`flex-1 py-2 rounded-lg font-medium capitalize transition ${step === tab
+                ? "bg-[#0FAF94] text-white shadow-sm"
+                : "text-gray-500 hover:text-gray-700"
+                }`}
+            >
+              {tab === "basic" ? "Basic Info" : tab}
+            </button>
+          ))}
         </div>
 
-        <div className="grid grid-cols-2 gap-3">
-          <input
-            name="maxGuests"
-            type="number"
-            value={form.maxGuests}
-            onChange={handleChange}
-            className="border rounded-lg px-3 py-2"
-            required
-          />
-          <input
-            name="price"
-            type="number"
-            value={form.price}
-            onChange={handleChange}
-            className="border rounded-lg px-3 py-2"
-            required
-          />
+        {/* ===== CONTENT ===== */}
+        <div className="flex-1 overflow-y-auto pr-1">
+          <form
+            id="edit-tour-form"
+            onSubmit={handleSaveChanges}
+            className="space-y-4"
+          >
+
+            {/* ===== BASIC ===== */}
+            {step === "basic" && (
+              <>
+                <input
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  className="w-full border border-gray-400 rounded-lg px-3 py-2 text-sm"
+                  placeholder="Tour Name"
+                />
+
+                <div className="grid grid-cols-2 gap-3">
+                  <input
+                    value={location}
+                    onChange={(e) => setLocation(e.target.value)}
+                    className="border border-gray-400 rounded-lg px-3 py-2 text-sm"
+                    placeholder="Location"
+                  />
+                  <input
+                    value={duration}
+                    onChange={(e) => setDuration(e.target.value)}
+                    className="border border-gray-400 rounded-lg px-3 py-2 text-sm"
+                    placeholder="Duration"
+                  />
+                </div>
+
+                <div className="grid grid-cols-2 gap-3">
+                  <input
+                    type="number"
+                    value={maxGuests}
+                    onChange={(e) => setMaxGuests(e.target.value)}
+                    className="border border-gray-400 rounded-lg px-3 py-2 text-sm"
+                    placeholder="Max Guests"
+                  />
+                  <input
+                    type="number"
+                    value={price}
+                    onChange={(e) => setPrice(e.target.value)}
+                    className="border border-gray-400 rounded-lg px-3 py-2 text-sm"
+                    placeholder="Price"
+                  />
+                </div>
+
+                <select
+                  value={status}
+                  onChange={(e) => setStatus(e.target.value)}
+                  className="w-full border border-gray-400 rounded-lg px-3 py-2 text-sm"
+                >
+                  <option value="DRAFTED">Draft</option>
+                  <option value="POSTED">Active</option>
+                </select>
+
+                {/* Image */}
+                <label className="border-2 border-dashed border-gray-400 rounded-lg p-6 text-center cursor-pointer block">
+                  {preview ? (
+                    <img
+                      src={preview}
+                      className="h-40 w-full object-cover rounded-lg"
+                      alt="Preview"
+                    />
+                  ) : (
+                    <>
+                      <Upload className="mx-auto mb-2 text-emerald-500" />
+                      <p className="text-sm">Click to upload</p>
+                      <p className="text-xs text-gray-500">
+                        PNG, JPG up to 5MB
+                      </p>
+                    </>
+                  )}
+                  <input
+                    type="file"
+                    hidden
+                    accept="image/*"
+                    onChange={handleImageChange}
+                  />
+                </label>
+
+                <textarea
+                  rows="4"
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                  className="w-full border border-gray-400 rounded-lg px-3 py-2 text-sm"
+                  placeholder="Tour description"
+                />
+              </>
+            )}
+
+            {/* ===== ITINERARY ===== */}
+            {step === "itinerary" && (
+              <div className="space-y-4">
+                <div className="grid grid-cols-2 gap-3">
+                  <input
+                    type="time"
+                    placeholder="Time"
+                    value={stop.time}
+                    onChange={(e) =>
+                      setStop({ ...stop, time: e.target.value })
+                    }
+                    className="border border-gray-300 rounded-xl px-4 py-2 text-sm"
+                  />
+                  <input
+                    placeholder="Title"
+                    value={stop.title}
+                    onChange={(e) =>
+                      setStop({ ...stop, title: e.target.value })
+                    }
+                    className="border border-gray-300 rounded-xl px-4 py-2 text-sm"
+                  />
+                </div>
+
+                <input
+                  placeholder="Description"
+                  value={stop.description}
+                  onChange={(e) =>
+                    setStop({ ...stop, description: e.target.value })
+                  }
+
+                  className="w-full border border-gray-300 rounded-xl px-4 py-2 text-sm"
+                />
+
+                <button
+                  type="button"
+                  onClick={addStop}
+                  className="text-sm text-emerald-600"
+                >
+                  + Add Stop
+                </button>
+
+                {itineraries.map((item, i) => (
+                  <div
+                    key={i}
+                    className="flex justify-between items-center bg-gray-50 border rounded-xl px-4 py-3"
+                  >
+                    <p className="text-sm font-medium">
+                      {item.time} — {item.title}
+                    </p>
+                    <Trash2
+                      size={16}
+                      className="text-red-500 cursor-pointer"
+                      onClick={() => removeStop(i)}
+                    />
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* ===== DETAILS ===== */}
+            {step === "details" && (
+              <div className="space-y-6">
+                {[
+                  ["What's Included", included, setIncluded, includedInput, setIncludedInput, "bg-green-50"],
+                  ["Not Included", notIncluded, setNotIncluded, excludedInput, setExcludedInput, "bg-red-50"],
+                  ["Important Info", importantInformation, setImportantInformation, infoInput, setInfoInput, "bg-yellow-50"],
+                ]
+                  .map(([label, list, setList, input, setInput, bg]) => (
+                    <div key={label} className="space-y-3">
+                      <h3 className="text-sm font-medium">{label}</h3>
+
+                      <div className="flex gap-3">
+                        <input
+                          value={input}
+                          onChange={(e) => setInput(e.target.value)}
+                          className="flex-1 border rounded-xl px-4 py-2 text-sm"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => addItem(input, setList, setInput)}
+                          className="w-10 h-10 border rounded-xl"
+                        >
+                          +
+                        </button>
+                      </div>
+
+                      {list.map((item, i) => (
+                        <div
+                          key={i}
+                          className={`flex justify-between px-4 py-2 border rounded-lg ${bg}`}
+                        >
+                          <span className="text-sm">{item}</span>
+                          <Trash2
+                            size={14}
+                            className="text-red-500 cursor-pointer"
+                            onClick={() => removeItem(setList, i)}
+                          />
+                        </div>
+                      ))}
+                    </div>
+                  ))}
+              </div>
+            )}
+          </form>
         </div>
 
-        <select
-          name="status"
-          value={form.status}
-          onChange={handleChange}
-          className="w-full border rounded-lg px-3 py-2"
-        >
-          <option value="DRAFTED">Draft</option>
-          <option value="POSTED">Active</option>
-        </select>
-
-        {/* Image upload */}
-        <label className="border-2 border-dashed rounded-lg p-4 cursor-pointer block">
-          {preview && (
-            <img src={preview} alt="Preview" className="h-40 w-full object-cover rounded-lg mb-2" />
-          )}
-          <input type="file" accept="image/*" hidden onChange={handleImage} />
-        </label>
-
-        <textarea
-          name="description"
-          value={form.description}
-          onChange={handleChange}
-          rows="3"
-          className="w-full border rounded-lg px-3 py-2"
-        />
-
-        <div className="flex justify-end gap-3 pt-4">
-          <button type="button" onClick={onClose} className="px-4 py-2 border rounded-lg">
+        {/* ===== FOOTER ===== */}
+        <div className="flex justify-end gap-3 pt-4 border-t bg-white shrink-0">
+          <button
+            type="button"
+            onClick={onClose}
+            className="px-4 py-2 border rounded-lg text-sm"
+          >
             Cancel
           </button>
-          <button type="submit" className="px-4 py-2 bg-emerald-500 text-white rounded-lg">
-            Save Changes
+          <button
+            type="submit"
+            form="edit-tour-form"
+            disabled={loading}
+            className="px-4 py-2 bg-[#0FAF94] text-white rounded-lg text-sm"
+          >
+            {loading ? "Saving..." : "Save Changes"}
           </button>
         </div>
-      </form>
+      </div>
     </Modal>
   );
 }
