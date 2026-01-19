@@ -49,16 +49,6 @@ const tours = [
     image: Chitwan,
     description: "Wildlife safari in Chitwan National Park.",
   },
-  //   {
-  //     title: "Lumbini Buddhist Pilgrimage Tour",
-  //     location: "Lumbini, Nepal",
-  //     duration: "1 day",
-  //     price: "$180",
-  //     bookings: 10,
-  //     status: "Active",
-  //     image: Lumbini,
-  //     description: "Visit the birthplace of Lord Buddha.",
-  //   },
 ];
 
 const TourList = () => {
