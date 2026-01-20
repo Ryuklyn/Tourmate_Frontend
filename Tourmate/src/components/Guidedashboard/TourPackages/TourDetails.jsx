@@ -216,16 +216,6 @@ const TourDetails = () => {
   );
 };
 
-// const InfoCard = ({ icon, label, value }) => (
-//   <div className="flex items-center gap-4 bg-gray-50 p-4 rounded-xl">
-//     <div className="text-blue-600">{icon}</div>
-//     <div>
-//       <p className="text-sm text-gray-500">{label}</p>
-//       <p className="font-semibold">{value}</p>
-//     </div>
-//   </div>
-// );
-
 const InfoCard = ({ icon, label, value }) => (
   <div className="flex items-center gap-4 bg-blue-100 p-4 rounded-xl">
     <div className="text-blue-600">{icon}</div>
