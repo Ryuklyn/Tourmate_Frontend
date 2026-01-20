@@ -1,5 +1,6 @@
 import React from "react";
 import {
+  ShieldCheck,
   MapPin,
   Star,
   Clock,
@@ -11,6 +12,8 @@ import {
   Calendar,
   Heart,
 } from "lucide-react";
+
+import Niroj from "../../../assets/img/NirojSir.jpg";
 
 // demo purpose – normally use params or API
 import Patan from "../../../assets/img/Patan.jpg";
@@ -105,6 +108,50 @@ const TourDetails = () => {
       <div className="max-w-7xl mx-auto px-6 py-10 grid grid-cols-1 lg:grid-cols-3 gap-10">
         {/* LEFT */}
         <div className="lg:col-span-2 space-y-10">
+          <section>
+            <div className="flex items-center gap-5">
+              <img
+                src={Niroj}
+                alt="Guide"
+                className="w-32 h-32 rounded-xl object-cover"
+              />
+
+              <div>
+                <h1 className="text-3xl font-semibold flex items-center gap-2">
+                  Niroj Shrestha
+                  <span className="flex items-center gap-1 bg-green-50 text-green-700 px-3 py-1 rounded-lg text-xs font-medium border border-green-200">
+                    <ShieldCheck size={15} /> Verified Guide
+                  </span>
+                </h1>
+
+                <p className="text-gray-600 mt-1 flex items-center gap-1">
+                  <MapPin size={16} className="text-gray-500" />
+                  Lalitpur, Nepal
+                </p>
+
+                <div className="flex items-center gap-5 text-sm text-gray-700 mt-2">
+                  <div className="flex items-center gap-1">
+                    <Star
+                      size={16}
+                      className="text-yellow-500 fill-yellow-500"
+                    />
+                    <span>4.9 (4 reviews)</span>
+                  </div>
+
+                  <div className="flex items-center gap-1">
+                    <Clock size={16} className="text-gray-600" />
+                    <span>Responds in 1 hour</span>
+                  </div>
+                </div>
+
+                <p className="text-sm text-gray-600 mt-1">
+                  Member since 2019 — 340 tours completed
+                </p>
+              </div>
+            </div>
+          </section>
+          <hr className="text-gray-200" />
+
           {/* OVERVIEW */}
           <section>
             <h2 className="text-2xl font-semibold mb-3">Overview</h2>
