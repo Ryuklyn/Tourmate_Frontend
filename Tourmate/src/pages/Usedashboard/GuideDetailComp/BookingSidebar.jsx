@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import { Calendar, Users, Clock, Heart, ShieldCheck } from "lucide-react";
+import { Calendar, Users, Clock, Heart, ShieldCheck, X } from "lucide-react";
 
-export default function BookingSidebar() {
+export default function BookingSidebar({ selectedTour, clearSelectedTour }) {
   const [date, setDate] = useState("");
   const [hours, setHours] = useState(3);
   const [groupSize, setGroupSize] = useState(2);
@@ -55,6 +55,34 @@ export default function BookingSidebar() {
         value={groupSize}
         onChange={(e) => setGroupSize(Number(e.target.value))}
       />
+      {/* ✅ SELECTED TRIP */}
+      {/* {selectedTour && (
+        <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg text-sm">
+          <p className="font-medium text-blue-700">Selected Trip</p>
+          <p className="text-gray-700">{selectedTour.title}</p>
+          <p className="text-xs text-gray-500">
+            {selectedTour.hours} • {selectedTour.price}
+          </p>
+        </div>
+      )} */}
+      {selectedTour && (
+        <div className="relative mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg text-sm">
+          {/* ❌ Cancel */}
+          <button
+            onClick={clearSelectedTour}
+            className="absolute top-2 right-2 text-blue-600 hover:text-red-500 transition"
+            title="Cancel selected trip"
+          >
+            <X size={16} />
+          </button>
+
+          <p className="font-medium text-blue-700">Selected Trip</p>
+          <p className="text-gray-700">{selectedTour.title}</p>
+          <p className="text-xs text-gray-500">
+            {selectedTour.hours} • {selectedTour.price}
+          </p>
+        </div>
+      )}
 
       {/* Divider Line */}
       <hr className="border-gray-300 my-5" />
@@ -72,7 +100,18 @@ export default function BookingSidebar() {
       </h3>
 
       {/* Buttons */}
-      <button className="w-full py-3 bg-linear-to-r from-blue-400 to-blue-600 text-white rounded-lg font-semibold">
+      {/* <button className="w-full py-3 bg-linear-to-r from-blue-400 to-blue-600 text-white rounded-lg font-semibold">
+        Book Now
+      </button> */}
+      <button
+        disabled={!selectedTour}
+        className={`w-full py-3 rounded-lg font-semibold transition
+          ${
+            selectedTour
+              ? "bg-linear-to-r from-blue-400 to-blue-600 text-white"
+              : "bg-gray-300 text-gray-500 cursor-not-allowed"
+          }`}
+      >
         Book Now
       </button>
 

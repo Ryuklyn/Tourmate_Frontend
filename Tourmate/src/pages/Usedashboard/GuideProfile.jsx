@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import GuideHeader from "../Usedashboard/GuideDetailComp/GuideHeader";
 import BookingSidebar from "../Usedashboard/GuideDetailComp/BookingSidebar";
 import TourPackages from "../Usedashboard/GuideDetailComp/TourPackage";
@@ -7,6 +7,12 @@ import Reviews from "./GuideDetailComp/Reviews";
 import ReviewsSection from "../../components/GuideDetais/ReviewSection";
 
 export default function GuideProfile() {
+  const [selectedTour, setSelectedTour] = useState(null);
+  const [activeTour, setActiveTour] = useState(null);
+  const clearSelectedTour = () => {
+    setSelectedTour(null);
+    setActiveTour(null);
+  };
   return (
     <div className="bg-gray-50 min-h-screen">
       {/* Hero Background */}
@@ -23,13 +29,21 @@ export default function GuideProfile() {
           {/* Left Section */}
           <div className="flex-1">
             <GuideHeader />
-            <TourPackages />
+            <TourPackages
+              activeTour={activeTour}
+              setActiveTour={setActiveTour}
+              selectedTour={selectedTour}
+              setSelectedTour={setSelectedTour}
+            />
             <Reviews />
           </div>
 
           {/* Right Section (Booking) */}
           <div className="w-full lg:w-1/3">
-            <BookingSidebar />
+            <BookingSidebar
+              selectedTour={selectedTour}
+              clearSelectedTour={clearSelectedTour}
+            />
           </div>
         </div>
       </div>
