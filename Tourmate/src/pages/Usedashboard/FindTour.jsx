@@ -9,7 +9,7 @@ import { toggleFavouriteTour } from "../../services/tour/tourData";
 
 const FindTour = () => {
   const [filters, setFilters] = useState({
-    search: "",   
+    search: "",
     minPrice: 0,
     maxPrice: 100000,
     rating: 0,
@@ -24,22 +24,11 @@ const FindTour = () => {
   const [tours, setTours] = useState([]);
   const [totalPages, setTotalPages] = useState(1);
   const handleToggleFavourite = async (id) => {
-
-
-
     const res = await toggleFavouriteTour(id);
-    if(res.success) {
+    if (res.success) {
       setTours((prev) =>
-      prev.map((tour) =>
-        tour.id === id ? { ...tour, favorited: !tour.favorited } : tour
-      )
-    );
-    }
-    if (!res.success) {
-      // Rollback if API fails
-      setGuides((prev) =>
-        prev.map((g) =>
-          g.guideId === guideId ? { ...g, favorited: !g.favorited } : g
+        prev.map((tour) =>
+          tour.id === id ? { ...tour, favorited: !tour.favorited } : tour
         )
       );
     }
@@ -87,7 +76,7 @@ const FindTour = () => {
       <div className="flex items-center justify-between py-3 mb-6">
         <input
           type="text"
-          value={filters.search}  
+          value={filters.search}
           onChange={(e) => setFilters({ ...filters, search: e.target.value, page: 0 })}
           placeholder="Search by location, guide name, or specialty..."
           className="flex-1 border border-gray-200 px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400 mr-4"
@@ -112,70 +101,70 @@ const FindTour = () => {
 
       {/* Main content */}
       <div className="flex gap-6">
-        <FilterSidebarTour filters={filters} setFilters={setFilters}/>
+        <FilterSidebarTour filters={filters} setFilters={setFilters} />
         <div className="flex-1">
-          <TourList tours={tours} onToggleFavourite={handleToggleFavourite}/>
+          <TourList tours={tours} onToggleFavourite={handleToggleFavourite} />
 
           {/* Pagination */}
-<div className="flex justify-center items-center gap-2 mt-10">
+          <div className="flex justify-center items-center gap-2 mt-10">
 
-{/* Previous */}
-<button
-  disabled={filters.page === 0}
-  onClick={() =>
-    setFilters((prev) => ({
-      ...prev,
-      page: prev.page - 1,
-    }))
-  }
-  className={`px-4 py-2 border rounded-md transition
+            {/* Previous */}
+            <button
+              disabled={filters.page === 0}
+              onClick={() =>
+                setFilters((prev) => ({
+                  ...prev,
+                  page: prev.page - 1,
+                }))
+              }
+              className={`px-4 py-2 border rounded-md transition
     ${filters.page === 0
-      ? "text-gray-400 border-gray-200 cursor-not-allowed"
-      : "text-gray-700 border-gray-300 hover:bg-gray-100"
-    }`}
->
-  Previous
-</button>
+                  ? "text-gray-400 border-gray-200 cursor-not-allowed"
+                  : "text-gray-700 border-gray-300 hover:bg-gray-100"
+                }`}
+            >
+              Previous
+            </button>
 
-{/* Page Numbers */}
-{[...Array(totalPages)].map((_, index) => (
-  <button
-    key={index}
-    onClick={() =>
-      setFilters((prev) => ({
-        ...prev,
-        page: index,
-      }))
-    }
-    className={`px-4 py-2 border rounded-md transition
+            {/* Page Numbers */}
+            {[...Array(totalPages)].map((_, index) => (
+              <button
+                key={index}
+                onClick={() =>
+                  setFilters((prev) => ({
+                    ...prev,
+                    page: index,
+                  }))
+                }
+                className={`px-4 py-2 border rounded-md transition
       ${filters.page === index
-        ? "bg-blue-600 text-white border-blue-600 font-medium"
-        : "text-gray-700 border-gray-300 hover:bg-gray-100"
-      }`}
-  >
-    {index + 1}
-  </button>
-))}
+                    ? "bg-blue-600 text-white border-blue-600 font-medium"
+                    : "text-gray-700 border-gray-300 hover:bg-gray-100"
+                  }`}
+              >
+                {index + 1}
+              </button>
+            ))}
 
-{/* Next */}
-<button
-  disabled={filters.page === totalPages - 1}
-  onClick={() =>
-    setFilters((prev) => ({
-      ...prev,
-      page: prev.page + 1,
-    }))
-  }
-  className={`px-4 py-2 border rounded-md transition
+            {/* Next */}
+            <button
+              disabled={filters.page === totalPages - 1}
+              onClick={() =>
+                setFilters((prev) => ({
+                  ...prev,
+                  page: prev.page + 1,
+                }))
+              }
+              className={`px-4 py-2 border rounded-md transition
     ${filters.page === totalPages - 1
-      ? "text-gray-400 border-gray-200 cursor-not-allowed"
-      : "text-gray-700 border-gray-300 hover:bg-gray-100"
-    }`}
->
-  Next
-</button>
+                  ? "text-gray-400 border-gray-200 cursor-not-allowed"
+                  : "text-gray-700 border-gray-300 hover:bg-gray-100"
+                }`}
+            >
+              Next
+            </button>
 
-</div>
+          </div>
 
         </div>
       </div>

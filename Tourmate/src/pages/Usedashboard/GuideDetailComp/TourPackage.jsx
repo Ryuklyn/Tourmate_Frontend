@@ -25,9 +25,7 @@ export default function TourPackages({ guideId, selectedTour, setSelectedTour,ac
     }
 
     setSelectedTour(activeTour);
-    console.log("Selected Tour:", activeTour);
-    toast.success(`${activeTour.title} selected successfully`);
-    console.log("Confirmed Tour:", activeTour);
+    toast.success(`${activeTour.name} selected successfully`);
   };
 
   return (

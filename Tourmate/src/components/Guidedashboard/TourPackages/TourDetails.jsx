@@ -18,7 +18,7 @@ import Niroj from "../../../assets/img/NirojSir.jpg";
 // demo purpose – normally use params or API
 import Patan from "../../../assets/img/Patan.jpg";
 import { useParams } from "react-router-dom";
-import { getTourById } from "../../../services/tour/tourData";
+import { getTourById, toggleFavouriteTour } from "../../../services/tour/tourData";
 
 
 const TourDetails = () => {
@@ -37,6 +37,21 @@ const TourDetails = () => {
 
     fetchTour();
   }, [tourId]);
+  const handleToggleFavourite = async (id) => {
+    const res = await toggleFavouriteTour(id);
+  
+    if (res.success) {
+      setTour((prev) => ({
+        ...prev,
+        favorited: !prev.favorited,
+      }));
+    }
+  };
+  
+
+
+
+
   if (!tour) {
     return (
       <div className="w-full h-[60vh] flex items-center justify-center">
@@ -79,13 +94,19 @@ const TourDetails = () => {
         {/* HEART BUTTON */}
         <button
           type="button"
-          className="absolute bottom-10 right-10 z-20
-            w-12 h-12
-            bg-white rounded-full! shadow-md
-            flex items-center justify-center"
+          className="absolute bottom-3 right-3 z-20
+          w-12 h-12
+          bg-white rounded-full! shadow-md
+          flex items-center justify-center"
+          onClick={() => handleToggleFavourite(tour.id)}
         >
-          <Heart size={18} className="text-gray-900 shrink-0" />
+          <Heart size={18} className={
+                tour.favorited
+                  ? "text-red-500 fill-red-500 shrink-0"
+                  : "text-gray-900 shrink-0"
+              } />
         </button>
+        
       </div>
 
       {/* CONTENT */}

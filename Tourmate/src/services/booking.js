@@ -31,3 +31,38 @@ export const bookGuide = async ({ guideId, hours, groupSize }) => {
     };
   }
 };
+
+
+export const bookTour = async ({
+  guideId,
+  tourId,
+  travellers,
+  startDate,
+}) => {
+  const token = localStorage.getItem("AUTH_TOKEN");
+
+  try {
+    const res = await axios.post(
+      `${CONFIG.API_URL}/traveller/tour/book-request`,
+      {
+        guideId,
+        tourId,
+        travellers,
+        startDate,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    return { success: true, data: res.data };
+  } catch (error) {
+    console.error("Booking error", error);
+    return {
+      success: false,
+      error: error.response?.data?.message || "Booking failed",
+    };
+  }
+};
