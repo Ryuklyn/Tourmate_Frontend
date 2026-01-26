@@ -125,3 +125,23 @@ export const getFavouritedTours = async () => {
       };
   }
 };
+
+
+export const getTourById = async (tourId) => {
+  const token = localStorage.getItem("AUTH_TOKEN");
+
+  try {
+    const response = await axios.get(`${CONFIG.API_URL}/traveller/tours/${tourId}`,
+      { 
+          headers: { Authorization: `Bearer ${token}`} 
+      }
+    );
+    return { 
+      success: true, 
+      data: response.data.data };
+  } catch (error) {
+    return { 
+      success: false, 
+      error: error.message || "Unknown error" };
+  }
+};

@@ -1,8 +1,10 @@
-import { Upload, Trash2 } from "lucide-react";
-import { useState } from "react";
+import { Upload, Trash2, X } from "lucide-react";
+import { useEffect, useState } from "react";
 import Modal from "./Modal";
 import { editTour } from "../../../services/tour/tourData";
 import { useNavigate } from "react-router-dom";
+import CONFIG from "../../../../config";
+import axios from "axios";
 
 export default function EditTourModal({ tour, onClose, onUpdated }) {
   const navigate = useNavigate();
@@ -39,10 +41,75 @@ export default function EditTourModal({ tour, onClose, onUpdated }) {
   const [notIncluded, setNotIncluded] = useState(tour.notIncluded || []);
   const [importantInformation, setImportantInformation] =
     useState(tour.importantInformation || []);
-
+  const [languagesEnum, setLanguagesEnum] = useState([]);
+  const [categoriesEnum, setCategoriesEnum] = useState([]);
   const [includedInput, setIncludedInput] = useState("");
   const [excludedInput, setExcludedInput] = useState("");
   const [infoInput, setInfoInput] = useState("");
+
+  /* ================= ENUM SELECTION ================= */
+  const [selectedLanguages, setSelectedLanguages] = useState([]);
+  const [selectedCategories, setSelectedCategories] = useState([]);
+
+  const [langOpen, setLangOpen] = useState(false);
+  const [catOpen, setCatOpen] = useState(false);
+  /* ================= HELPERS ================= */
+  useEffect(() => {
+    const token = localStorage.getItem("AUTH_TOKEN");
+  
+    const fetchEnums = async () => {
+      try {
+        const [langsRes, catsRes] = await Promise.all([
+          axios.get(`${CONFIG.API_URL}/user/enums/languages`, {
+            headers: { Authorization: `Bearer ${token}` },
+          }),
+          axios.get(`${CONFIG.API_URL}/user/enums/categories`, {
+            headers: { Authorization: `Bearer ${token}` },
+          }),
+        ]);
+  
+        const mapEnum = (arr) =>
+          arr.map(v => ({
+            value: v,
+            label: v
+              .toLowerCase()
+              .replace(/_/g, " ")
+              .replace(/\b\w/g, c => c.toUpperCase()),
+          }));
+  
+        const langs = mapEnum(langsRes.data);
+        const cats = mapEnum(catsRes.data);
+  
+        setLanguagesEnum(langs);
+        setCategoriesEnum(cats);
+  
+        /* ===== PRESELECT FROM TOUR ===== */
+        if (tour) {
+          setSelectedLanguages(
+            langs.filter(l => tour.languages?.includes(l.value))
+          );
+  
+          setSelectedCategories(
+            cats.filter(c => tour.categories?.includes(c.value))
+          );
+        }
+  
+      } catch (err) {
+        console.error("Failed to fetch enums", err);
+      }
+    };
+  
+    fetchEnums();
+  }, [tour]);
+  
+
+  const toggleItem = (item, setter) => {
+    setter(prev =>
+      prev.some(i => i.value === item.value)
+        ? prev.filter(i => i.value !== item.value)
+        : [...prev, item]
+    );
+  };
 
   // ===== HANDLERS =====
   const handleImageChange = (e) => {
@@ -69,7 +136,7 @@ export default function EditTourModal({ tour, onClose, onUpdated }) {
     const updated = itineraries
       .filter((_, i) => i !== index)
       .map((item, i) => ({ ...item, stepNumber: i + 1 }));
-  
+
     setItineraries(updated);
   };
 
@@ -100,6 +167,8 @@ export default function EditTourModal({ tour, onClose, onUpdated }) {
       included,
       notIncluded,
       importantInformation,
+      languages: selectedLanguages.map(l => l.value),   // ✅
+      categories: selectedCategories.map(c => c.value), // ✅
     };
 
     const formData = new FormData();
@@ -304,6 +373,108 @@ export default function EditTourModal({ tour, onClose, onUpdated }) {
             {/* ===== DETAILS ===== */}
             {step === "details" && (
               <div className="space-y-6">
+                {/* Languages */}
+                <div className="relative space-y-2">
+                  <h3 className="text-sm font-medium text-gray-700">Languages</h3>
+
+                  <div
+                    onClick={() => setLangOpen(!langOpen)}
+                    className="border border-gray-300 rounded-xl px-4 py-2 cursor-pointer flex justify-between items-center text-sm bg-white"
+                  >
+                    <span className="text-gray-600 truncate">
+                      {selectedLanguages.length
+                        ? selectedLanguages.map(l => l.label).join(", ")
+                        : "Select languages"}
+                    </span>
+                    <span className="text-gray-400">{langOpen ? "▲" : "▼"}</span>
+                  </div>
+
+                  {langOpen && (
+                    <div className="absolute z-10 mt-1 w-full bg-white border border-gray-200 rounded-xl shadow-sm max-h-52 overflow-y-auto">
+                      {languagesEnum.map(lang => (
+                        <div
+                          key={lang.value}
+                          onClick={() => toggleItem(lang, setSelectedLanguages)}
+                          className={`px-4 py-2 text-sm cursor-pointer hover:bg-gray-50 ${selectedLanguages.some(l => l.value === lang.value)
+                              ? "bg-gray-100 font-medium"
+                              : ""
+                            }`}
+                        >
+                          {lang.label}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  <div className="flex flex-wrap gap-2">
+                    {selectedLanguages.map(lang => (
+                      <div
+                        key={lang.value}
+                        className="flex items-center gap-1 bg-gray-100 border border-gray-200 px-3 py-1 rounded-full text-sm"
+                      >
+                        <span>{lang.label}</span>
+                        <X
+                          size={14}
+                          className="cursor-pointer text-gray-500 hover:text-red-500"
+                          onClick={() => toggleItem(lang, setSelectedLanguages)}
+                        />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+
+                {/* Categories */}
+                <div className="relative space-y-2">
+                  <h3 className="text-sm font-medium text-gray-700">Tour Categories</h3>
+
+                  <div
+                    onClick={() => setCatOpen(!catOpen)}
+                    className="border border-gray-300 rounded-xl px-4 py-2 cursor-pointer flex justify-between items-center text-sm bg-white"
+                  >
+                    <span className="text-gray-600 truncate">
+                      {selectedCategories.length
+                        ? selectedCategories.map(c => c.label).join(", ")
+                        : "Select categories"}
+                    </span>
+                    <span className="text-gray-400">{catOpen ? "▲" : "▼"}</span>
+                  </div>
+
+                  {catOpen && (
+                    <div className="absolute z-10 mt-1 w-full bg-white border border-gray-200 rounded-xl shadow-sm max-h-52 overflow-y-auto">
+                      {categoriesEnum.map(cat => (
+                        <div
+                          key={cat.value}
+                          onClick={() => toggleItem(cat, setSelectedCategories)}
+                          className={`px-4 py-2 text-sm cursor-pointer hover:bg-gray-50 ${selectedCategories.some(c => c.value === cat.value)
+                              ? "bg-gray-100 font-medium"
+                              : ""
+                            }`}
+                        >
+                          {cat.label}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  <div className="flex flex-wrap gap-2">
+                    {selectedCategories.map(cat => (
+                      <div
+                        key={cat.value}
+                        className="flex items-center gap-1 bg-gray-100 border border-gray-200 px-3 py-1 rounded-full text-sm"
+                      >
+                        <span>{cat.label}</span>
+                        <X
+                          size={14}
+                          className="cursor-pointer text-gray-500 hover:text-red-500"
+                          onClick={() => toggleItem(cat, setSelectedCategories)}
+                        />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+
                 {[
                   ["What's Included", included, setIncluded, includedInput, setIncludedInput, "bg-green-50"],
                   ["Not Included", notIncluded, setNotIncluded, excludedInput, setExcludedInput, "bg-red-50"],

@@ -9,7 +9,7 @@ const TourCard = ({ tour, onToggleFavourite }) => {
     ? `data:image/jpeg;base64,${tour.tourPic}`
     : "/default-avatar.png";
   const handleViewPackage = () => {
-    navigate("/dashboard/tour-details");
+    navigate(`/dashboard/tourdetails/${tour.id}`);
   };
 
   return (
@@ -18,11 +18,10 @@ const TourCard = ({ tour, onToggleFavourite }) => {
       <div className="relative">
         <img
           src={imageSrc}
-          alt={tour.title}
+          alt={tour.name}
           className="w-full h-56 object-cover"
         />
 
-        {/* Verified */}
         {tour.status === "Active" && (
           <div className="absolute top-3 left-3 flex items-center gap-1 bg-blue-600 text-white text-xs font-semibold px-3 py-1 rounded-full">
             <CheckCircle size={14} />
@@ -30,7 +29,6 @@ const TourCard = ({ tour, onToggleFavourite }) => {
           </div>
         )}
 
-        {/* Rating */}
         <div className="absolute top-3 right-3 flex items-center gap-1 bg-white px-2 py-1 rounded-full shadow text-sm font-semibold">
           <Star size={14} className="text-yellow-500 fill-yellow-500" />
           <span className="text-gray-800">4.8</span>
@@ -38,13 +36,16 @@ const TourCard = ({ tour, onToggleFavourite }) => {
         
         <button
           type="button"
-          className="absolute bottom-3 right-3 z-20 w-15 h-15 bg-white rounded-full! shadow-md flex items-center justify-center"
+          className="absolute bottom-3 right-3 z-20
+          w-12 h-12
+          bg-white rounded-full! shadow-md
+          flex items-center justify-center"
           onClick={() => onToggleFavourite(tour.id)}
         >
           <Heart size={18} className={
                 tour.favorited
-                  ? "text-red-500 fill-red-500"
-                  : "text-gray-900"
+                  ? "text-red-500 fill-red-500 shrink-0"
+                  : "text-gray-900 shrink-0"
               } />
         </button>
       </div>

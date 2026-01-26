@@ -1,6 +1,7 @@
 import React from "react";
 import { Calendar, Clock, MapPin, Users, Phone, Mail } from "lucide-react";
 import NirojSirImg from "../../assets/img/NirojSir.jpg";
+import Patan from "../../assets/img/Patan.jpg";
 import { useNavigate } from "react-router-dom";
 
 export default function BookingDetails() {
@@ -9,6 +10,7 @@ export default function BookingDetails() {
     id: 1,
     status: "Upcoming Tour",
     title: "Kathmandu Heritage Walking Tour",
+    image: Patan,
     description:
       "Explore the ancient wonders of Patan with an expert local historian. This immersive walking tour takes you through centuries of cultural heritage and iconic landmarks in Lalitpur.",
     date: "Dec 18, 2025",
@@ -64,7 +66,7 @@ export default function BookingDetails() {
   };
 
   return (
-    <div className="p-6 max-w-5xl mx-auto">
+    <div className="p-6 max-w-6xl mx-auto">
       {/* Back Button */}
       <button
         onClick={() => navigate("/dashboard/bookings")}
@@ -76,7 +78,7 @@ export default function BookingDetails() {
       {/* Header Image */}
       <div className="relative w-full h-64 rounded-2xl overflow-hidden mb-6">
         <img
-          src={booking.guide.image}
+          src={booking.image}
           alt={booking.title}
           className="w-full h-full object-cover"
         />

@@ -41,6 +41,7 @@ import Support1 from "./pages/Admin/Support";
 import { BecomeGuideProvider } from "./pages/BecomeGuide/BecomeGuideContext";
 import GuideTourPackage from "./pages/Guidedashboard/GuideTourPackages";
 import FindTour from "./pages/Usedashboard/FindTour";
+import TourDetails from "./components/Guidedashboard/TourPackages/TourDetails";
 
 function App() {
   const [count, setCount] = useState(0);
@@ -59,6 +60,7 @@ function App() {
           <Route index element={<TravelerOverview />} />
           <Route path="findguide" element={<FindGuide />} />
           <Route path="findtour" element={<FindTour />} />
+          <Route path="tourdetails/:tourId" element={<TourDetails />} />
           <Route path="favorites" element={<FavoriteGuides />} />
           <Route path="bookings" element={<Bookings />} />
           <Route path="bookingsdetails" element={<BookingDetails />} />

@@ -8,6 +8,9 @@ import {
   ArrowRight,
 } from "lucide-react";
 import NirojSirImg from "../../assets/img/NirojSir.jpg";
+import Patan from "../../assets/img/Patan.jpg";
+import Paris from "../../assets/img/Paris.jpg";
+import Tokyo from "../../assets/img/Tokyo.jpg";
 import { useNavigate } from "react-router-dom";
 
 export default function Bookings() {
@@ -26,7 +29,7 @@ export default function Bookings() {
       languages: "English, Nepali, Japanese",
       rating: 4.9,
       reviews: 127,
-      image: NirojSirImg,
+      image: Patan,
       date: "Dec 18, 2025",
       time: "9:00 AM",
       guests: "2 Guests",
@@ -43,8 +46,7 @@ export default function Bookings() {
       languages: "English, French, German",
       rating: 5.0,
       reviews: 203,
-      image:
-        "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=300&h=300&fit=crop",
+      image: Paris,
       date: "Jan 8, 2026",
       time: "10:00 AM",
       guests: "4 Guests",
@@ -61,8 +63,7 @@ export default function Bookings() {
       languages: "English, Japanese",
       rating: 4.8,
       reviews: 156,
-      image:
-        "https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=300&h=300&fit=crop",
+      image: Tokyo,
       date: "Feb 12, 2026",
       time: "6:00 PM",
       guests: "3 Guests",
@@ -103,11 +104,11 @@ export default function Bookings() {
             className="bg-white shadow-lg rounded-2xl flex overflow-hidden border border-gray-100"
           >
             {/* Image Section */}
-            <div className="relative w-72 h-auto">
+            <div className="relative w-72 h-64 overflow-hidden">
               <img
                 src={b.image}
                 alt={b.title}
-                className="w-full rounded-t-2xl object-cover"
+                className="w-full h-full object-cover rounded-t-2xl"
               />
 
               {/* Status Badge */}

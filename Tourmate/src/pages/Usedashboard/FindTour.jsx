@@ -55,8 +55,8 @@ const FindTour = () => {
             search: filters.search,
             minPrice: filters.minPrice,
             maxPrice: filters.maxPrice,
-            // category: filters.categories,
-            // language: filters.languages,
+            category: filters.categories,
+            language: filters.languages,
             page: filters.page,
             size: filters.size,
             sortBy: filters.sortBy,
@@ -117,23 +117,66 @@ const FindTour = () => {
           <TourList tours={tours} onToggleFavourite={handleToggleFavourite}/>
 
           {/* Pagination */}
-          <div className="flex justify-center items-center gap-2 mt-10">
-            <button className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-100 transition">
-              Previous
-            </button>
-            <button className="px-4 py-2 border border-gray-300 rounded-md bg-blue-600 text-white font-medium">
-              1
-            </button>
-            <button className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-100 transition">
-              2
-            </button>
-            <button className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-100 transition">
-              3
-            </button>
-            <button className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-100 transition">
-              Next
-            </button>
-          </div>
+<div className="flex justify-center items-center gap-2 mt-10">
+
+{/* Previous */}
+<button
+  disabled={filters.page === 0}
+  onClick={() =>
+    setFilters((prev) => ({
+      ...prev,
+      page: prev.page - 1,
+    }))
+  }
+  className={`px-4 py-2 border rounded-md transition
+    ${filters.page === 0
+      ? "text-gray-400 border-gray-200 cursor-not-allowed"
+      : "text-gray-700 border-gray-300 hover:bg-gray-100"
+    }`}
+>
+  Previous
+</button>
+
+{/* Page Numbers */}
+{[...Array(totalPages)].map((_, index) => (
+  <button
+    key={index}
+    onClick={() =>
+      setFilters((prev) => ({
+        ...prev,
+        page: index,
+      }))
+    }
+    className={`px-4 py-2 border rounded-md transition
+      ${filters.page === index
+        ? "bg-blue-600 text-white border-blue-600 font-medium"
+        : "text-gray-700 border-gray-300 hover:bg-gray-100"
+      }`}
+  >
+    {index + 1}
+  </button>
+))}
+
+{/* Next */}
+<button
+  disabled={filters.page === totalPages - 1}
+  onClick={() =>
+    setFilters((prev) => ({
+      ...prev,
+      page: prev.page + 1,
+    }))
+  }
+  className={`px-4 py-2 border rounded-md transition
+    ${filters.page === totalPages - 1
+      ? "text-gray-400 border-gray-200 cursor-not-allowed"
+      : "text-gray-700 border-gray-300 hover:bg-gray-100"
+    }`}
+>
+  Next
+</button>
+
+</div>
+
         </div>
       </div>
     </div>
