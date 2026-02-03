@@ -1,6 +1,29 @@
 import { Bell, ChevronDown } from "lucide-react";
+import { useEffect, useState } from "react";
+import { getUserData } from "../../services/user";
 
 export default function Header() {
+  const [profileImage, setProfileImage] = useState("/https://api.dicebear.com/7.x/personas/svg?seed=John");
+  const [user, setUser] = useState({});
+
+  useEffect(() => {
+
+    const fetchUser = async () => {
+      const res = await getUserData();
+      if (res.success) {
+        const data = res.data;
+
+        setUser(data);
+        if (data.profilePic) {
+          const imageSrc = data.profilePic
+            ? `data:image/jpeg;base64,${data.profilePic}`
+            : "/default-avatar.png";
+          setProfileImage(imageSrc);
+        }
+      }
+    };
+    fetchUser();
+  }, []);
   return (
     <header className="h-16 bg-white border border-gray-200 flex items-center justify-between px-6 sticky top-0 z-50">
       <input
@@ -20,12 +43,12 @@ export default function Header() {
         {/* Profile */}
         <div className="flex items-center gap-2 cursor-pointer">
           <img
-            src="https://i.pravatar.cc/40"
+            src={profileImage}
             className="w-10 h-10 rounded-full"
           />
           <div className="leading-tight">
-            <p className="font-semibold">Super Admin</p>
-            <p className="text-xs text-gray-500">admin@tourmate.com</p>
+            <p className="font-semibold">{user.firstName} {user.lastName}</p>
+            <p className="text-xs text-gray-500">{user.email}</p>
           </div>
           <ChevronDown size={18} />
         </div>

@@ -45,25 +45,26 @@ export default function UserManage() {
   // -----------------------------
   // Fetch data
   // -----------------------------
+  const fetchData = async () => {
+    setLoading(true);
+
+    const usersRes = await getUsers();
+    const guidesRes = await getGuides();
+
+    if (usersRes.success) {
+      setTravelers(usersRes.data.data);
+    }
+
+    if (guidesRes.success) {
+      setGuides(guidesRes.data.data);
+    }
+    console.log(usersRes);
+    console.log(guidesRes);
+    setLoading(false);
+  };
   useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-
-      const usersRes = await getUsers();
-      const guidesRes = await getGuides();
-
-      if (usersRes.success) {
-        setTravelers(usersRes.data.data);
-      }
-
-      if (guidesRes.success) {
-        setGuides(guidesRes.data.data);
-      }
-
-      setLoading(false);
-    };
-
     fetchData();
+
   }, []);
 
   // -----------------------------
@@ -171,10 +172,14 @@ export default function UserManage() {
                   <td className="p-4">
                     <span
                       className={`px-3 py-1 rounded-full text-xs font-semibold ${getStatusClasses(
-                        activeTab === "travelers" ? item.role : item.status
+                        activeTab === "travelers"
+                          ? item.suspended ? "SUSPENDED" : "ACTIVE"
+                          : item.status
                       )}`}
                     >
-                      {activeTab === "travelers" ? item.role : item.status}
+                      {activeTab === "travelers"
+                        ? item.suspended ? "SUSPENDED" : "ACTIVE"
+                        : item.status}
                     </span>
                   </td>
 
@@ -212,16 +217,16 @@ export default function UserManage() {
                           <Mail className="w-4 h-4" /> Send Email
                         </button>
 
-                        <button
+                        {/* <button
                           onClick={() => {
                             setSelectedUser(item);
                             setModalType("suspend");
                           }}
                           className={`flex items-center gap-3 w-full px-4 py-2 ${(activeTab === "travelers"
-                              ? item.role === "SUSPENDED"
-                              : item.status === "SUSPENDED")
-                              ? "text-green-600 hover:bg-green-50"
-                              : "text-red-600 hover:bg-red-50"
+                            ? item.role === "SUSPENDED"
+                            : item.status === "SUSPENDED")
+                            ? "text-green-600 hover:bg-green-50"
+                            : "text-red-600 hover:bg-red-50"
                             }`}
                         >
                           <Ban className="w-4 h-4" />
@@ -230,6 +235,25 @@ export default function UserManage() {
                             : item.status === "SUSPENDED")
                             ? "Unsuspend"
                             : "Suspend"}
+                        </button> */}
+                        <button
+                          onClick={() => {
+                            setSelectedUser(item);
+                            setModalType("suspend");
+                          }}
+                          className={`flex items-center gap-3 w-full px-4 py-2 ${activeTab === "travelers"
+                            ? item.suspended
+                              ? "text-green-600 hover:bg-green-50"
+                              : "text-red-600 hover:bg-red-50"
+                            : item.status === "SUSPENDED"
+                              ? "text-green-600 hover:bg-green-50"
+                              : "text-red-600 hover:bg-red-50"
+                            }`}
+                        >
+                          <Ban className="w-4 h-4" />
+                          {activeTab === "travelers"
+                            ? item.suspended ? "Unsuspend" : "Suspend"
+                            : item.status === "SUSPENDED" ? "Unsuspend" : "Suspend"}
                         </button>
 
                       </div>
@@ -264,7 +288,7 @@ export default function UserManage() {
           onClose={() => setModalType(null)}
           onSuccess={() => {
             setModalType(null);
-            window.location.reload(); // or refetch users
+            fetchData();
           }}
         />
       )}

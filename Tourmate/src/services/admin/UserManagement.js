@@ -59,8 +59,12 @@ export const suspendGuide = async (guideId) => {
 
     return { success: true, data: response.data };
   } catch (error) {
-    console.error("Error suspending guide", error);
-    return { success: false, error: error.message };
+
+    return {
+      success: false,
+      error:
+        error.response?.data || "Something went wrong while suspending guide",
+    };
   }
 };
 

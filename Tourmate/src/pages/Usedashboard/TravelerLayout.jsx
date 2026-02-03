@@ -1,16 +1,30 @@
-import React from "react";
-import { Outlet } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Outlet, useNavigate } from "react-router-dom";
 import Sidebar from "../../components/Userdashboard/Sidebar";
 import Header from "../../components/Userdashboard/Header";
 import AltHeader from "../../components/Userdashboard/AltHeader";
+import { authenticateRole, validateAuthToken } from "../../services/auth";
 
 export default function TravelerLayout() {
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const validate = async () => {
+      const isValid = await validateAuthToken(navigate);
+      if (!isValid) return;
+      setLoading(false);
+    };
+    validate();
+  }, [navigate]);
+
+  // if (loading) return <div>Checking traveler access...</div>;
   return (
     <div className="min-h-screen w-screen bg-gray-50 text-gray-900">
       {/* ✅ Fixed Header */}
       <header className="fixed top-0 left-0 w-full z-50 bg-white shadow">
         {/* <Header /> */}
-        <AltHeader />
+        <Header role = "TRAVELLER"/>
       </header>
 
       <div className="flex pt-16">

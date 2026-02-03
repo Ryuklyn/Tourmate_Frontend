@@ -1,6 +1,8 @@
 import Sidebar from "../../components/Admin/Sidebar";
 import Header from "../../components/Admin/Header";
-import { Outlet } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { authenticateRole } from "../../services/auth";
 
 export default function AdminLayout() {
   // return (
@@ -14,6 +16,20 @@ export default function AdminLayout() {
   //     </main>
   //   </div>
   // );
+
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const validate = async () => {
+      const isValid = await authenticateRole("ADMIN", navigate);
+      if (!isValid) return;
+      setLoading(false);
+    };
+    validate();
+  }, [navigate]);
+
+  if (loading) return <div>Checking admin access...</div>;
   return (
     <div className="flex h-screen overflow-hidden">
       {/* Sidebar (fixed height, NOT scrollable) */}

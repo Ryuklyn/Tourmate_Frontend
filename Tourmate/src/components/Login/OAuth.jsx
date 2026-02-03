@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";  // Import useNavigate hook
-import { fetchUserInfo } from "../../services/auth";
+import { fetchUserInfoOAuth } from "../../services/auth";
 
 const OAuth = () => {
   const [token, setToken] = useState(null);
@@ -13,7 +13,7 @@ const OAuth = () => {
     if (t) {
       setToken(t);
       localStorage.setItem("AUTH_TOKEN", t);
-      fetchUserInfo().then(() => {
+      fetchUserInfoOAuth().then(() => {
         // After the user info is fetched successfully, redirect to the dashboard
         navigate("/dashboard");  // Redirect to /dashboard
       }).catch((error) => {

@@ -18,7 +18,7 @@ export const handleLoginGoogle = () => {
   window.location.href = "http://localhost:8080/oauth2/authorization/google";
 };
 
-export const fetchUserInfo = async () => {
+export const fetchUserInfoOAuth = async () => {
   const token = localStorage.getItem("AUTH_TOKEN");
   try {
     const res = await axios.get(
@@ -35,10 +35,7 @@ export const fetchUserInfo = async () => {
   }
 };
 export const doLogout = (navigate) => {
-  localStorage.removeItem("AUTH_TOKEN");
-  localStorage.removeItem("Email");        
-  localStorage.removeItem("userId");
-  localStorage.removeItem("role");
+localStorage.clear();
   navigate("/login");
 }
 
@@ -56,9 +53,7 @@ export const validateAuthToken = async (navigate) => {
       });
       return true; // token valid
     } catch (error) {
-      localStorage.removeItem("AUTH_TOKEN");
-      localStorage.removeItem("userId");
-      localStorage.removeItem("role");
+      localStorage.clear();
       navigate("/login");
       return false;
     }
@@ -67,22 +62,25 @@ export const validateAuthToken = async (navigate) => {
 
 
   
-  export const authenticateAdmin = async (navigate) => {
+  export const authenticateRole = async (role, navigate) => {
     const token = localStorage.getItem("AUTH_TOKEN");
-    if (!token) return false;
+  
+    if (!token) {
+      navigate("/login");
+      return false;
+    }
   
     try {
-      await axios.get(`${CONFIG.API_URL}/auth/validate-admin`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      return true; // admin validated
-    } catch (err) {
-      // failed validation: remove token & role
-      localStorage.removeItem("AUTH_TOKEN");
-      localStorage.removeItem("userId");
-      localStorage.removeItem("role");
+      await axios.get(
+        `${CONFIG.API_URL}/auth/validate-role/${role}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      return true;
+    } catch {
+      localStorage.clear();
       navigate("/login");
       return false;
     }
   };
-  
