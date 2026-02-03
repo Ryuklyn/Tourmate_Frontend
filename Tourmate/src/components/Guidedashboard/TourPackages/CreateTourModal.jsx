@@ -3,8 +3,9 @@ import { useEffect, useState } from "react";
 import Modal from "./Modal";
 import { useNavigate } from "react-router-dom";
 import { createTour } from "../../../services/tour/tourData";
-import axios from "axios";
-import CONFIG from "../../../../config";
+
+import api from "../../../utils/axiosInterceptor";
+
 export default function CreateTourModal({ onClose, onTourCreated }) {
   const navigate = useNavigate();
 
@@ -49,18 +50,15 @@ export default function CreateTourModal({ onClose, onTourCreated }) {
   const [langOpen, setLangOpen] = useState(false);
   const [catOpen, setCatOpen] = useState(false);
   /* ================= HELPERS ================= */
+
   useEffect(() => {
-    const token = localStorage.getItem("AUTH_TOKEN");
     const fetchEnums = async () => {
       try {
         const [langsRes, catsRes] = await Promise.all([
-          axios.get(`${CONFIG.API_URL}/user/enums/languages`, {
-            headers: { Authorization: `Bearer ${token}` },
-          }),
-          axios.get(`${CONFIG.API_URL}/user/enums/categories`, {
-            headers: { Authorization: `Bearer ${token}` },
-          }),
+          api.get("/user/enums/languages"),
+          api.get("/user/enums/categories"),
         ]);
+  
         const mapEnum = (arr) =>
           arr.map(v => ({
             value: v,
@@ -69,13 +67,14 @@ export default function CreateTourModal({ onClose, onTourCreated }) {
               .replace(/_/g, " ")
               .replace(/\b\w/g, c => c.toUpperCase()),
           }));
-
+  
         setLanguagesEnum(mapEnum(langsRes.data));
         setCategoriesEnum(mapEnum(catsRes.data));
       } catch (err) {
         console.error("Failed to fetch enums", err);
       }
     };
+  
     fetchEnums();
   }, []);
 

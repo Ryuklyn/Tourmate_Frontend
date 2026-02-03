@@ -1,23 +1,13 @@
-import axios from "axios";
-import CONFIG from "../../config";
+import api from "../utils/axiosInterceptor";
 
+// Book a guide
 export const bookGuide = async ({ guideId, hours, groupSize }) => {
-  const token = localStorage.getItem("AUTH_TOKEN");
-
   try {
-    const res = await axios.post(
-      `${CONFIG.API_URL}/traveller/guide/book-request`,
-      {
-        guideId,
-        hours,
-        groupSize,
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
+    const res = await api.post("/traveller/guide/book-request", {
+      guideId,
+      hours,
+      groupSize,
+    });
 
     return {
       success: true,
@@ -32,30 +22,15 @@ export const bookGuide = async ({ guideId, hours, groupSize }) => {
   }
 };
 
-
-export const bookTour = async ({
-  guideId,
-  tourId,
-  travellers,
-  startDate,
-}) => {
-  const token = localStorage.getItem("AUTH_TOKEN");
-
+// Book a tour
+export const bookTour = async ({ guideId, tourId, travellers, startDate }) => {
   try {
-    const res = await axios.post(
-      `${CONFIG.API_URL}/traveller/tour/book-request`,
-      {
-        guideId,
-        tourId,
-        travellers,
-        startDate,
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
+    const res = await api.post("/traveller/tour/book-request", {
+      guideId,
+      tourId,
+      travellers,
+      startDate,
+    });
 
     return { success: true, data: res.data };
   } catch (error) {

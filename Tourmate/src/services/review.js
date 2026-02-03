@@ -1,12 +1,9 @@
-import axios from "axios";
-import CONFIG from "../../config";
+import api from "../utils/axiosInterceptor";
 
+// Get reviews for a guide
 export const getGuideReviews = async (guideId) => {
-  const token = localStorage.getItem("AUTH_TOKEN");
   try {
-    const res = await axios.get(`${CONFIG.API_URL}/traveller/guide/review/${guideId}/reviews`, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
+    const res = await api.get(`/traveller/guide/review/${guideId}/reviews`);
 
     return {
       success: res.data.status === "success",
@@ -20,17 +17,13 @@ export const getGuideReviews = async (guideId) => {
   }
 };
 
+// Post a review for a guide
 export const postGuideReview = async (guideId, review) => {
-    const token = localStorage.getItem("AUTH_TOKEN");
-    try {
-      const res = await axios.post(
-        `${CONFIG.API_URL}/traveller/guide/review/${guideId}`,
-        review,
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
-      return { success: true, data: res.data };
-    } catch (error) {
-      console.error("Error posting review:", error.response?.data || error.message);
-      return { success: false, error: error.response?.data || error.message };
-    }
-  };
+  try {
+    const res = await api.post(`/traveller/guide/review/${guideId}`, review);
+    return { success: true, data: res.data };
+  } catch (error) {
+    console.error("Error posting review:", error.response?.data || error.message);
+    return { success: false, error: error.response?.data || error.message };
+  }
+};

@@ -1,12 +1,8 @@
-import axios from "axios";
 import { useEffect, useState } from "react";
-import FilterSidebar from "../../components/FindGuide/FilterSidebar";
-import GuideList from "../../components/FindGuide/GuideList";
-import CONFIG from "../../../config";
 import FilterSidebarTour from "../../components/FindTour/FilterSidebarTour";
 import TourList from "../../components/FindTour/TourList";
 import { toggleFavouriteTour } from "../../services/tour/tourData";
-
+import api from "../../utils/axiosInterceptor";
 const FindTour = () => {
   const [filters, setFilters] = useState({
     search: "",
@@ -34,37 +30,38 @@ const FindTour = () => {
     }
   };
   // Fetch guides whenever filters change
-  useEffect(() => {
-    const fetchTours = async () => {
-      const token = localStorage.getItem("AUTH_TOKEN");
-      try {
-        const res = await axios.get(`${CONFIG.API_URL}/traveller/tours`, {
-          headers: { Authorization: `Bearer ${token}` },
-          params: {
-            search: filters.search,
-            minPrice: filters.minPrice,
-            maxPrice: filters.maxPrice,
-            category: filters.categories,
-            language: filters.languages,
-            page: filters.page,
-            size: filters.size,
-            sortBy: filters.sortBy,
-            sortDir: filters.sortDir,
-            rating: filters.rating,
 
-          },
-        });
-        if (res.data.status === "success") {
-          setTours(res.data.data);
-          setTotalPages(res.data.totalPages);
-          console.log(res.data.data);
-        }
-      } catch (err) {
-        console.error("Error fetching tours:", err);
+
+useEffect(() => {
+  const fetchTours = async () => {
+    try {
+      const res = await api.get("/traveller/tours", {
+        params: {
+          search: filters.search,
+          minPrice: filters.minPrice,
+          maxPrice: filters.maxPrice,
+          category: filters.categories,
+          language: filters.languages,
+          page: filters.page,
+          size: filters.size,
+          sortBy: filters.sortBy,
+          sortDir: filters.sortDir,
+          rating: filters.rating,
+        },
+      });
+
+      if (res.data.status === "success") {
+        setTours(res.data.data);
+        setTotalPages(res.data.totalPages);
+        console.log(res.data.data);
       }
-    };
-    fetchTours();
-  }, [filters]);
+    } catch (err) {
+      console.error("Error fetching tours:", err);
+    }
+  };
+
+  fetchTours();
+}, [filters]);
   return (
     <div className="max-w-7xl mx-auto px-6 py-8">
       {/* Title */}

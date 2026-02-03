@@ -1,37 +1,27 @@
-import axios from "axios";
-import CONFIG from "../../../config";
+import api from "../../utils/axiosInterceptor";
 
-
-export const getToursByGuide = async (guideId) => {
-    const token = localStorage.getItem("AUTH_TOKEN");
-    try {
-      const res = await axios.get(`${CONFIG.API_URL}/guide/tour/mytours`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-  
-      // Map to expected format
-      return {
-        success: res.data.status === "success",
-        data: res.data.data || [],
-      };
-    } catch (error) {
-      console.error("Error fetching tours:", error);
-      return {
-        success: false,
-        data: [],
-        error: error.message || "Unknown error",
-      };
-    }
-  };
-  
-
-
-export const deleteTourById = async (tourId) => {
-  const token = localStorage.getItem("AUTH_TOKEN");
+// Get tours of the guide
+export const getToursByGuide = async () => {
   try {
-    const res = await axios.delete(`${CONFIG.API_URL}/guide/tour/${tourId}/delete`, {
-      headers: { Authorization: `Bearer ${token}` }
-    });
+    const res = await api.get("/guide/tour/mytours");
+    return {
+      success: res.data.status === "success",
+      data: res.data.data || [],
+    };
+  } catch (error) {
+    console.error("Error fetching tours:", error);
+    return {
+      success: false,
+      data: [],
+      error: error.message || "Unknown error",
+    };
+  }
+};
+
+// Delete a tour
+export const deleteTourById = async (tourId) => {
+  try {
+    const res = await api.delete(`/guide/tour/${tourId}/delete`);
     return {
       success: res.data.status === "success",
       message: res.data.message,
@@ -45,13 +35,12 @@ export const deleteTourById = async (tourId) => {
   }
 };
 
+// Create a new tour
 export const createTour = async (formData) => {
   try {
-    const token = localStorage.getItem("AUTH_TOKEN"); // or your auth logic
-    const res = await axios.post(`${CONFIG.API_URL}/guide/tour/create`, formData, {
+    const res = await api.post("/guide/tour/create", formData, {
       headers: {
-        "Content-Type": "multipart/form-data",
-        Authorization: `Bearer ${token}`,
+        "Content-Type": "multipart/form-data", // token auto-added
       },
     });
     return res.data;
@@ -61,13 +50,12 @@ export const createTour = async (formData) => {
   }
 };
 
-export const editTour = async (tourId,formData) => {
+// Edit an existing tour
+export const editTour = async (tourId, formData) => {
   try {
-    const token = localStorage.getItem("AUTH_TOKEN"); // or your auth logic
-    const res = await axios.put(`${CONFIG.API_URL}/guide/tour/${tourId}/edit`, formData, {
+    const res = await api.put(`/guide/tour/${tourId}/edit`, formData, {
       headers: {
-        "Content-Type": "multipart/form-data",
-        Authorization: `Bearer ${token}`,
+        "Content-Type": "multipart/form-data", // token auto-added
       },
     });
     return res.data;
@@ -77,24 +65,13 @@ export const editTour = async (tourId,formData) => {
   }
 };
 
-
+// Toggle favourite tour
 export const toggleFavouriteTour = async (tourId) => {
-  const token = localStorage.getItem("AUTH_TOKEN");
-
   try {
-    const res = await axios.post(
-      `${CONFIG.API_URL}/traveller/favourites/tour/${tourId}`,
-      {},
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-
+    const res = await api.post(`/traveller/favourites/tour/${tourId}`, {});
     return {
       success: true,
-      favorited: res.data?.data?.favorited, // may be undefined
+      favorited: res.data?.data?.favorited,
     };
   } catch (error) {
     console.error("Error toggling favourite:", error);
@@ -105,43 +82,36 @@ export const toggleFavouriteTour = async (tourId) => {
   }
 };
 
+// Get favourite tours
 export const getFavouritedTours = async () => {
-  const token = localStorage.getItem("AUTH_TOKEN");
   try {
-      const response = await axios.get(`${CONFIG.API_URL}/traveller/favourites/tours`,
-          {
-              headers: { Authorization: `Bearer ${token}` }
-          });
-          console.log(response.data);
-      return {
-          success: true,
-          data: response.data,
-      };
+    const response = await api.get("/traveller/favourites/tours");
+    console.log(response.data);
+    return {
+      success: true,
+      data: response.data,
+    };
   } catch (error) {
-      console.error("Error fetching guides:", error);
-      return {
-          success: false,
-          error: error.message || "Unknown error",
-      };
+    console.error("Error fetching favourite tours:", error);
+    return {
+      success: false,
+      error: error.message || "Unknown error",
+    };
   }
 };
 
-
+// Get tour by ID
 export const getTourById = async (tourId) => {
-  const token = localStorage.getItem("AUTH_TOKEN");
-
   try {
-    const response = await axios.get(`${CONFIG.API_URL}/traveller/tours/${tourId}`,
-      { 
-          headers: { Authorization: `Bearer ${token}`} 
-      }
-    );
-    return { 
-      success: true, 
-      data: response.data.data };
+    const response = await api.get(`/traveller/tours/${tourId}`);
+    return {
+      success: true,
+      data: response.data.data,
+    };
   } catch (error) {
-    return { 
-      success: false, 
-      error: error.message || "Unknown error" };
+    return {
+      success: false,
+      error: error.message || "Unknown error",
+    };
   }
 };

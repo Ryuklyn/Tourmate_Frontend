@@ -1,73 +1,61 @@
-import axios from "axios";
-import CONFIG from "../../config";
+import api from "../utils/axiosInterceptor";
 
+// Get all approved guides
 export const getApprovedGuides = async () => {
-    const token = localStorage.getItem("AUTH_TOKEN");
-    try {
-        const response = await axios.get(`${CONFIG.API_URL}/traveller/guides/filter`,
-            {
-                headers: { Authorization: `Bearer ${token}` }
-            });
-        return {
-            success: true,
-            data: response.data,
-        };
-    } catch (error) {
-        console.error("Error fetching guides:", error);
-        return {
-            success: false,
-            error: error.message || "Unknown error",
-        };
-    }
-};
-
-export const getGuideById = async (guideId) => {
-    const token = localStorage.getItem("AUTH_TOKEN");
-
-    try {
-      const response = await axios.get(`${CONFIG.API_URL}/traveller/guides/${guideId}`,
-        { 
-            headers: { Authorization: `Bearer ${token}`} 
-        }
-      );
-      return { 
-        success: true, 
-        data: response.data.data };
-    } catch (error) {
-      return { 
-        success: false, 
-        error: error.message || "Unknown error" };
-    }
-  };
-  export const getFavouritedGuides = async () => {
-    const token = localStorage.getItem("AUTH_TOKEN");
-    try {
-        const response = await axios.get(`${CONFIG.API_URL}/traveller/favourites/guides`,
-            {
-                headers: { Authorization: `Bearer ${token}` }
-            });
-            console.log(response.data);
-        return {
-            success: true,
-            data: response.data,
-        };
-    } catch (error) {
-        console.error("Error fetching guides:", error);
-        return {
-            success: false,
-            error: error.message || "Unknown error",
-        };
-    }
-};
-
-export const getToursByGuide = async (guideId) => {
-  const token = localStorage.getItem("AUTH_TOKEN");
   try {
-    const res = await axios.get(`${CONFIG.API_URL}/traveller/tours/guide/${guideId}`, {
-      headers: { Authorization: `Bearer ${token}` }
-    });
+    const response = await api.get("/traveller/guides/filter");
+    return {
+      success: true,
+      data: response.data,
+    };
+  } catch (error) {
+    console.error("Error fetching guides:", error);
+    return {
+      success: false,
+      error: error.message || "Unknown error",
+    };
+  }
+};
 
-    // Map to expected format
+// Get guide by ID
+export const getGuideById = async (guideId) => {
+  try {
+    const response = await api.get(`/traveller/guides/${guideId}`);
+    return {
+      success: true,
+      data: response.data.data,
+    };
+  } catch (error) {
+    return {
+      success: false,
+      error: error.message || "Unknown error",
+    };
+  }
+};
+
+// Get favourited guides
+export const getFavouritedGuides = async () => {
+  try {
+    const response = await api.get("/traveller/favourites/guides");
+    console.log(response.data);
+    return {
+      success: true,
+      data: response.data,
+    };
+  } catch (error) {
+    console.error("Error fetching guides:", error);
+    return {
+      success: false,
+      error: error.message || "Unknown error",
+    };
+  }
+};
+
+// Get tours by guide
+export const getToursByGuide = async (guideId) => {
+  try {
+    const res = await api.get(`/traveller/tours/guide/${guideId}`);
+
     return {
       success: res.data.status === "success",
       data: res.data.data || [],
@@ -82,23 +70,14 @@ export const getToursByGuide = async (guideId) => {
   }
 };
 
+// Toggle favourite guide
 export const toggleFavouriteGuide = async (guideId) => {
-  const token = localStorage.getItem("AUTH_TOKEN");
-
   try {
-    const res = await axios.post(
-      `${CONFIG.API_URL}/traveller/favourites/guide/${guideId}`,
-      {},
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
+    const res = await api.post(`/traveller/favourites/guide/${guideId}`, {});
 
     return {
       success: true,
-      favorited: res.data?.data?.favorited, // may be undefined
+      favorited: res.data?.data?.favorited,
     };
   } catch (error) {
     console.error("Error toggling favourite:", error);
@@ -108,5 +87,3 @@ export const toggleFavouriteGuide = async (guideId) => {
     };
   }
 };
-
-

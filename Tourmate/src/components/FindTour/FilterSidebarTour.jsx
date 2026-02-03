@@ -1,33 +1,27 @@
 import React, { useEffect, useState } from "react";
 import { Star } from "lucide-react";
-import axios from "axios";
 import { displayName } from "../../services/enumFormatter";
-import CONFIG from "../../../config";
-
+import api from "../../utils/axiosInterceptor";
 const FilterSidebarTour = ({ filters, setFilters }) => {
   const [selectedRating, setSelectedRating] = useState(0);
   const [languagesEnum, setLanguagesEnum] = useState([]);
   const [categoriesEnum, setCategoriesEnum] = useState([]);
   // Fetch enums from backend
   useEffect(() => {
-    const token = localStorage.getItem("AUTH_TOKEN");
     const fetchEnums = async () => {
       try {
         const [langsRes, catsRes] = await Promise.all([
-          axios.get(`${CONFIG.API_URL}/user/enums/languages`, {
-            headers: { Authorization: `Bearer ${token}` },
-          }),
-          axios.get(`${CONFIG.API_URL}/user/enums/categories`, {
-            headers: { Authorization: `Bearer ${token}` },
-          }),
+          api.get("/user/enums/languages"),
+          api.get("/user/enums/categories"),
         ]);
-
+  
         setLanguagesEnum(langsRes.data);   // ["ENGLISH", "NEPALI", ...]
         setCategoriesEnum(catsRes.data);   // ["CITY_TOUR", "FOOD_TOUR", ...]
       } catch (err) {
         console.error("Failed to fetch enums", err);
       }
     };
+  
     fetchEnums();
   }, []);
 

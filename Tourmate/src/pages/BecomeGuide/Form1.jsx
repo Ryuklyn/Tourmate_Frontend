@@ -3,8 +3,8 @@ import React, { useEffect, useState } from "react";
 import { Upload, CheckCircle, Circle } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { X } from "lucide-react";
-import axios from "axios";
-import CONFIG from "../../../config";
+import api from "../../utils/axiosInterceptor";
+
 import { useBecomeGuide } from "./BecomeGuideContext";
 
 export default function Form1() {
@@ -51,26 +51,21 @@ export default function Form1() {
 
 
   /* ------------------ FETCH ENUMS ------------------ */
+  
   useEffect(() => {
-    const token = localStorage.getItem("AUTH_TOKEN");
-
     const fetchEnums = async () => {
       try {
         const [langsRes, expRes] = await Promise.all([
-          axios.get(`${CONFIG.API_URL}/user/enums/languages`, {
-            headers: { Authorization: `Bearer ${token}` },
-          }),
-          axios.get(`${CONFIG.API_URL}/user/enums/experience`, {
-            headers: { Authorization: `Bearer ${token}` },
-          }),
+          api.get("/user/enums/languages"),
+          api.get("/user/enums/experience"),
         ]);
-
+  
         setAllLanguages(
           langsRes.data.map(l =>
             l.toLowerCase().replace(/_/g, " ").replace(/\b\w/g, c => c.toUpperCase())
           )
         );
-
+  
         setAllExperience(
           expRes.data.map(e =>
             e.toLowerCase().replace(/_/g, " ").replace(/\b\w/g, c => c.toUpperCase())
@@ -80,7 +75,7 @@ export default function Form1() {
         console.error("Failed to fetch enums", err);
       }
     };
-
+  
     fetchEnums();
   }, []);
 

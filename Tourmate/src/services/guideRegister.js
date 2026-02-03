@@ -1,22 +1,19 @@
 // guideRegister.js
-import axios from "axios";
-import CONFIG from "../../config";
+import api from "../utils/axiosInterceptor";
 
-export const registerGuide = async (userId, token, guideData, profilePicFile, governmentPicFile) => {
+export const registerGuide = async (userId, guideData, profilePicFile, governmentPicFile) => {
   try {
     const formData = new FormData();
-
     formData.append("guide", JSON.stringify(guideData));
     if (profilePicFile) formData.append("profilePic", profilePicFile);
     if (governmentPicFile) formData.append("governmentPic", governmentPicFile);
 
-    const response = await axios.post(
-      `${CONFIG.API_URL}/user/guides/register/${userId}`,
+    const response = await api.post(
+      `/user/guides/register/${userId}`,
       formData,
       {
         headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "multipart/form-data",
+          "Content-Type": "multipart/form-data", // token auto-added by interceptor
         },
       }
     );

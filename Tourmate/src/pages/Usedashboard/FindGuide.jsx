@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
 import FilterSidebar from "../../components/FindGuide/FilterSidebar";
 import GuideList from "../../components/FindGuide/GuideList";
-import CONFIG from "../../../config";
+
+import api from "../../utils/axiosInterceptor";
 import { toggleFavouriteGuide } from "../../services/guideData";
 
 const FindGuide = () => {
@@ -23,37 +23,38 @@ const FindGuide = () => {
   const [totalPages, setTotalPages] = useState(1);
 
   // Fetch guides whenever filters change
-  useEffect(() => {
-    const fetchGuides = async () => {
-      const token = localStorage.getItem("AUTH_TOKEN");
-      try {
-        const res = await axios.get(`${CONFIG.API_URL}/traveller/guides/filter`, {
-          headers: { Authorization: `Bearer ${token}` },
-          params: {
-            search: filters.search,
-            minPrice: filters.minPrice,
-            maxPrice: filters.maxPrice,
-            category: filters.categories,
-            language: filters.languages,
-            page: filters.page,
-            size: filters.size,
-            sortBy: filters.sortBy,
-            sortDir: filters.sortDir,
-            rating: filters.rating,
 
-          },
-        });
-        if (res.data.status === "success") {
-          setGuides(res.data.data);
-          setTotalPages(res.data.totalPages);
-          console.log(res.data.data);
-        }
-      } catch (err) {
-        console.error("Error fetching guides:", err);
+
+useEffect(() => {
+  const fetchGuides = async () => {
+    try {
+      const res = await api.get("/traveller/guides/filter", {
+        params: {
+          search: filters.search,
+          minPrice: filters.minPrice,
+          maxPrice: filters.maxPrice,
+          category: filters.categories,
+          language: filters.languages,
+          page: filters.page,
+          size: filters.size,
+          sortBy: filters.sortBy,
+          sortDir: filters.sortDir,
+          rating: filters.rating,
+        },
+      });
+
+      if (res.data.status === "success") {
+        setGuides(res.data.data);
+        setTotalPages(res.data.totalPages);
+        console.log(res.data.data);
       }
-    };
-    fetchGuides();
-  }, [filters]);
+    } catch (err) {
+      console.error("Error fetching guides:", err);
+    }
+  };
+
+  fetchGuides();
+}, [filters]);
 
   // Favorite toggle handler
   const handleToggleFavourite = async (guideId) => {

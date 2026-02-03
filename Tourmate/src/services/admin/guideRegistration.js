@@ -1,40 +1,31 @@
-import axios from "axios";
-import CONFIG from "../../../config";
+import api from "../../utils/axiosInterceptor";
 
-export const getPendingGuideRequest = async (guideId) => {
-    const token = localStorage.getItem("AUTH_TOKEN");
-    try {
-        const response = await axios.get(`${CONFIG.API_URL}/admin/guides/pending`,
-            {
-                headers: { Authorization: `Bearer ${token}` }
-            });
-        return {
-            success: true,
-            data: response.data,
-        };
-    } catch (error) {
-        console.error("Error fetching guide Requests:", error);
-        return {
-            success: false,
-            error: error.message || "Unknown error",
-        };
-    }
+// Get all pending guide requests
+export const getPendingGuideRequest = async () => {
+  try {
+    const response = await api.get("/admin/guides/pending");
+    return {
+      success: true,
+      data: response.data,
+    };
+  } catch (error) {
+    console.error("Error fetching guide requests:", error);
+    return {
+      success: false,
+      error: error.message || "Unknown error",
+    };
+  }
 };
 
+// Approve or reject a guide
 export const decideGuide = async (guideId, action) => {
-    const token = localStorage.getItem("AUTH_TOKEN");
-    try {
-      const res = await axios.post(
-        `${CONFIG.API_URL}/admin/guides/${guideId}/decision`,
-        null,
-        {
-          params: { action },
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
-      return { success: true, data: res.data };
-    } catch (err) {
-      console.error("Error deciding guide:", err);
-      return { success: false, error: err.message };
-    }
-  };
+  try {
+    const res = await api.post(`/admin/guides/${guideId}/decision`, null, {
+      params: { action },
+    });
+    return { success: true, data: res.data };
+  } catch (err) {
+    console.error("Error deciding guide:", err);
+    return { success: false, error: err.message };
+  }
+};

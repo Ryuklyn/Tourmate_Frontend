@@ -3,8 +3,8 @@ import { useEffect, useState } from "react";
 import Modal from "./Modal";
 import { editTour } from "../../../services/tour/tourData";
 import { useNavigate } from "react-router-dom";
-import CONFIG from "../../../../config";
-import axios from "axios";
+
+import api from "../../../utils/axiosInterceptor";
 
 export default function EditTourModal({ tour, onClose, onUpdated }) {
   const navigate = useNavigate();
@@ -54,53 +54,48 @@ export default function EditTourModal({ tour, onClose, onUpdated }) {
   const [langOpen, setLangOpen] = useState(false);
   const [catOpen, setCatOpen] = useState(false);
   /* ================= HELPERS ================= */
-  useEffect(() => {
-    const token = localStorage.getItem("AUTH_TOKEN");
-  
-    const fetchEnums = async () => {
-      try {
-        const [langsRes, catsRes] = await Promise.all([
-          axios.get(`${CONFIG.API_URL}/user/enums/languages`, {
-            headers: { Authorization: `Bearer ${token}` },
-          }),
-          axios.get(`${CONFIG.API_URL}/user/enums/categories`, {
-            headers: { Authorization: `Bearer ${token}` },
-          }),
-        ]);
-  
-        const mapEnum = (arr) =>
-          arr.map(v => ({
-            value: v,
-            label: v
-              .toLowerCase()
-              .replace(/_/g, " ")
-              .replace(/\b\w/g, c => c.toUpperCase()),
-          }));
-  
-        const langs = mapEnum(langsRes.data);
-        const cats = mapEnum(catsRes.data);
-  
-        setLanguagesEnum(langs);
-        setCategoriesEnum(cats);
-  
-        /* ===== PRESELECT FROM TOUR ===== */
-        if (tour) {
-          setSelectedLanguages(
-            langs.filter(l => tour.languages?.includes(l.value))
-          );
-  
-          setSelectedCategories(
-            cats.filter(c => tour.categories?.includes(c.value))
-          );
-        }
-  
-      } catch (err) {
-        console.error("Failed to fetch enums", err);
+
+useEffect(() => {
+  const fetchEnums = async () => {
+    try {
+      const [langsRes, catsRes] = await Promise.all([
+        api.get("/user/enums/languages"),
+        api.get("/user/enums/categories"),
+      ]);
+
+      const mapEnum = (arr) =>
+        arr.map(v => ({
+          value: v,
+          label: v
+            .toLowerCase()
+            .replace(/_/g, " ")
+            .replace(/\b\w/g, c => c.toUpperCase()),
+        }));
+
+      const langs = mapEnum(langsRes.data);
+      const cats = mapEnum(catsRes.data);
+
+      setLanguagesEnum(langs);
+      setCategoriesEnum(cats);
+
+      /* ===== PRESELECT FROM TOUR ===== */
+      if (tour) {
+        setSelectedLanguages(
+          langs.filter(l => tour.languages?.includes(l.value))
+        );
+
+        setSelectedCategories(
+          cats.filter(c => tour.categories?.includes(c.value))
+        );
       }
-    };
-  
-    fetchEnums();
-  }, [tour]);
+
+    } catch (err) {
+      console.error("Failed to fetch enums", err);
+    }
+  };
+
+  fetchEnums();
+}, [tour]);
   
 
   const toggleItem = (item, setter) => {

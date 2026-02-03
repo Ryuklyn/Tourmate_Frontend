@@ -1,25 +1,21 @@
 import React, { useState, useEffect } from "react";
 import { Star } from "lucide-react";
-import axios from "axios";
 import { displayName } from "../../services/enumFormatter";
-import CONFIG from "../../../config";
+import api from "../../utils/axiosInterceptor";
+
 
 const FilterSidebar = ({ filters, setFilters }) => {
   const [languagesEnum, setLanguagesEnum] = useState([]);
   const [categoriesEnum, setCategoriesEnum] = useState([]);
 
   // Fetch enums from backend
+
   useEffect(() => {
-    const token = localStorage.getItem("AUTH_TOKEN");
     const fetchEnums = async () => {
       try {
         const [langsRes, catsRes] = await Promise.all([
-          axios.get(`${CONFIG.API_URL}/user/enums/languages`, {
-            headers: { Authorization: `Bearer ${token}` },
-          }),
-          axios.get(`${CONFIG.API_URL}/user/enums/categories`, {
-            headers: { Authorization: `Bearer ${token}` },
-          }),
+          api.get("/user/enums/languages"),
+          api.get("/user/enums/categories"),
         ]);
 
         setLanguagesEnum(langsRes.data);   // ["ENGLISH", "NEPALI", ...]
@@ -83,9 +79,8 @@ const FilterSidebar = ({ filters, setFilters }) => {
             <Star
               key={rating}
               size={22}
-              className={`cursor-pointer transition-colors duration-200 ${
-                rating <= filters.rating ? "fill-yellow-400 text-yellow-400" : "text-gray-300"
-              }`}
+              className={`cursor-pointer transition-colors duration-200 ${rating <= filters.rating ? "fill-yellow-400 text-yellow-400" : "text-gray-300"
+                }`}
               onClick={() => handleStarClick(rating)}
             />
           ))}

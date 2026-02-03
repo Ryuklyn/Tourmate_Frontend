@@ -2,8 +2,8 @@ import React, { useEffect, useState } from "react";
 import { X } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import StepProgress from "./StepProgress";
-import CONFIG from "../../../config";
-import axios from "axios";
+import api from "../../utils/axiosInterceptor";
+
 import { useBecomeGuide } from "./BecomeGuideContext";
 
 export default function Form3() {
@@ -21,16 +21,12 @@ export default function Form3() {
   const [open, setOpen] = useState(false);
 
   /* ------------------ FETCH ENUMS ------------------ */
-  useEffect(() => {
-    const token = localStorage.getItem("AUTH_TOKEN");
 
+  useEffect(() => {
     const fetchEnums = async () => {
       try {
-        const res = await axios.get(
-          `${CONFIG.API_URL}/user/enums/categories`,
-          { headers: { Authorization: `Bearer ${token}` } }
-        );
-
+        const res = await api.get("/user/enums/categories");
+  
         const mapped = res.data.map(v => ({
           value: v,
           label: v
@@ -38,13 +34,13 @@ export default function Form3() {
             .replace(/_/g, " ")
             .replace(/\b\w/g, c => c.toUpperCase()),
         }));
-
+  
         setEnumMap(mapped);
       } catch (err) {
         console.error("Failed to fetch categories", err);
       }
     };
-
+  
     fetchEnums();
   }, []);
 
