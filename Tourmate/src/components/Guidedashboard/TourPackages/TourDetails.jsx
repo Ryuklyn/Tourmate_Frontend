@@ -16,11 +16,11 @@ import {
 import Niroj from "../../../assets/img/NirojSir.jpg";
 
 // demo purpose – normally use params or API
-import Patan from "../../../assets/img/Patan.jpg";
 import { useParams } from "react-router-dom";
 import { getTourById, toggleFavouriteTour } from "../../../services/tour/tourData";
-
-
+import { useLocation, useNavigate } from "react-router-dom";
+import ReviewsSection from "../../GuideDetais/ReviewSection";
+import BookingSidebar from "../../../pages/Usedashboard/GuideDetailComp/BookingSidebar";
 const TourDetails = () => {
   const { tourId } = useParams();
   const [tour, setTour] = useState(null);
@@ -34,7 +34,6 @@ const TourDetails = () => {
         console.error("Failed to fetch tour:", error);
       }
     };
-
     fetchTour();
   }, [tourId]);
   const handleToggleFavourite = async (id) => {
