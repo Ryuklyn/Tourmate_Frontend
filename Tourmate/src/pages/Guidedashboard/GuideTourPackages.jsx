@@ -50,7 +50,7 @@ export default function GuideTourPackage() {
     {
       title: "Kathmandu Heritage Tour",
       location: "Kathmandu, Nepal",
-      duration: "6 hours",
+      hours: 6,
       max: 10,
       price: "$120",
       bookings: 18,
@@ -93,7 +93,7 @@ export default function GuideTourPackage() {
     {
       title: "Everest Base Camp Trek (12 Days)",
       location: "Solukhumbu, Nepal",
-      duration: "12 days",
+      hours: 12,
       max: 12,
       price: "$1450",
       bookings: 22,

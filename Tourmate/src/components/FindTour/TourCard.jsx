@@ -5,8 +5,11 @@ import { useNavigate } from "react-router-dom";
 const TourCard = ({ tour }) => {
   const navigate = useNavigate();
 
-  const handleViewPackage = () => {
-    navigate("/dashboard/tourdetails");
+  const handleViewPackage = (tour) => {
+    console.log("Navigating with tour:", tour);
+    navigate("/dashboard/tourdetails", {
+      state: { tour },
+    });
   };
 
   return (
@@ -59,7 +62,7 @@ const TourCard = ({ tour }) => {
         <div className="flex items-center gap-4 text-sm text-gray-500 mt-3">
           <div className="flex items-center gap-1">
             <Clock size={14} className="text-blue-500" />
-            {tour.duration}
+            {tour.hours}
           </div>
           <div className="flex items-center gap-1">
             <Users size={14} className="text-blue-500" />
@@ -85,7 +88,10 @@ const TourCard = ({ tour }) => {
           </div>
 
           <button
-            onClick={handleViewPackage}
+            onClick={(e) => {
+              e.stopPropagation();
+              handleViewPackage(tour);
+            }}
             className="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-lg text-sm font-medium transition"
           >
             View Package

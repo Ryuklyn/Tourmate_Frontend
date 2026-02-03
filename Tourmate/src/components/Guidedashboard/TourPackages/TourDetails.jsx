@@ -1,4 +1,5 @@
 import React from "react";
+import { useState, useEffect } from "react";
 import {
   ShieldCheck,
   MapPin,
@@ -12,8 +13,11 @@ import {
   Calendar,
   Heart,
 } from "lucide-react";
+import { useLocation, useNavigate } from "react-router-dom";
 
 import Niroj from "../../../assets/img/NirojSir.jpg";
+import ReviewsSection from "../../GuideDetais/ReviewSection";
+import BookingSidebar from "../../../pages/Usedashboard/GuideDetailComp/BookingSidebar";
 
 // demo purpose – normally use params or API
 import Patan from "../../../assets/img/Patan.jpg";
@@ -22,7 +26,7 @@ const tours = [
   {
     title: "Kathmandu Heritage Tour",
     location: "Kathmandu, Nepal",
-    duration: "6 hours",
+    hours: 6,
     max: 10,
     price: "$120",
     image: Patan,
@@ -58,8 +62,44 @@ const tours = [
 ];
 
 const TourDetails = () => {
+  // const [selectedTour, setSelectedTour] = useState(null);
+  const navigate = useNavigate();
+  const location = useLocation();
+  const selectedtour = location.state?.tour;
   const tour = tours[0];
+  console.log("Tour Details - tour:", tour);
+  console.log("Tour Details - SELECTEDtour:", selectedtour);
+  const [reviews, setReviews] = useState([
+    {
+      name: "Jennifer M.",
+      date: "2024-02-15",
+      img: "https://randomuser.me/api/portraits/women/44.jpg",
+      rating: 5,
+      text: "Maria was absolutely fantastic! Her knowledge of Barcelona's history is incredible.",
+    },
+    {
+      name: "David K.",
+      date: "2024-02-10",
+      img: "https://randomuser.me/api/portraits/men/46.jpg",
+      rating: 5,
+      text: "Best tour we've ever taken! Maria's passion for her city really shows.",
+    },
+  ]);
+  const addReview = (newReview) => {
+    setReviews((prev) => [newReview, ...prev]);
+  };
+  const clearSelectedTour = () => {
+    // setSelectedTour(null);
+    setActiveTour(null);
+  };
+  useEffect(() => {
+    if (!selectedtour) {
+      navigate("/dashboard/findtour");
+    }
+  }, [selectedtour, navigate]);
 
+  if (!selectedtour) return null;
+  // console.log("Rendering TourDetails with tour:", selectedtour.included[0]);
   return (
     <div className="w-full">
       {/* HERO */}
@@ -234,29 +274,58 @@ const TourDetails = () => {
               ))}
             </div>
           </section>
-        </div>
+          <hr className="text-gray-200" />
+          {/* Reviews List */}
+          <section>
+            <div className="mt-6 overflow-auto w-full">
+              <h2 className="text-2xl font-semibold mb-4">
+                Reviews ({reviews.length})
+              </h2>
+              <div className="w-full max-w-3xl">
+                {reviews.map((rev, i) => (
+                  <div key={i} className="pb-6">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <img
+                          src={rev.img}
+                          className="w-12 h-12 rounded-full object-cover"
+                          alt={rev.name}
+                        />
 
-        {/* RIGHT – BOOK CARD */}
-        <div className="sticky top-24 h-fit">
-          <div className="bg-white rounded-2xl shadow p-6 space-y-6">
-            <div>
-              <p className="text-sm text-gray-500">Price per package</p>
-              <h3 className="text-3xl font-bold text-blue-600">{tour.price}</h3>
+                        <div>
+                          <p className="font-semibold">{rev.name}</p>
+                          <div className="flex text-yellow-500">
+                            {Array.from({ length: rev.rating }).map(
+                              (_, idx) => (
+                                <Star key={idx} size={16} fill="currentColor" />
+                              ),
+                            )}
+                          </div>
+                        </div>
+                      </div>
+
+                      <p className="text-gray-500 text-sm">{rev.date}</p>
+                    </div>
+
+                    <p className="text-gray-700 mt-3">{rev.text}</p>
+
+                    {i < reviews.length - 1 && (
+                      <hr className="mt-6 border-gray-200" />
+                    )}
+                  </div>
+                ))}
+                {/* Add Review */}
+                <ReviewsSection onAddReview={addReview} />
+              </div>
             </div>
-
-            <button className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition">
-              Book Now
-            </button>
-
-            <button className="w-full border py-3 rounded-lg font-semibold">
-              Contact Us
-            </button>
-
-            <p className="text-sm text-gray-500 flex items-center gap-2">
-              <Calendar size={16} />
-              Free cancellation up to 24 hours before departure
-            </p>
-          </div>
+          </section>
+        </div>
+        {/* RIGHT – BOOK CARD */}
+        <div className="w-full lg:col-span-1 sticky top-24 h-fit">
+          <BookingSidebar
+            selectedTour={selectedtour}
+            clearSelectedTour={() => {}}
+          />
         </div>
       </div>
     </div>

@@ -12,8 +12,8 @@ const tours = [
   {
     title: "Kathmandu Heritage Tour",
     location: "Kathmandu, Nepal",
-    duration: "6 hours",
-    price: "$120",
+    hours: 6,
+    price: 120,
     bookings: 18,
     status: "Active",
     image: Patan,
@@ -22,8 +22,8 @@ const tours = [
   {
     title: "Everest Base Camp Trek (12 Days)",
     location: "Solukhumbu, Nepal",
-    duration: "12 days",
-    price: "$1450",
+    hours: 12,
+    price: 1450,
     bookings: 22,
     status: "Active",
     image: Everest,
@@ -32,8 +32,8 @@ const tours = [
   {
     title: "Pokhara Adventure & Lakeside Tour",
     location: "Pokhara, Nepal",
-    duration: "8 hours",
-    price: "$150",
+    hours: 8,
+    price: 150,
     bookings: 14,
     status: "Active",
     image: Pokhara,
@@ -42,8 +42,8 @@ const tours = [
   {
     title: "Chitwan Jungle Safari",
     location: "Chitwan, Nepal",
-    duration: "2 days",
-    price: "$250",
+    hours: 16,
+    price: 250,
     bookings: 10,
     status: "Draft",
     image: Chitwan,

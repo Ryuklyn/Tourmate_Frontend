@@ -16,36 +16,36 @@ export default function TourPackages({ selectedTour, setSelectedTour }) {
     {
       id: 1,
       title: "Kathmandu Heritage Tour",
-      hours: "6 hours",
-      price: "$120",
+      hours: 6,
+      price: 120,
       img: Patan,
     },
     {
       id: 2,
       title: "Everest Base Camp Trek (12 Days)",
-      hours: "12 days",
-      price: "$1450",
+      hours: 12,
+      price: 1450,
       img: Everest,
     },
     {
       id: 3,
       title: "Pokhara Adventure & Lakeside Tour",
-      hours: "8 hours",
-      price: "$150",
+      hours: 8,
+      price: 150,
       img: Pokhara,
     },
     {
       id: 4,
       title: "Chitwan Jungle Safari",
-      hours: "2 days",
-      price: "$250",
+      hours: 2,
+      price: 250,
       img: Chitwan,
     },
     {
       id: 5,
       title: "Lumbini Buddhist Pilgrimage Tour",
-      hours: "1 day",
-      price: "$180",
+      hours: 1,
+      price: 180,
       img: Lumbini,
     },
   ];
@@ -82,7 +82,7 @@ export default function TourPackages({ selectedTour, setSelectedTour }) {
       </div>
 
       {/* INFO BAR */}
-      {selectedTour && (
+      {activeTour && (
         <div className="mb-4 text-sm bg-blue-50 text-blue-600 px-4 py-2 rounded-lg">
           ✓ Tour selected! Click <strong>Proceed</strong> to continue with your
           booking.
@@ -121,10 +121,10 @@ export default function TourPackages({ selectedTour, setSelectedTour }) {
 
               <div className="p-4">
                 <h3 className="font-semibold text-lg">{t.title}</h3>
-                <p className="text-gray-600 text-sm mt-1">{t.hours}</p>
+                <p className="text-gray-600 text-sm mt-1">{t.hours} hours</p>
 
                 <div className="flex items-center justify-between mt-3">
-                  <p className="text-blue-600 font-semibold">{t.price}</p>
+                  <p className="text-blue-600 font-semibold">$ {t.price}</p>
 
                   <button
                     onClick={(e) => {
