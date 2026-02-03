@@ -1,7 +1,8 @@
 import { useState } from "react";
-import { postGuideReview } from "../../services/review";
+import { postTourReview } from "../../../services/review";
+import { getUserData } from "../../../services/user";
 
-export default function ReviewsSection({ guideId, onAddReview }) {
+export default function TourReviewsSection({ tourId, onAddReview }) {
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState("");
   const [loading, setLoading] = useState(false);
@@ -16,7 +17,7 @@ export default function ReviewsSection({ guideId, onAddReview }) {
       review: comment.trim(),
     };
 
-    const res = await postGuideReview(guideId, reviewPayload);
+    const res = await postTourReview(tourId, reviewPayload);
 
     setLoading(false);
 

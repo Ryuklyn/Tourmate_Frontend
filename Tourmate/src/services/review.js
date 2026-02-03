@@ -27,3 +27,29 @@ export const postGuideReview = async (guideId, review) => {
     return { success: false, error: error.response?.data || error.message };
   }
 };
+
+export const getTourReviews = async (tourId) => {
+  try {
+    const res = await api.get(`/traveller/tour/review/${tourId}/reviews`);
+
+    return {
+      success: res.data.status === "success",
+      reviews: res.data.reviews || [],
+      averageRating: res.data.averageRating || 0,
+      totalReviews: res.data.totalReviews || 0,
+    };
+  } catch (error) {
+    console.error("Error fetching reviews:", error);
+    return { success: false, reviews: [], averageRating: 0, totalReviews: 0 };
+  }
+};
+
+export const postTourReview = async (tourId, review) => {
+  try {
+    const res = await api.post(`/traveller/tour/review/${tourId}`, review);
+    return { success: true, data: res.data };
+  } catch (error) {
+    console.error("Error posting review:", error.response?.data || error.message);
+    return { success: false, error: error.response?.data || error.message };
+  }
+};

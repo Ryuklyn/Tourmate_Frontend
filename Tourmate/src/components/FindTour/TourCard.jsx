@@ -95,7 +95,10 @@ const TourCard = ({ tour, onToggleFavourite }) => {
           </div>
 
           <button
-            onClick={handleViewPackage}
+            onClick={(e) => {
+              e.stopPropagation();
+              handleViewPackage(tour);
+            }}
             className="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-lg text-sm font-medium transition"
           >
             View Package

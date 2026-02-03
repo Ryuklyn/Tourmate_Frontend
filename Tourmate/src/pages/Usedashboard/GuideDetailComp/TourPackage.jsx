@@ -47,7 +47,7 @@ export default function TourPackages({ guideId, selectedTour, setSelectedTour,ac
       </div>
 
       {/* INFO BAR */}
-      {selectedTour && (
+      {activeTour && (
         <div className="mb-4 text-sm bg-blue-50 text-blue-600 px-4 py-2 rounded-lg">
           ✓ Tour selected! Click <strong>Proceed</strong> to continue with your
           booking.
@@ -89,7 +89,7 @@ export default function TourPackages({ guideId, selectedTour, setSelectedTour,ac
                 <p className="text-gray-600 text-sm mt-1">{t.duration}</p>
 
                 <div className="flex items-center justify-between mt-3">
-                  <p className="text-blue-600 font-semibold">{t.price}</p>
+                  <p className="text-blue-600 font-semibold">$ {t.price}</p>
 
                   <button
                     onClick={(e) => {

@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
+import { useState, useEffect } from "react";
 import {
   ShieldCheck,
   MapPin,
@@ -14,28 +15,40 @@ import {
 } from "lucide-react";
 
 import Niroj from "../../../assets/img/NirojSir.jpg";
+import BookingSidebar from "../../../pages/Usedashboard/GuideDetailComp/BookingSidebar";
 
 // demo purpose – normally use params or API
 import { useParams } from "react-router-dom";
 import { getTourById, toggleFavouriteTour } from "../../../services/tour/tourData";
-import { useLocation, useNavigate } from "react-router-dom";
-import ReviewsSection from "../../GuideDetais/ReviewSection";
-import BookingSidebar from "../../../pages/Usedashboard/GuideDetailComp/BookingSidebar";
+import { getGuideById } from "../../../services/guideData";
+import TourReviews from "../../../pages/Usedashboard/GuideDetailComp/TourReviews";
 const TourDetails = () => {
   const { tourId } = useParams();
   const [tour, setTour] = useState(null);
-  useEffect(() => {
-    const fetchTour = async () => {
+  const [guide, setGuide] = useState(null);
+  const fetchTour = async () => {
+    try {
+      const res = await getTourById(tourId);
+      setTour(res.data);
+      const guidesId = res.data.guideId;
+
       try {
-        const res = await getTourById(tourId);
-        setTour(res.data);
-        console.log(res.data);
+        const res = await getGuideById(guidesId);
+        setGuide(res.data);
+  
       } catch (error) {
-        console.error("Failed to fetch tour:", error);
+        console.error("Failed to fetch guide:", error);
       }
-    };
+    } catch (error) {
+      console.error("Failed to fetch tour:", error);
+    }
+  };
+
+  useEffect(() => {
     fetchTour();
   }, [tourId]);
+
+
   const handleToggleFavourite = async (id) => {
     const res = await toggleFavouriteTour(id);
   
@@ -48,6 +61,9 @@ const TourDetails = () => {
   };
   
 
+  const selectedtour = tour;
+
+
 
 
 
@@ -58,6 +74,12 @@ const TourDetails = () => {
       </div>
     );
   }
+
+
+
+ 
+  if (!selectedtour) return null;
+  // console.log("Rendering TourDetails with tour:", selectedtour.included[0]);
   return (
     <div className="w-full">
       {/* HERO */}
@@ -122,7 +144,7 @@ const TourDetails = () => {
 
               <div>
                 <h1 className="text-3xl font-semibold flex items-center gap-2">
-                  Niroj Shrestha
+                  {guide?.fullName}
                   <span className="flex items-center gap-1 bg-green-50 text-green-700 px-3 py-1 rounded-lg text-xs font-medium border border-green-200">
                     <ShieldCheck size={15} /> Verified Guide
                   </span>
@@ -130,7 +152,7 @@ const TourDetails = () => {
 
                 <p className="text-gray-600 mt-1 flex items-center gap-1">
                   <MapPin size={16} className="text-gray-500" />
-                  Lalitpur, Nepal
+                  {guide?.location}
                 </p>
 
                 <div className="flex items-center gap-5 text-sm text-gray-700 mt-2">
@@ -139,7 +161,7 @@ const TourDetails = () => {
                       size={16}
                       className="text-yellow-500 fill-yellow-500"
                     />
-                    <span>4.9 (4 reviews)</span>
+                    <span>{guide?.averageRating} ({guide?.totalReviews} reviews)</span>
                   </div>
 
                   <div className="flex items-center gap-1">
@@ -175,7 +197,7 @@ const TourDetails = () => {
               <InfoCard
                 icon={<Users />}
                 label="Group Size"
-                value={`Max ${tour.max} people`}
+                value={`Max ${tour.maxGuests} people`}
               />
               <InfoCard
                 icon={<Languages />}
@@ -238,29 +260,18 @@ const TourDetails = () => {
               ))}
             </div>
           </section>
+          <hr className="text-gray-200" />
+          {/* Reviews List */}
+          
+          <TourReviews tourId={tour.id}/>
         </div>
-
         {/* RIGHT – BOOK CARD */}
-        <div className="sticky top-24 h-fit">
-          <div className="bg-white rounded-2xl shadow p-6 space-y-6">
-            <div>
-              <p className="text-sm text-gray-500">Price per package</p>
-              <h3 className="text-3xl font-bold text-blue-600">{tour.price}</h3>
-            </div>
-
-            <button className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition">
-              Book Now
-            </button>
-
-            <button className="w-full border py-3 rounded-lg font-semibold">
-              Contact Us
-            </button>
-
-            <p className="text-sm text-gray-500 flex items-center gap-2">
-              <Calendar size={16} />
-              Free cancellation up to 24 hours before departure
-            </p>
-          </div>
+        <div className="w-full lg:col-span-1 sticky top-24 h-fit">
+          <BookingSidebar
+            guide={guide}
+            selectedTour={selectedtour}
+            clearSelectedTour={() => {}}
+          />
         </div>
       </div>
     </div>

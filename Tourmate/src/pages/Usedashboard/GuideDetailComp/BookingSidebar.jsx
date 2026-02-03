@@ -6,7 +6,6 @@ import { bookGuide, bookTour } from "../../../services/booking";
 export default function BookingSidebar({ guide, selectedTour, clearSelectedTour }) {
   const today = new Date().toISOString().split("T")[0];
   const [date, setDate] = useState(today);
-  const [hours, setHours] = useState(1);
   const [groupSize, setGroupSize] = useState(1);
   const [favourite, setFavourite] = useState(false);
   const handleGroupSizeChange = (e) => {
@@ -22,7 +21,6 @@ export default function BookingSidebar({ guide, selectedTour, clearSelectedTour 
     if (selectedTour) {
       setGroupSize(1);
     }
-    console.log(selectedTour);
   }, [selectedTour]);
 
 
@@ -41,7 +39,7 @@ export default function BookingSidebar({ guide, selectedTour, clearSelectedTour 
       alert("Please select a date");
       return;
     }
-
+    console.log(guide.guideId, selectedTour.id, groupSize, date);
     const res = await bookTour({
     guideId: guide.guideId,
     tourId: selectedTour.id,
@@ -77,7 +75,6 @@ export default function BookingSidebar({ guide, selectedTour, clearSelectedTour 
         onChange={(e) => setDate(e.target.value)}
       />
 
-
       {/* Group Size */}
       <label className="text-sm font-medium mt-4 flex items-center gap-2">
         <Users size={16} /> Group Size (Max {selectedTour?.maxGuests} Guests)
@@ -94,7 +91,6 @@ export default function BookingSidebar({ guide, selectedTour, clearSelectedTour 
         onChange={handleGroupSizeChange}
       />
       {/* ✅ SELECTED TRIP */}
-
       {selectedTour && (
         <div className="relative mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg text-sm">
           {/* ❌ Cancel */}
@@ -126,26 +122,24 @@ export default function BookingSidebar({ guide, selectedTour, clearSelectedTour 
 
       {/* Price Summary */}
       {selectedTour && (
-        <>
-          <hr className="border-gray-300 my-5" />
+        <div className="text-gray-700 text-sm">
+          <p>
+            ${selectedTour.price} × {groupSize} people
+            <span className="float-right font-semibold">${total}</span>
+          </p>
+          <p className="text-xs text-gray-500 mt-1">
+            Duration: {selectedTour.duration} 
+          </p>
+        </div>
+      )}
 
-          <div className="text-gray-700 text-sm">
-            <p>
-              ${selectedTour.price} × {groupSize} people
-              <span className="float-right">${total}</span>
-            </p>
-          </div>
 
           <h3 className="text-xl font-semibold mt-2 mb-4">
             Total <span className="float-right text-blue-600">${total}</span>
           </h3>
-        </>
-      )}
+
 
       {/* Buttons */}
-      {/* <button className="w-full py-3 bg-linear-to-r from-blue-400 to-blue-600 text-white rounded-lg font-semibold">
-        Book Now
-      </button> */}
       <button
         disabled={!selectedTour}
         className={`w-full py-3 rounded-lg font-semibold transition
