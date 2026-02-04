@@ -27,6 +27,7 @@ const FilterSidebarTour = ({ filters, setFilters }) => {
 
   const handleStarClick = (rating) => {
     setSelectedRating(rating);
+    setFilters({ ...filters, rating, page: 0 });
   };
   const toggleItem = (item, listName) => {
     const list = filters[listName];
@@ -140,7 +141,7 @@ const FilterSidebarTour = ({ filters, setFilters }) => {
       {/* Clear Filters */}
       <button
         className="mt-4 text-sm text-blue-600 hover:underline"
-        onClick={() =>
+        onClick={() => {
           setFilters({
             ...filters,
             location: "",
@@ -150,8 +151,9 @@ const FilterSidebarTour = ({ filters, setFilters }) => {
             languages: [],
             categories: [],
             page: 0,
-          })
-        }
+          });
+          setSelectedRating(0);
+        }}
       >
         Clear All Filters
       </button>

@@ -53,3 +53,71 @@ export const postTourReview = async (tourId, review) => {
     return { success: false, error: error.response?.data || error.message };
   }
 };
+
+
+export const getReviewGuides = async () => {
+  try {
+    const res = await api.get(`/guides/reviews/guide`);
+
+    return {
+      success: res.data.status === "success",
+      reviews: res.data.reviews || [],
+      averageRating: res.data.averageRating || 0,
+      totalReviews: res.data.totalReviews || 0,
+    };
+  } catch (error) {
+    console.error("Error fetching reviews:", error);
+    return { success: false, reviews: [], averageRating: 0, totalReviews: 0 };
+  }
+};
+export const getReviewTours = async () => {
+  try {
+    const res = await api.get(`/guides/reviews/tour`);
+
+    return {
+      success: res.data.status === "success",
+      reviews: res.data.reviews || [],
+      averageRating: res.data.averageRating || 0,
+      totalReviews: res.data.totalReviews || 0,
+    };
+  } catch (error) {
+    console.error("Error fetching reviews:", error);
+    return { success: false, reviews: [], averageRating: 0, totalReviews: 0 };
+  }
+};
+
+// Guide comments on a review
+export const commentOnGuideReview = async (reviewId, comment) => {
+  try {
+    const res = await api.post(
+      `/guides/reviews/guide/${reviewId}/comment`,
+      { comment }
+    );
+
+    return { success: true, data: res.data };
+  } catch (error) {
+    console.error(
+      "Error commenting on review:",
+      error.response?.data || error.message
+    );
+    return { success: false, error: error.response?.data || error.message };
+  }
+};
+
+
+export const commentOnTourReview = async (reviewId, comment) => {
+  try {
+    const res = await api.post(
+      `/guides/reviews/tour/${reviewId}/comment`,
+      { comment }
+    );
+
+    return { success: true, data: res.data };
+  } catch (error) {
+    console.error(
+      "Error commenting on review:",
+      error.response?.data || error.message
+    );
+    return { success: false, error: error.response?.data || error.message };
+  }
+};

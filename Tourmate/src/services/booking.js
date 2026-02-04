@@ -41,3 +41,19 @@ export const bookTour = async ({ guideId, tourId, travellers, startDate }) => {
     };
   }
 };
+
+export const fetchBookings = async ({ status, page, size }) => {
+  try {
+    const res = await api.get("/guides/tour/bookings/view", {
+      params: { status, page, size },
+    });
+
+    return {
+      success: true,
+      data: res.data,
+    };
+  } catch (err) {
+    console.error("Failed to fetch bookings", err);
+    return { success: false };
+  }
+};

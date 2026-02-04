@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { postTourReview } from "../../../services/review";
-import { getUserData } from "../../../services/user";
 
 export default function TourReviewsSection({ tourId, onAddReview }) {
   const [rating, setRating] = useState(0);

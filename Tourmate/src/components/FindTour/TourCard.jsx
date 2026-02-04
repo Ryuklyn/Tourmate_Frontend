@@ -31,7 +31,7 @@ const TourCard = ({ tour, onToggleFavourite }) => {
 
         <div className="absolute top-3 right-3 flex items-center gap-1 bg-white px-2 py-1 rounded-full shadow text-sm font-semibold">
           <Star size={14} className="text-yellow-500 fill-yellow-500" />
-          <span className="text-gray-800">4.8</span>
+          <span className="text-gray-800">{tour.averageRating}</span>
         </div>
         
         <button
