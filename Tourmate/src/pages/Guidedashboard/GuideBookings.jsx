@@ -162,7 +162,7 @@ const GuideBookings = () => {
                 </p>
               </div>
 
-              <p className="text-sm text-gray-700 mt-1">👤 {item.guideName}</p>
+              <p className="text-sm text-gray-700 mt-1">👤 {item.user.firstName} {item.user.lastName}</p>
             </div>
 
             <div className="flex items-center gap-3">

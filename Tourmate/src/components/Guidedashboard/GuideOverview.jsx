@@ -1,10 +1,49 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import StatCard from "../Guidedashboard/StatCard";
 import BookingItem from "../Guidedashboard/BookingItem";
 
 import { Map, DollarSign, Users, Star, Clock } from "lucide-react";
+import { getGuideDashboard } from "../../services/guide/dashboard";
+import { fetchBookings } from "../../services/booking";
+import api from "../../utils/axiosInterceptor";
+import formatDateTime from "../../utils/dateUtil";
 
 export default function GuideOverview() {
+  const [dashboard, setDashboard] = useState({});
+  const [bookings, setBookings] = useState([]);
+  const getInitials = (firstName = "", lastName = "") =>
+    `${firstName.charAt(0)}${lastName.charAt(0)}`.toUpperCase();
+
+  const handleReject = async (id) => {
+    await api.put(`/guides/tour/bookings/${id}/reject`);
+    fetchBookingsRequests();
+    loadCounts();
+  };
+
+  const handleAccept = async (id) => {
+    await api.put(`/guides/tour/bookings/${id}/accept`);
+    fetchBookingsRequests();
+    loadCounts();
+  };
+  const fetchDashboard = async () => {
+    const res = await getGuideDashboard();
+    if (res.success) {
+      setDashboard(res.data);
+    }
+  };
+  const fetchBookingsRequests = async () => {
+    const res = await fetchBookings({
+      status: "PENDING",
+      page: 0,
+      size: 10,
+    });
+    if (res?.success) setBookings(res.data.data);
+    console.log(res.data.data);
+  };
+  useEffect(() => {
+    fetchBookingsRequests();
+    fetchDashboard();
+  }, []);
   return (
     <div className="pb-10">
       {/* HEADER */}
@@ -19,33 +58,49 @@ export default function GuideOverview() {
       <section className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-10">
         <StatCard
           title="Active Tours"
-          value="8"
+          value={dashboard.activeTours}
           subtitle="This month"
           icon={<Map className="w-6 h-6 text-[#0faf94]" />}
         />
 
         <StatCard
           title="Monthly Earnings"
-          value="$3,240"
+          value={`$ ${dashboard.monthlyEarnings}`}
           icon={<DollarSign className="w-6 h-6 text-[#0faf94]" />}
-          extra={
-            <span className="text-[#0faf94] text-sm">
-              ▲ +12% from last month
-            </span>
-          }
+          extra={(() => {
+            const change = dashboard.earningsChangePercent;
+            const isPositive = change > 0;
+            const isNegative = change < 0;
+
+            return (
+              <span
+                className={`text-sm font-medium ${isPositive
+                  ? "text-[#0faf94]"
+                  : isNegative
+                    ? "text-red-500"
+                    : "text-gray-400"
+                  }`}
+              >
+                {isPositive && "▲ "}
+                {isNegative && "▼ "}
+                {Math.abs(change).toFixed(1)}% from last month
+              </span>
+            );
+          })()}
         />
+
 
         <StatCard
           title="Total Travelers"
-          value="156"
+          value={dashboard.totalTravelers}
           subtitle="All time"
           icon={<Users className="w-6 h-6 text-[#0faf94]" />}
         />
 
         <StatCard
           title="Rating"
-          value="4.9"
-          subtitle="From 89 reviews"
+          value={dashboard.rating}
+          subtitle={`From ${dashboard.totalReviews} reviews`}
           icon={<Star className="w-6 h-6 text-[#0faf94]" />}
         />
       </section>
@@ -63,25 +118,26 @@ export default function GuideOverview() {
 
           {/* Booking Items */}
           <div className="space-y-4">
-            <BookingItem
-              initials="SJ"
-              name="Sarah Johnson"
-              tour="City Walking Tour"
-              datePrice="Jan 18, 2025 • $120"
-            />
-            <BookingItem
-              initials="MC"
-              name="Michael Chen"
-              tour="Food & Culture Tour"
-              datePrice="Jan 22, 2025 • $150"
-            />
-            <BookingItem
-              initials="EW"
-              name="Emma Williams"
-              tour="Museum Tour"
-              datePrice="Jan 25, 2025 • $90"
-            />
+            {bookings.length === 0 && (
+              <p className="text-sm text-gray-400">No pending booking requests</p>
+            )}
+
+            {bookings.map((booking) => (
+              <BookingItem
+                key={booking.bookingId}
+                initials={getInitials(
+                  booking.user.firstName,
+                  booking.user.lastName
+                )}
+                name={`${booking.user.firstName} ${booking.user.lastName}`}
+                tour={booking.tourName}
+                datePrice={`${formatDateTime(booking.startDate)} • $${booking.totalPrice}`}
+                onAccept={() => handleAccept(booking.bookingId)}
+                onReject={() => handleReject(booking.bookingId)}
+              />
+            ))}
           </div>
+
         </div>
       </section>
     </div>

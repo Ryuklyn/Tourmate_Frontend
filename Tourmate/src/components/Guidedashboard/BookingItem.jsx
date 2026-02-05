@@ -1,6 +1,6 @@
 import React from "react";
 
-export default function BookingItem({ initials, name, tour, datePrice }) {
+export default function BookingItem({ initials, name, tour, datePrice,onAccept, onReject }) {
   return (
     <div
       className="flex items-center justify-between bg-white p-4 rounded-xl border"
@@ -17,10 +17,10 @@ export default function BookingItem({ initials, name, tour, datePrice }) {
         </div>
       </div>
       <div className="flex items-center gap-3">
-        <button className="px-4 py-2 rounded-full bg-[#0FAF94] text-white">
+        <button className="px-4 py-2 rounded-full bg-[#0FAF94] text-white" onClick={onAccept}>
           Accept
         </button>
-        <button className="px-4 py-2 rounded-full border border-gray-200 text-sm">
+        <button className="px-4 py-2 rounded-full border border-gray-200 text-sm" onClick={onReject}>
           Decline
         </button>
       </div>

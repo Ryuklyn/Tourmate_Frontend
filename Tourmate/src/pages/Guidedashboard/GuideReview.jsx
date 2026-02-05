@@ -117,7 +117,9 @@ const GuideReview = () => {
         <div className="p-5 border border-gray-300 rounded-xl shadow-sm bg-white">
           <p className="text-sm text-gray-500">Total Reviews</p>
           <h2 className="text-3xl font-bold mt-1">{totalReviews}</h2>
-          <p className="text-gray-600 text-sm">From all tours</p>
+          {reviewType === "TOUR" && (<p className="text-gray-600 text-sm">From all tours</p>)}
+          {reviewType === "GUIDE" && (<p className="text-gray-600 text-sm">From all guides</p>)}
+
         </div>
 
         <div className="p-5 border border-gray-300 rounded-xl shadow-sm bg-white">

@@ -92,7 +92,7 @@ export default function Header({ role }) {
           <motion.button
             whileTap={{ scale: 0.97 }}
             onClick={() => handleRoleSwitch("TRAVELLER")}
-            className={`relative z-10 flex-1 text-sm font-semibold rounded-full transition-colors duration-300 
+            className={`relative z-10 flex-1 flex items-center justify-center text-sm font-semibold rounded-full transition-colors duration-300 
               focus:outline-none active:outline-none select-none
               ${activeRole === "TRAVELLER"
                 ? "text-white"
@@ -107,9 +107,9 @@ export default function Header({ role }) {
             <motion.button
               whileTap={{ scale: 0.97 }}
               onClick={() => handleRoleSwitch("GUIDE")}
-              className={`relative z-10 text-sm font-semibold rounded-full transition-colors duration-300 
-      focus:outline-none active:outline-none select-none
-      ${activeRole === "GUIDE"
+              className={`relative z-10 flex flex-1 items-center justify-center text-sm font-semibold rounded-full transition-colors duration-300 
+                  focus:outline-none active:outline-none select-none
+                  ${activeRole === "GUIDE"
                   ? "text-white"
                   : "text-gray-600 hover:text-gray-800"
                 }`}
