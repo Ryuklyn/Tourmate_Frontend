@@ -13,7 +13,6 @@ export default function Dashboard() {
     const res = await getAdminDashboard();
     if (res.success) {
       setDashboard(res.data);
-      console.log(res.data);
     }
   }
   useEffect(() => {

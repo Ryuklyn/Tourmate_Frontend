@@ -1,32 +1,42 @@
 import { Star, Trophy } from "lucide-react";
+import { useEffect, useState } from "react";
+import { getTopGuides } from "../../services/admin/dashboard";
 
 export default function TopGuides() {
-  const guides = [
-    {
-      name: "Marco Rivera",
-      location: "Rome, Italy",
-      rating: 4.9,
-      earnings: "$12,450",
-    },
-    {
-      name: "Yuki Tanaka",
-      location: "Tokyo, Japan",
-      rating: 4.8,
-      earnings: "$11,200",
-    },
-    {
-      name: "Pierre Dubois",
-      location: "Paris, France",
-      rating: 4.9,
-      earnings: "$10,800",
-    },
-    {
-      name: "Ana Santos",
-      location: "Barcelona, Spain",
-      rating: 4.7,
-      earnings: "$9,650",
-    },
-  ];
+  const [guides, setGuides] = useState([]);
+  const fetchTopGuides = async () => {
+    const res = await getTopGuides();
+    if (res.success) setGuides(res.data);
+  }
+  useEffect(() => {
+    fetchTopGuides();
+  },[])
+  // const guides = [
+  //   {
+  //     name: "Marco Rivera",
+  //     location: "Rome, Italy",
+  //     rating: 4.9,
+  //     earnings: "$12,450",
+  //   },
+  //   {
+  //     name: "Yuki Tanaka",
+  //     location: "Tokyo, Japan",
+  //     rating: 4.8,
+  //     earnings: "$11,200",
+  //   },
+  //   {
+  //     name: "Pierre Dubois",
+  //     location: "Paris, France",
+  //     rating: 4.9,
+  //     earnings: "$10,800",
+  //   },
+  //   {
+  //     name: "Ana Santos",
+  //     location: "Barcelona, Spain",
+  //     rating: 4.7,
+  //     earnings: "$9,650",
+  //   },
+  // ];
 
   return (
     <div className="bg-white p-6 rounded-xl shadow border border-gray-300">
@@ -72,7 +82,7 @@ export default function TopGuides() {
               {/* RATING */}
               <div className="flex items-center gap-1 text-gray-800 text-base font-semibold">
                 <Star className="w-5 h-5 text-yellow-500 fill-yellow-500" />
-                <span>{item.rating}</span>
+                <span>{item.avgRating}</span>
               </div>
 
               {/* EARNINGS */}

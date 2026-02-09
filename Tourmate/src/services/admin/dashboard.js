@@ -14,3 +14,32 @@ export const getAdminDashboard = async () => {
     };
   }
 };
+export const getRecentBookings = async () => {
+  try {
+    const response = await api.get("/admin/recent-bookings");
+    return {
+      success: true,
+      data: response.data,
+    };
+  } catch (error) {
+    return {
+      success: false,
+      error: error.message || "Unknown error",
+    };
+  }
+};
+export const getTopGuides = async () => {
+  try {
+    const response = await api.get("/admin/top-guides");
+    return {
+      success: true,
+      data: response.data,
+    };
+  } catch (error) {
+    return {
+      success: false,
+      error: error.message || "Unknown error",
+    };
+  }
+};
+

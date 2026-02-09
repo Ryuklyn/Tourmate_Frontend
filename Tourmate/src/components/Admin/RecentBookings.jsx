@@ -1,34 +1,47 @@
+import { useEffect, useState } from "react";
+import { getRecentBookings } from "../../services/admin/dashboard";
+
 export default function RecentBookings() {
-  const data = [
-    {
-      tour: "Rome Historical Tour",
-      name: "Sarah Wilson",
-      date: "Dec 15, 2024",
-      price: "$450",
-      status: "Confirmed",
-    },
-    {
-      tour: "Tokyo Food Adventure",
-      name: "James Chen",
-      date: "Dec 18, 2024",
-      price: "$320",
-      status: "Pending",
-    },
-    {
-      tour: "Paris Art Walk",
-      name: "Emma Davis",
-      date: "Dec 20, 2024",
-      price: "$280",
-      status: "Confirmed",
-    },
-    {
-      tour: "Barcelona Architecture",
-      name: "Alex Murphy",
-      date: "Dec 22, 2024",
-      price: "$390",
-      status: "Cancelled",
-    },
-  ];
+  const [data, setData] = useState([]);
+  const fetchData = async () => {
+    const res = await getRecentBookings();
+    if (res.success) {
+      setData(res.data);
+    }
+  }
+  useEffect(() => {
+    fetchData();
+  }, []);
+  //  data = [
+  //   {
+  //     tour: "Rome Historical Tour",
+  //     name: "Sarah Wilson",
+  //     date: "Dec 15, 2024",
+  //     price: "$450",
+  //     status: "Confirmed",
+  //   },
+  //   {
+  //     tour: "Tokyo Food Adventure",
+  //     name: "James Chen",
+  //     date: "Dec 18, 2024",
+  //     price: "$320",
+  //     status: "Pending",
+  //   },
+  //   {
+  //     tour: "Paris Art Walk",
+  //     name: "Emma Davis",
+  //     date: "Dec 20, 2024",
+  //     price: "$280",
+  //     status: "Confirmed",
+  //   },
+  //   {
+  //     tour: "Barcelona Architecture",
+  //     name: "Alex Murphy",
+  //     date: "Dec 22, 2024",
+  //     price: "$390",
+  //     status: "Cancelled",
+  //   },
+  // ];
 
   return (
     <div className="bg-white p-6 rounded-xl shadow border border-gray-200">
@@ -59,28 +72,31 @@ export default function RecentBookings() {
           >
             {/* Left Section */}
             <div>
-              <p className="font-semibold text-gray-800">{item.tour}</p>
+              <p className="font-semibold text-gray-800">{item.tourName}</p>
               <p className="text-sm text-gray-600 mt-1">
-                {item.name} • {item.date}
+                {item.travelerName} • {item.bookingDate}
               </p>
             </div>
 
             {/* Right Section */}
             <div className="text-right">
               <p className="text-lg font-semibold text-gray-800">
-                {item.price}
+                {item.totalPrice}
               </p>
 
               <span
                 className={`px-2 py-1 text-xs font-medium rounded-full inline-block mt-1
-                  ${
-                    item.status === "Confirmed"
-                      ? "bg-green-100 text-green-600"
-                      : item.status === "Pending"
+    ${item.status === "APPROVED"
+                    ? "bg-green-100 text-green-600"
+                    : item.status === "COMPLETED"
                       ? "bg-yellow-100 text-yellow-600"
-                      : "bg-red-100 text-red-600"
+                      : item.status === "PENDING"
+                        ? "bg-yellow-100 text-yellow-600"
+                        : item.status === "CANCELLED"
+                          ? "bg-red-100 text-red-600"
+                          : "bg-gray-100 text-gray-600"
                   }
-                `}
+  `}
               >
                 {item.status}
               </span>
