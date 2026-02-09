@@ -4,8 +4,21 @@ import RecentBookings from "../../components/Admin/RecentBookings";
 import TopGuides from "../../components/Admin/TopGuides";
 
 import { Users, Map, Bookmark, DollarSign } from "lucide-react";
+import { getAdminDashboard } from "../../services/admin/dashboard";
+import { useEffect, useState } from "react";
 
 export default function Dashboard() {
+  const [dashboard, setDashboard] = useState();
+  const fetchDashboard = async () => {
+    const res = await getAdminDashboard();
+    if (res.success) {
+      setDashboard(res.data);
+      console.log(res.data);
+    }
+  }
+  useEffect(() => {
+    fetchDashboard();
+  }, [])
   return (
     <div className="w-full">
       <h1 className="text-2xl font-bold mb-1">Dashboard</h1>
@@ -18,28 +31,29 @@ export default function Dashboard() {
         <StatCard
           icon={<Users />}
           title="Total Travelers"
-          value="12,847"
-          percentage="+12.5%"
+          value={dashboard?.totalTravelers.toLocaleString()}
+          percentage={`${dashboard?.travelersChange.toFixed(1)}%`}
         />
         <StatCard
           icon={<Map />}
           title="Active Guides"
-          value="486"
-          percentage="+8.2%"
+          value={dashboard?.activeGuides.toLocaleString()}
+          percentage={`${dashboard?.guidesChange.toFixed(1)}%`}
         />
         <StatCard
           icon={<Bookmark />}
           title="Total Bookings"
-          value="3,254"
-          percentage="-2.4%"
+          value={dashboard?.totalBookings.toLocaleString()}
+          percentage={`${dashboard?.bookingsChange.toFixed(1)}%`}
         />
         <StatCard
           icon={<DollarSign />}
           title="Revenue"
-          value="$284,500"
-          percentage="+18.7%"
+          value={`$${dashboard?.revenue.toLocaleString()}`}
+          percentage={`${dashboard?.revenueChange.toFixed(1)}%`}
         />
       </div>
+
 
       <div className="space-y-6">
         {/* Row 1 - Full Width Chart */}

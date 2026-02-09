@@ -1,31 +1,27 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { DollarSign, Wallet, Clock } from "lucide-react";
+import { getEarnings } from "../../services/guide/dashboard";
 
 export default function EarningsOverview() {
-  const transactions = [
-    {
-      title: "Historic Tokyo Walking Tour",
-      date: "Jan 15, 2025",
-      amount: "$150",
-      status: "completed",
-    },
-    {
-      title: "Food & Culture Experience",
-      date: "Jan 12, 2025",
-      amount: "$200",
-      status: "completed",
-    },
-    {
-      title: "Historic Tokyo Walking Tour",
-      date: "Jan 10, 2025",
-      amount: "$150",
-      status: "pending",
-    },
-  ];
+  const [earnings, setEarnings] = useState(0);
+  const [transactions, setTransactions] = useState([]);
+  const fetchEarnings = async () => {
+    const res = await getEarnings();
+    if (res.success) {
+      setEarnings(res.data);
+      setTransactions(res.data.recentTransactions);
+    }
+  }
+
+  useEffect(() => {
+    fetchEarnings();
+  }, [])
+
 
   const statusColor = {
     completed: "bg-green-100 text-[#0faf94]",
     pending: "bg-yellow-100 text-yellow-600",
+    approved: "bg-yellow-100 text-yellow-600",
   };
 
   return (
@@ -39,21 +35,38 @@ export default function EarningsOverview() {
         {/* This Month */}
         <div className="border border-gray-300 rounded-xl p-5 shadow-sm bg-white">
           <p className="text-gray-500">This Month</p>
-          <h2 className="text-3xl font-bold mt-2 text-[#0faf94]">$3,240</h2>
-          <p className="text-gray-500 text-sm mt-1">+15% from last month</p>
+          <h2 className="text-3xl font-bold mt-2 text-[#0faf94]">
+            ${earnings.monthlyEarnings?.toLocaleString() || 0}
+          </h2>
+          <p className="text-gray-500 text-sm mt-1">
+            {(() => {
+              const change = earnings.earningsChangePercent || 0;
+              const isPositive = change > 0;
+              const isNegative = change < 0;
+
+              return (
+                <span className={`${isPositive ? "text-[#0faf94]" : isNegative ? "text-red-500" : "text-gray-400"} font-medium`}>
+                  {isPositive && "▲ "}
+                  {isNegative && "▼ "}
+                  {Math.abs(change).toFixed(1)}% from last month
+                </span>
+              );
+            })()}
+          </p>
         </div>
+
 
         {/* Total Earnings */}
         <div className="border border-gray-300 rounded-xl p-5 shadow-sm bg-white">
           <p className="text-gray-500">Total Earnings</p>
-          <h2 className="text-3xl font-bold mt-2 text-[#0faf94]">$28,450</h2>
+          <h2 className="text-3xl font-bold mt-2 text-[#0faf94]">{earnings.totalEarnings}</h2>
           <p className="text-gray-500 text-sm">All time earnings</p>
         </div>
 
         {/* Pending Payout */}
         <div className="border border-gray-300 rounded-xl p-5 shadow-sm bg-white">
           <p className="text-gray-500">Pending Payout</p>
-          <h2 className="text-3xl font-bold mt-2 text-[#0faf94]">$1,120</h2>
+          <h2 className="text-3xl font-bold mt-2 text-[#0faf94]">{earnings.pendingPayout}</h2>
           <p className="text-gray-500 text-sm mt-1">Available in 3 days</p>
         </div>
       </div>
@@ -69,16 +82,15 @@ export default function EarningsOverview() {
               className="flex justify-between items-center border border-gray-300 rounded-lg p-4 hover:bg-gray-50 transition"
             >
               <div>
-                <p className="font-medium text-gray-900">{t.title}</p>
+                <p className="font-medium text-gray-900">{t.tourName}</p>
                 <p className="text-gray-500 text-sm">{t.date}</p>
               </div>
 
               <div className="flex flex-col items-end">
                 <p className="font-semibold">{t.amount}</p>
                 <span
-                  className={`px-3 py-1 mt-1 text-xs rounded-full font-medium ${
-                    statusColor[t.status]
-                  }`}
+                  className={`px-3 py-1 mt-1 text-xs rounded-full font-medium ${statusColor[t.status]
+                    }`}
                 >
                   {t.status}
                 </span>

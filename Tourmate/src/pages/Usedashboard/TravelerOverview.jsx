@@ -1,4 +1,4 @@
-import React from "react";
+import React, { use, useEffect, useState } from "react";
 import StatCard from "../../components/Userdashboard/StatCard";
 import AdventureCard from "../../components/Userdashboard/AdventureCard";
 import RecentSearches from "../../components/Userdashboard/RecentSearches";
@@ -6,19 +6,48 @@ import Kyoto from "../../assets/img/Kyoto.jpg";
 import Barcelona from "../../assets/img/Barcelona.jpg";
 import Mustang from "../../assets/img/Mustang.jpg";
 import { CalendarDays, Star, MapPin, BookOpen, Map } from "lucide-react";
+import { getTravellerDashboard, getUpcomingTrips } from "../../services/traveller/dashboard";
 
 export default function TravelerOverview() {
+  const [dashboard, setDashboard] = useState({});
+  const [upcomingTrips, setUpcomingTrips] = useState([]);
+  const fetchDashboard = async () => {
+    const res = await getTravellerDashboard();
+    if (res.success) {
+      setDashboard(res.data);
+    }
+  };
+  
+  const fetchUpcomingTrips = async () => {
+    const res = await getUpcomingTrips(0,10);
+
+      if (res.success) {
+        setUpcomingTrips(res.data.data.map((b) => ({
+          title: b.tourName,
+          guide: b.guideName,
+          date: b.startDate,
+          image: b.tour.tourPic || Kyoto // fallback image
+        })) || []);
+      }else{
+        setUpcomingTrips([]);
+
+      }
+  };
+  useEffect(() => {
+    fetchDashboard();
+    fetchUpcomingTrips();
+  },[]);
   const stats = [
     {
       title: "Upcoming Trips",
-      value: 3,
-      subtitle: "Next trip in 5 days",
+      value: dashboard.upcomingTrips,
+      subtitle: `Next trip in ${dashboard.nextTripInDays} days`,
       icon: <CalendarDays className="w-6 h-6 text-green-600" />,
     },
     {
       title: "Favorite Guides",
-      value: 12,
-      subtitle: "4 active this week",
+      value: dashboard.favouriteGuides,
+      subtitle:  `${dashboard.favouriteGuidesThisWeek} guides added this week`,
       icon: <Star className="w-6 h-6 text-yellow-500" />,
     },
     {
@@ -29,32 +58,12 @@ export default function TravelerOverview() {
     },
     {
       title: "Total Bookings",
-      value: 45,
+      value: dashboard.totalBookings,
       subtitle: "Since joining",
       icon: <BookOpen className="w-6 h-6 text-purple-500" />,
     },
   ];
 
-  const adventures = [
-    {
-      title: "Kyoto, Japan",
-      guide: "Yuki Tanaka",
-      date: "Jan 15, 2025",
-      image: Kyoto,
-    },
-    {
-      title: "Barcelona, Spain",
-      guide: "Maria Garcia",
-      date: "Feb 3, 2025",
-      image: Barcelona,
-    },
-    {
-      title: "Mustang, Nepal",
-      guide: "Niroj Shrestha",
-      date: "Mar 20, 2025",
-      image: Mustang,
-    },
-  ];
 
   return (
     <>
@@ -77,7 +86,7 @@ export default function TravelerOverview() {
           <Map className="w-5 h-5 text-green-600" /> Upcoming Adventures
         </h2>
         <div className="flex flex-col gap-4">
-          {adventures.map((adv, i) => (
+          {upcomingTrips.map((adv, i) => (
             <AdventureCard key={i} {...adv} />
           ))}
         </div>
