@@ -16,12 +16,15 @@ const LoginForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const loginStatus = await doLogin(formData.email, formData.password);
-
+    
     if (loginStatus.error) {
       alert(loginStatus.error);
+    }else if(localStorage.getItem("role") === "ADMIN") {
+      navigate("/dashboard/admin");
+    }else if(localStorage.getItem("role") === "GUIDE") {
+      navigate("/dashboard/guide");
     } else {
       navigate("/dashboard");
-
     }
   };
 
