@@ -1,0 +1,80 @@
+/* Import your custom styles */
+@import url("./assets/styles/calendar.css");
+
+@import "tailwindcss";
+
+/* Optional: define global styles using Tailwind classes */
+body {
+  font-family: "Sora", system-ui, sans-serif;
+}
+
+/* @layer base {
+  body {
+    font-family: theme(fontFamily.sora);
+  }
+} */
+
+*/ :root {
+  /* font-family: system-ui, Avenir, Helvetica, Arial, sans-serif; */
+  font-weight: 400;
+  width: 100%;
+}
+
+button:focus,
+button:focus-visible {
+  outline: none;
+}
+
+a {
+  font-weight: 500;
+  /* color: #646cff; */
+  text-decoration: inherit;
+}
+/* a:hover {
+  color: #535bf2;
+} */
+
+body {
+  margin: 0;
+  display: flex;
+  place-items: center;
+  /* min-width: 320px;
+  min-height: 100vh; */
+}
+
+/* h1 {
+  font-size: 3.2em;
+  line-height: 1.1;
+} */
+
+button {
+  border-radius: 8px;
+
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  cursor: pointer;
+  transition: border-color 0.25s;
+}
+/* button:hover {
+  border-color: #646cff;
+} */
+.react-calendar__month-view__weekdays__weekday {
+  text-align: center;
+}
+@media (prefers-color-scheme: light) {
+  :root {
+    color: #213547;
+    background-color: #ffffff;
+  }
+  a:hover {
+    color: #747bff;
+  }
+  /* button {
+    background-color: #f9f9f9;
+  } */
+  .default-button {
+    background-color: #f9f9f9;
+  }
+}

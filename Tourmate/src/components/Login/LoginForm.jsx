@@ -1,0 +1,85 @@
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { doLogin, handleLoginGoogle } from "../../services/auth";
+
+const LoginForm = () => {
+  const [formData, setFormData] = useState({ email: "", password: "" });
+  const navigate = useNavigate();
+
+  // Handle form data changes
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  // Handle login form submission
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const loginStatus = await doLogin(formData.email, formData.password);
+
+    if (loginStatus.error) {
+      alert(loginStatus.error);
+    } else {
+      navigate("/dashboard");
+
+    }
+  };
+
+  return (
+    <form onSubmit={handleSubmit} className="space-y-5">
+      <div>
+        <label className="block text-sm font-medium text-gray-700 text-left">
+          Email Address
+        </label>
+        <input
+          type="email"
+          name="email"
+          placeholder="Enter your email"
+          value={formData.email}
+          onChange={handleChange}
+          className="mt-1 w-full border text-sm border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+      </div>
+
+      <div>
+        <label className="block text-sm font-medium text-gray-700 text-left">
+          Password
+        </label>
+        <input
+          type="password"
+          name="password"
+          placeholder="Enter your password"
+          value={formData.password}
+          onChange={handleChange}
+          className="mt-1 w-full border text-sm border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+      </div>
+
+      <div className="flex items-center justify-between text-sm">
+        <label className="flex items-center gap-2 text-gray-600">
+          <input type="checkbox" /> Remember me
+        </label>
+        <Link to="#A" className="text-blue-600 hover:underline">
+          Forget Password?
+        </Link>
+      </div>
+
+      {/* Sign In Button */}
+      <button
+        type="submit"
+        className="w-full bg-blue-500 text-white py-2.5 rounded-lg font-semibold hover:bg-blue-700 transition"
+      >
+        Sign In
+      </button>
+
+      <p className="text-center text-sm text-gray-600 mt-4">
+        Don’t have an account?{" "}
+        <Link to="/signup" className="text-blue-600 hover:underline">
+          Sign up now
+        </Link>
+      </p>
+    </form>
+  );
+};
+
+export default LoginForm;
