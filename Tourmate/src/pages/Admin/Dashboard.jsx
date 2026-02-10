@@ -10,11 +10,16 @@ import { useEffect, useState } from "react";
 export default function Dashboard() {
   const [dashboard, setDashboard] = useState();
   const fetchDashboard = async () => {
-    const res = await getAdminDashboard();
-    if (res.success) {
-      setDashboard(res.data);
+    try {
+      const res = await getAdminDashboard();
+      if (res?.success) {
+        setDashboard(res.data);
+      }
+    } catch (err) {
+      console.error("Failed to load dashboard", err);
     }
-  }
+  };
+  
   useEffect(() => {
     fetchDashboard();
   }, [])
@@ -30,27 +35,51 @@ export default function Dashboard() {
         <StatCard
           icon={<Users />}
           title="Total Travelers"
-          value={dashboard?.totalTravelers.toLocaleString()}
-          percentage={`${dashboard?.travelersChange.toFixed(1)}%`}
+          value={dashboard?.totalTravelers?.toLocaleString() ?? "—"}
+          percentage={
+            dashboard?.travelersChange != null
+              ? `${dashboard.travelersChange.toFixed(1)}%`
+              : "—"
+          }
         />
+
         <StatCard
           icon={<Map />}
           title="Active Guides"
-          value={dashboard?.activeGuides.toLocaleString()}
-          percentage={`${dashboard?.guidesChange.toFixed(1)}%`}
+          value={dashboard?.activeGuides?.toLocaleString() ?? "—"}
+          percentage={
+            dashboard?.guidesChange != null
+              ? `${dashboard.guidesChange.toFixed(1)}%`
+              : "—"
+          }
         />
+
         <StatCard
           icon={<Bookmark />}
           title="Total Bookings"
-          value={dashboard?.totalBookings.toLocaleString()}
-          percentage={`${dashboard?.bookingsChange.toFixed(1)}%`}
+          value={dashboard?.totalBookings?.toLocaleString() ?? "—"}
+          percentage={
+            dashboard?.bookingsChange != null
+              ? `${dashboard.bookingsChange.toFixed(1)}%`
+              : "—"
+          }
         />
+
         <StatCard
           icon={<DollarSign />}
           title="Revenue"
-          value={`$${dashboard?.revenue.toLocaleString()}`}
-          percentage={`${dashboard?.revenueChange.toFixed(1)}%`}
+          value={
+            dashboard?.revenue != null
+              ? `$${dashboard.revenue.toLocaleString()}`
+              : "—"
+          }
+          percentage={
+            dashboard?.revenueChange != null
+              ? `${dashboard.revenueChange.toFixed(1)}%`
+              : "—"
+          }
         />
+
       </div>
 
 

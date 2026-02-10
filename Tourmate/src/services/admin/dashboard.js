@@ -43,3 +43,20 @@ export const getTopGuides = async () => {
   }
 };
 
+
+
+export const getMonthlyRevenue = async () => {
+  try {
+    const res = await api.get("/admin/monthly-revenue");
+    console.log(res.data);
+    return {
+      success: true,
+      data: res.data,
+    };
+  } catch (error) {
+    return {
+      success: false,
+      error: error.message || "Unknown error",
+    };
+  }
+};
