@@ -17,26 +17,22 @@ export default function TravelerOverview() {
       setDashboard(res.data);
     }
   };
-  
+
   const fetchUpcomingTrips = async () => {
-    const res = await getUpcomingTrips(0,10);
+    const res = await getUpcomingTrips(0, 10);
 
-      if (res.success) {
-        setUpcomingTrips(res.data.data.map((b) => ({
-          title: b.tourName,
-          guide: b.guideName,
-          date: b.startDate,
-          image: b.tour.tourPic || Kyoto // fallback image
-        })) || []);
-      }else{
-        setUpcomingTrips([]);
+    if (res.success) {
+      setUpcomingTrips(res.data.data);
+      console.log(res.data.data);
+    } else {
+      setUpcomingTrips([]);
 
-      }
+    }
   };
   useEffect(() => {
     fetchDashboard();
     fetchUpcomingTrips();
-  },[]);
+  }, []);
   const stats = [
     {
       title: "Upcoming Trips",
@@ -47,7 +43,7 @@ export default function TravelerOverview() {
     {
       title: "Favorite Guides",
       value: dashboard.favouriteGuides,
-      subtitle:  `${dashboard.favouriteGuidesThisWeek} guides added this week`,
+      subtitle: `${dashboard.favouriteGuidesThisWeek} guides added this week`,
       icon: <Star className="w-6 h-6 text-yellow-500" />,
     },
     {
@@ -86,8 +82,8 @@ export default function TravelerOverview() {
           <Map className="w-5 h-5 text-green-600" /> Upcoming Adventures
         </h2>
         <div className="flex flex-col gap-4">
-          {upcomingTrips.map((adv, i) => (
-            <AdventureCard key={i} {...adv} />
+          {upcomingTrips.map((booking, i) => (
+            <AdventureCard key={booking.bookingId} booking={booking} />
           ))}
         </div>
       </div>
