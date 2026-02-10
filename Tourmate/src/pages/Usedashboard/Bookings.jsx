@@ -30,6 +30,7 @@ export default function Bookings() {
       rating: 4.9,
       reviews: 127,
       image: Patan,
+      guideAvatar: NirojSirImg,
       date: "Dec 18, 2025",
       time: "9:00 AM",
       guests: "2 Guests",
@@ -47,6 +48,8 @@ export default function Bookings() {
       rating: 5.0,
       reviews: 203,
       image: Paris,
+      guideAvatar:
+        "https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=300&h=300&fit=crop",
       date: "Jan 8, 2026",
       time: "10:00 AM",
       guests: "4 Guests",
@@ -64,6 +67,8 @@ export default function Bookings() {
       rating: 4.8,
       reviews: 156,
       image: Tokyo,
+      guideAvatar:
+        "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=300&h=300&fit=crop",
       date: "Feb 12, 2026",
       time: "6:00 PM",
       guests: "3 Guests",
@@ -96,78 +101,90 @@ export default function Bookings() {
         </button>
       </div>
 
-      {/* Booking Cards */}
       <div className="space-y-6">
         {bookings.map((b) => (
           <div
             key={b.id}
-            className="bg-white shadow-lg rounded-2xl flex overflow-hidden border border-gray-100"
+            className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden flex h-[280px]"
           >
-            {/* Image Section */}
-            <div className="relative w-72 h-64 overflow-hidden">
+            {/* LEFT IMAGE (FIXED SIZE) */}
+            <div className="relative w-[45%] h-full shrink-0">
               <img
                 src={b.image}
                 alt={b.title}
-                className="w-full h-full object-cover rounded-t-2xl"
+                className="w-full h-full object-cover"
               />
 
               {/* Status Badge */}
-              <span className="absolute top-3 right-3 bg-blue-600 text-white text-xs px-3 py-1 rounded-full">
-                {b.status}
-              </span>
-
-              {/* Category badge */}
-              <span className="absolute bottom-3 left-3 bg-black/60 text-white text-xs px-3 py-1 rounded-full">
-                {b.category}
+              <span className="absolute top-4 left-4 bg-black text-white text-xs px-4 py-1 rounded-full flex items-center gap-2">
+                <span className="w-2 h-2 bg-white rounded-full" />
+                {b.status.toUpperCase()}
               </span>
             </div>
 
-            {/* Content Section */}
-            <div className="flex-1 p-6">
-              {/* Title */}
-              <h2 className="text-xl font-semibold">{b.title}</h2>
+            {/* RIGHT CONTENT */}
+            <div className="flex-1 p-8 flex flex-col justify-between overflow-hidden">
+              {/* Top Content */}
+              <div>
+                <h2 className="text-2xl font-semibold leading-snug mb-3 line-clamp-2">
+                  {b.title}
+                </h2>
 
-              <p className="text-gray-600 mb-4">
-                👤 {b.guide} · ⭐ {b.rating} ({b.reviews} reviews)
-              </p>
+                <div className="flex items-center gap-3 text-sm text-gray-600 mb-5">
+                  <img
+                    src={b.guideAvatar}
+                    alt={b.guide}
+                    className="w-6 h-6 rounded-full object-cover"
+                  />
+                  <span>{b.guide}</span>
+                  <span className="text-orange-500 font-medium">
+                    ⭐ {b.rating}
+                  </span>
+                  <span>· {b.reviews} reviews</span>
+                </div>
 
-              {/* Info grid */}
-              <div className="grid grid-cols-2 gap-x-6 gap-y-3 text-sm text-gray-700">
-                <div className="flex items-center gap-2">
-                  <Calendar size={18} /> {b.date}
-                </div>
-                <div className="flex items-center gap-2">
-                  <Clock size={18} /> {b.time}
-                </div>
-                <div className="flex items-center gap-2">
-                  <MapPin size={18} /> {b.meetingPoint}
-                </div>
-                <div className="flex items-center gap-2">
-                  <Users size={18} /> {b.guests}
+                <div className="flex flex-wrap gap-6 text-sm text-gray-600">
+                  <div className="flex items-center gap-2">
+                    <Calendar size={16} />
+                    {b.date}
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Clock size={16} />
+                    {b.time}
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <MapPin size={16} />
+                    {b.meetingPoint}
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Users size={16} />
+                    {b.guests} guests
+                  </div>
                 </div>
               </div>
 
-              <hr className="my-4" />
-
-              {/* Bottom Section */}
-              <div className="flex items-center justify-between mt-4">
-                {/* Total Amount (Stacked) */}
+              {/* Bottom */}
+              <div className="flex items-center justify-between pt-4">
                 <div>
-                  <p className="text-lg font-semibold">Total Amount</p>
-                  <p className="text-xl font-bold">{b.total}</p>
+                  <p className="text-2xl font-bold text-orange-600">
+                    {b.total}
+                  </p>
+                  <p className="text-xs uppercase text-gray-400 tracking-wide">
+                    Total
+                  </p>
                 </div>
 
-                {/* Buttons Right Aligned */}
                 <div className="flex gap-3">
-                  <button className="flex items-center gap-2 px-4 py-2 rounded-xl border border-gray-300 hover:bg-gray-50 transition">
-                    <Phone size={18} /> Call Guide
+                  <button className="px-5 py-2 rounded-full border border-gray-300 hover:bg-gray-50 transition flex items-center gap-2">
+                    <Phone size={16} />
+                    Call
                   </button>
 
                   <button
-                    onClick={() => handleViewDetails()}
-                    className="flex items-center gap-2 px-5 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition"
+                    onClick={() => handleViewDetails(b.id)}
+                    className="px-6 py-2 rounded-full bg-black text-white hover:bg-gray-900 transition flex items-center gap-2"
                   >
-                    View Details <ArrowRight size={18} />
+                    Details <ArrowRight size={16} />
                   </button>
                 </div>
               </div>
