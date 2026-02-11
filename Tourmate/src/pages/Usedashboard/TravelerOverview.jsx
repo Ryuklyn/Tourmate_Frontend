@@ -46,12 +46,12 @@ export default function TravelerOverview() {
       subtitle: `${dashboard.favouriteGuidesThisWeek} guides added this week`,
       icon: <Star className="w-6 h-6 text-yellow-500" />,
     },
-    {
-      title: "Places Visited",
-      value: 28,
-      subtitle: "Across 8 countries",
-      icon: <MapPin className="w-6 h-6 text-blue-500" />,
-    },
+    // {
+    //   title: "Places Visited",
+    //   value: 28,
+    //   subtitle: "Across 8 countries",
+    //   icon: <MapPin className="w-6 h-6 text-blue-500" />,
+    // },
     {
       title: "Total Bookings",
       value: dashboard.totalBookings,
@@ -70,7 +70,7 @@ export default function TravelerOverview() {
       </p>
 
       {/* Stats Section */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mt-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
         {stats.map((stat, i) => (
           <StatCard key={i} {...stat} />
         ))}
@@ -89,7 +89,7 @@ export default function TravelerOverview() {
       </div>
 
       {/* Recent Searches */}
-      <RecentSearches />
+      {/* <RecentSearches /> */}
     </>
   );
 }

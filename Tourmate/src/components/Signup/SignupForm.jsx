@@ -1,6 +1,6 @@
 // components/SignupForm.jsx
 import { useState } from "react";
-import { Mail, Lock } from "lucide-react";
+import { Mail, Lock, Phone } from "lucide-react";
 import InputField from "./InputField";
 import Button from "./Button";
 import { registerUser } from "../../services/user";
@@ -12,7 +12,7 @@ const SignupForm = () => {
     firstName: "",
     lastName: "",
     email: "",
-    purpose: "Find Amazing tours (Traveler)",
+    phoneNumber: "",
     password: "",
     confirmPassword: "",
     agreeToTerms: false,
@@ -35,18 +35,24 @@ const SignupForm = () => {
       alert("Please agree to the Terms of Service and Privacy Policy");
       return;
     }
+    const phoneRegex = /^\+?\d{7,15}$/;
+    if (!phoneRegex.test(formData.phoneNumber)) {
+      alert("Invalid phone number.");
+      return;
+    }
     const registerStatus = registerUser(formData);
     if (registerStatus) {
       setFormData({
         firstName: "",
         lastName: "",
         email: "",
-        purpose: "Find Amazing tours (Traveler)",
         password: "",
         confirmPassword: "",
         agreeToTerms: false,
       });
       navigate("/login");
+    }else{
+      navigate("/signup"); 
     }
   };
 
@@ -79,21 +85,17 @@ const SignupForm = () => {
         onChange={handleChange}
       />
 
-      {/* <div className="mb-4">
-        <label className="block text-sm font-medium text-gray-700 mb-1">
-          I want to
-        </label>
-        <select
-          name="purpose"
-          value={formData.purpose}
-          onChange={handleChange}
-          className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition bg-white"
-        >
-          <option>Find Amazing tours (Traveler)</option>
-          <option>List my tours (Tour Guide)</option>
-          <option>Explore destinations</option>
-        </select>
-      </div> */}
+      
+        <InputField
+        label="Phone Number"
+        type="number"
+        name="phoneNumber"
+        placeholder="Enter your phone number"
+        icon={Phone}
+        value={formData.phoneNumber}
+        onChange={handleChange}
+      />
+
 
       <InputField
         label="Password"

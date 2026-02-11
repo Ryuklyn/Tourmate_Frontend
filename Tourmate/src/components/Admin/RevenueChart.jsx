@@ -81,7 +81,7 @@ export default function RevenueChart() {
   const filledData = useMemo(() => showMissingMonths ? fillMissingMonths(filteredData) : filteredData, [filteredData, showMissingMonths]);
 
   useEffect(() => {
-    if (filledData.length > 0) setMonthRange([0, filledData.length - 1]);
+    if (filledData.length > 1) setMonthRange([0, filledData.length - 1]);
   }, [filledData]);
 
   const chartDataArray = useMemo(() => filledData.slice(monthRange[0], monthRange[1] + 1), [filledData, monthRange]);
@@ -182,7 +182,7 @@ export default function RevenueChart() {
       </div>
 
       {/* Month Range Slider */}
-      {filledData.length > 0 && (
+      {filledData.length > 1 && (
         <div className="my-4">
           <p className="text-gray-700 text-sm font-medium mb-2">Select Month Range:</p>
           <Range

@@ -1,10 +1,11 @@
-import CONFIG from "../../config";
+import CONFIG from "../utils/config";
 import api from "../utils/axiosInterceptor";
+import axios from "axios";
 
 export const doLogin = async (email, password) => {
   try {
     const res = await api.post("/auth/login", { email, password });
-
+    // const res = await axios.post(`${CONFIG.API_URL}/auth/login`, { email, password });
     localStorage.setItem("AUTH_TOKEN", res.data.token);
     localStorage.setItem("REFRESH_TOKEN", res.data.refreshToken);
     localStorage.setItem("userId", res.data.userId);

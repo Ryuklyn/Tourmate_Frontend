@@ -41,7 +41,6 @@ export default function ReviewForm() {
 
       const response = await registerGuide(
         userId,
-        token,
         guideData,
         personal.profileImage,
         verification.governmentPic

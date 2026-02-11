@@ -231,7 +231,7 @@ export default function ProfileSettings() {
 
         {/* RIGHT SIDE — PREFERENCES */}
         <div className="space-y-8">
-          <div className="bg-white shadow-sm rounded-2xl p-8 border border-gray-200 relative overflow-hidden">
+          {/* <div className="bg-white shadow-sm rounded-2xl p-8 border border-gray-200 relative overflow-hidden">
             <h2 className="text-xl font-semibold text-gray-800 mb-6">
               Preferences
             </h2>
@@ -264,10 +264,10 @@ export default function ProfileSettings() {
               Save Preferences
             </button>
             )}
-          </div>
+          </div> */}
 
           {/* DANGER ZONE */}
-          <div className="bg-red-50 border border-red-200 rounded-2xl p-8">
+          {/* <div className="bg-red-50 border border-red-200 rounded-2xl p-8">
             <h2 className="text-xl font-semibold text-red-700 mb-3">
               Danger Zone
             </h2>
@@ -280,7 +280,7 @@ export default function ProfileSettings() {
               <Trash2 className="w-4 h-4" />
               Delete Account
             </button>
-          </div>
+          </div> */}
         </div>
       </div>
     </div>

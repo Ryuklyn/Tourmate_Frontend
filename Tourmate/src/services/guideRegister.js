@@ -17,10 +17,11 @@ export const registerGuide = async (userId, guideData, profilePicFile, governmen
         },
       }
     );
-
+    console.error("Guide registration error:", response.message);
     return response.data;
   } catch (error) {
     console.error("Guide registration error:", error);
+
     throw error;
   }
 };

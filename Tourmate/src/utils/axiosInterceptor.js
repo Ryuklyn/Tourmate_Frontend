@@ -1,5 +1,5 @@
 import axios from "axios";
-import CONFIG from "../../config";
+import CONFIG from "./config";
 
 const api = axios.create({
   baseURL: CONFIG.API_URL,
@@ -30,9 +30,9 @@ api.interceptors.response.use(
         error.config.headers.Authorization = `Bearer ${res.data.token}`;
         return axios(error.config);
       } catch {
-        // alert("hehe");
-        localStorage.clear();
-        window.location.href = "/login";
+        // // alert("hehe");
+        // localStorage.clear();
+        // window.location.href = "/login";
       }
     }
     return Promise.reject(error);
