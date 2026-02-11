@@ -33,12 +33,12 @@ const menuItems = [
     icon: <BarChart2 size={18} />,
     path: "/dashboard/admin/review",
   },
-  { label: "Settings", icon: <Settings size={18} />, path: "#" },
 ];
 
 export default function Sidebar() {
   const location = useLocation();
   const navigate = useNavigate();
+
   return (
     <aside className="w-64 bg-[#0D1B2A] text-white h-screen p-6 relative">
       <h2 className="text-2xl font-semibold mb-10">Tourmate</h2>

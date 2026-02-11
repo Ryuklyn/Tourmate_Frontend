@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { authenticateRole, doLogout, validateAuthToken } from "../../services/auth";
 import { getUserData } from "../../services/user";
+import NotificationDropdown from "../Admin/NotificationDropdown";
 
 
 export default function Header({ role }) {
@@ -11,7 +12,9 @@ export default function Header({ role }) {
   const [activeRole, setActiveRole] = useState(role);
   const [profileImage, setProfileImage] = useState("/https://api.dicebear.com/7.x/personas/svg?seed=John");
   const [user, setUser] = useState({});
+  const [open, setOpen] = useState(false);
   const dropdownRef = useRef(null);
+  const [unreadCount, setUnreadCount] = useState(0);
   const navigate = useNavigate();
   useEffect(() => {
     setActiveRole(role);
@@ -120,12 +123,14 @@ export default function Header({ role }) {
         </div>
 
         {/* Notification Icon */}
-        <div className="relative">
-          <Bell className="w-5 h-5 text-gray-600 cursor-pointer" />
-          <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
-            3
+        <div className="relative cursor-pointer" onClick={() => setOpen(!open)}>
+          <Bell size={22} />
+          <span className="absolute -top-2 -right-2 bg-orange-500 text-white text-xs rounded-full px-1.5">
+          {unreadCount}
           </span>
         </div>
+
+        {open && <NotificationDropdown setUnreadCount={setUnreadCount} />}
 
         {/* User Avatar + Dropdown */}
         <div className="relative" ref={dropdownRef}>

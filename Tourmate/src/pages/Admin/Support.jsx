@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ViewMessage from "../../components/Admin/View.jsx";
 import {
   Filter,
@@ -8,92 +8,70 @@ import {
   ChevronLeft,
   ChevronRight,
 } from "lucide-react";
-import NirojSir from "../../assets/img/NirojSir.jpg";
-
-const initialMessages = [
-  {
-    id: 1,
-    name: "Niroj Shrestha",
-    email: "nirojshrestha@gmail.com",
-    userType: "Guide",
-    subject: "Payout delay inquiry",
-    message:
-      "Hello, my weekly payout hasn't arrived yet and it's been 5 days...",
-    date: "Dec 9, 2024",
-    seen: false,
-    avatar: NirojSir,
-  },
-  {
-    id: 2,
-    name: "Sarah Wilson",
-    email: "sarah@email.com",
-    userType: "Traveler",
-    subject: "How to cancel my booking?",
-    message:
-      "Hi, I need to cancel my upcoming tour booking scheduled for next week...",
-    date: "Dec 10, 2024",
-    seen: false,
-  },
-
-  {
-    id: 3,
-    name: "James Chen",
-    email: "james@email.com",
-    userType: "Traveler",
-    subject: "Change tour date request",
-    message:
-      "I booked a city tour for December 15th but I need to reschedule it to December 20th. Is it possible to change the date without additional charges? The guide hasn't confirmed yet.",
-    date: "Dec 8, 2024",
-    seen: false,
-  },
-  {
-    id: 4,
-    name: "Emma Davis",
-    email: "emma@email.com",
-    userType: "Guide",
-    subject: "Profile verification issue",
-    message:
-      "I submitted my documents for guide verification 10 days ago but still waiting for approval...",
-    date: "Dec 7, 2024",
-    seen: false,
-  },
-  {
-    id: 5,
-    name: "Ana Santos",
-    email: "ana@email.com",
-    userType: "Traveler",
-    subject: "Refund status",
-    message:
-      "I requested a refund for my cancelled tour 2 weeks ago but I haven't received any update...",
-    date: "Dec 6, 2024",
-    seen: false,
-  },
-];
+import {
+  getSupportMessagesByRole,
+  markSupportAsSeen,
+} from "../../services/admin/support"; // import your service
 
 export default function Support() {
-  const [messages, setMessages] = useState(initialMessages);
+  const [messages, setMessages] = useState([]);
   const [selectedMessage, setSelectedMessage] = useState(null);
   const [filter, setFilter] = useState("All");
   const [openFilter, setOpenFilter] = useState(false);
-  const filters = ["All", "Traveler", "Guide"];
+  const filters = ["All", "Traveller", "Guide"];
 
-  const filteredMessages =
-    filter === "All"
-      ? messages
-      : messages.filter((msg) => msg.userType === filter);
+  // Fetch messages on mount
+  useEffect(() => {
+    const fetchMessages = async () => {
+      let roleParam = filter === "All" ? "ALL" : filter.toUpperCase();
+      const res = await getSupportMessagesByRole(roleParam);
+      console.log(res);
+      if (res.success) {
+        const formatted = res.data.map(msg => ({
+          ...msg,
+          read: msg.view,
+          date: new Date(msg.createdAt).toLocaleDateString("en-US", {
+            month: "short",
+            day: "numeric",
+            year: "numeric",
+          }),
+        }));
+  
+        setMessages(formatted);
+      } else {
+        console.error(res.error);
+      }
+    };
+  
+    fetchMessages();
+  }, [filter]);
+  
 
-  const handleView = (message) => {
+
+
+  const handleView = async (message) => {
     setSelectedMessage(message);
-    // Mark message as seen
-    setMessages((prev) =>
-      prev.map((msg) => (msg.id === message.id ? { ...msg, seen: true } : msg))
-    );
+
+    if (!message.read) {
+      // Mark as seen in backend
+      const res = await markSupportAsSeen(message.id);
+      if (res.success) {
+        setMessages((prev) =>
+          prev.map((msg) =>
+            msg.id === message.id ? { ...msg, read: true } : msg
+          )
+        );
+      } else {
+        console.error(res.error);
+      }
+    }
   };
 
   return (
     <div className="p-6">
       <h1 className="text-2xl font-bold mb-2">Support Messages</h1>
       <p className="text-gray-500 mb-6">View help requests from users</p>
+
       <div className="flex gap-6 mb-6">
         {/* Unread Messages Card */}
         <div className="flex items-center gap-4 px-6 py-4 bg-white rounded-xl border border-gray-200 shadow-sm min-w-[220px]">
@@ -102,7 +80,7 @@ export default function Support() {
           </div>
           <div>
             <div className="text-2xl font-bold text-gray-900">
-              {messages.filter((m) => !m.seen).length}
+              {messages.filter((m) => !m.read).length}
             </div>
             <div className="text-sm text-gray-500">Unread Messages</div>
           </div>
@@ -114,20 +92,19 @@ export default function Support() {
             <MessageSquare className="text-orange-500" size={20} />
           </div>
           <div>
-            <div className="text-2xl font-bold text-gray-900">
-              {messages.length}
-            </div>
+            <div className="text-2xl font-bold text-gray-900">{messages.length}</div>
             <div className="text-sm text-gray-500">Total Messages</div>
           </div>
         </div>
       </div>
+
+      {/* Filter/Search */}
       <div className="flex justify-between mb-4">
         <input
           type="text"
           placeholder="Search messages..."
           className="px-4 py-2 border border-gray-200 rounded-lg w-1/3"
         />
-
         <div className="relative">
           <button
             onClick={() => setOpenFilter(!openFilter)}
@@ -136,7 +113,6 @@ export default function Support() {
             <Filter size={16} />
             Filter by status
           </button>
-
           {openFilter && (
             <div className="absolute right-0 top-full z-20 mt-2 w-36 rounded-lg border border-gray-200 bg-white shadow">
               {filters.map((f) => (
@@ -156,6 +132,7 @@ export default function Support() {
         </div>
       </div>
 
+      {/* Messages Table */}
       <div className="rounded-xl border border-gray-200 bg-white overflow-hidden">
         <table className="w-full text-sm">
           <thead className="bg-gray-50 text-left">
@@ -169,60 +146,40 @@ export default function Support() {
               <th className="p-4 text-right">Actions</th>
             </tr>
           </thead>
-
           <tbody>
-            {filteredMessages.map((msg) => (
+            {messages.map((msg) => (
               <tr
                 key={msg.id}
                 className="border-t border-gray-200 hover:bg-gray-50 transition"
               >
-                {/* Unread Dot */}
                 <td className="p-4">
-                  {!msg.seen && (
+                  {!msg.read && (
                     <span className="block w-2.5 h-2.5 bg-orange-500 rounded-full"></span>
                   )}
                 </td>
-
-                {/* From */}
                 <td className="p-4">
                   <div className="flex items-center gap-3">
-                    <img
-                      src={msg.avatar}
-                      alt={msg.name}
-                      className="w-9 h-9 rounded-full object-cover"
-                    />
+                    {msg.avatar && (
+                      <img
+                        src={`data:image/jpeg;base64,${msg.user.profilePic}`}
+                        alt={msg.user.fullName}
+                        className="w-9 h-9 rounded-full object-cover"
+                      />
+                    )}
                     <div>
-                      <div className="font-semibold text-gray-900">
-                        {msg.name}
-                      </div>
-                      <div className="text-xs text-gray-500">{msg.email}</div>
+                      <div className="font-semibold text-gray-900">{msg.user.firstName} {msg.user.lastName}</div>
+                      <div className="text-xs text-gray-500">{msg.user.email}</div>
                     </div>
                   </div>
                 </td>
-
-                {/* User Type */}
                 <td className="p-4">
                   <span className="px-3 py-1 border border-gray-200 rounded-full text-xs font-medium text-gray-700 bg-white">
-                    {msg.userType}
+                    {msg.role}
                   </span>
                 </td>
-
-                {/* Subject */}
-                <td className={`p-4 ${!msg.seen ? "font-semibold" : ""}`}>
-                  {msg.subject}
-                </td>
-
-                {/* Message Preview */}
-                <td className="p-4 text-gray-500 max-w-md truncate">
-                  {msg.message}
-                </td>
-
-                {/* Date */}
-                <td className="p-4 text-gray-700 whitespace-nowrap">
-                  {msg.date}
-                </td>
-
-                {/* Actions */}
+                <td className={`p-4 ${!msg.read ? "font-semibold" : ""}`}>{msg.subject}</td>
+                <td className="p-4 text-gray-500 max-w-md truncate">{msg.message}</td>
+                <td className="p-4 text-gray-700 whitespace-nowrap">{msg.date}</td>
                 <td className="p-4 text-right">
                   <button
                     onClick={() => handleView(msg)}
@@ -237,29 +194,23 @@ export default function Support() {
           </tbody>
         </table>
       </div>
-      {/* ---------- FOOTER / PAGINATION ---------- */}
-      <div className="flex justify-between items-center p-4 text-sm text-gray-500">
-        <p>Showing 1 to 5 of 5 entries</p>
 
+      {/* Pagination */}
+      <div className="flex justify-between items-center p-4 text-sm text-gray-500">
+        <p>Showing 1 to {messages.length} of {messages.length} entries</p>
         <div className="flex items-center gap-2">
           <button className="p-2 border border-gray-200 rounded-lg hover:bg-gray-100">
             <ChevronLeft />
           </button>
-
-          <button className="px-3 py-1 rounded-lg bg-orange-500 text-white">
-            1
-          </button>
-
+          <button className="px-3 py-1 rounded-lg bg-orange-500 text-white">1</button>
           <button className="p-2 border border-gray-200 rounded-lg hover:bg-gray-100">
             <ChevronRight />
           </button>
         </div>
       </div>
+
       {selectedMessage && (
-        <ViewMessage
-          message={selectedMessage}
-          onClose={() => setSelectedMessage(null)}
-        />
+        <ViewMessage message={selectedMessage} onClose={() => setSelectedMessage(null)} />
       )}
     </div>
   );

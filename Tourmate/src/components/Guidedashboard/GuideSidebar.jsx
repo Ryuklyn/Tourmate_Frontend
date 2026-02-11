@@ -9,6 +9,7 @@ import {
   Clock,
   Settings,
   Package,
+  HelpCircle,
 } from "lucide-react";
 
 const guideMenuItems = [
@@ -44,9 +45,9 @@ const guideMenuItems = [
     label: "Reviews",
   },
   {
-    to: "/dashboard/guide/availability",
-    icon: <Clock size={18} />,
-    label: "Availability",
+    to: "/dashboard/guide/support",
+    icon: <HelpCircle size={18} />,
+    label: "Support",
   },
   {
     to: "/dashboard/guide/settings",

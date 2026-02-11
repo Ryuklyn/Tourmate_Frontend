@@ -30,6 +30,7 @@ api.interceptors.response.use(
         error.config.headers.Authorization = `Bearer ${res.data.token}`;
         return axios(error.config);
       } catch {
+        // alert("hehe");
         localStorage.clear();
         window.location.href = "/login";
       }
