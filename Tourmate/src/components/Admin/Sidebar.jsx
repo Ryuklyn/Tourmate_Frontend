@@ -32,7 +32,6 @@ const menuItems = [
     icon: <BarChart2 size={18} />,
     path: "/dashboard/admin/review",
   },
-  { label: "Settings", icon: <Settings size={18} />, path: "#" },
 ];
 
 export default function Sidebar() {
