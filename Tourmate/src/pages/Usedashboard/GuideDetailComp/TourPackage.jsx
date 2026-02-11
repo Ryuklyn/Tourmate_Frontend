@@ -4,8 +4,10 @@ import React, { useEffect, useState } from "react";
 import { getToursByGuide } from "../../../services/guideData";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useNavigate } from "react-router-dom";
 export default function TourPackages({ guideId, selectedTour, setSelectedTour,activeTour, setActiveTour }) {
   const [tours, setTours] = useState([]);
+  const navigate = useNavigate();
   useEffect(() => {
     const fetchTours = async () => {
       const res = await getToursByGuide(guideId);
@@ -94,7 +96,7 @@ export default function TourPackages({ guideId, selectedTour, setSelectedTour,ac
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
-                      toast.info(`Viewing details for ${t.name}`);
+                      navigate(`/dashboard/tourdetails/${t.id}`)
                     }}
                     className="px-4 py-2 rounded-lg text-sm border border-gray-300 hover:bg-gray-50"
                   >

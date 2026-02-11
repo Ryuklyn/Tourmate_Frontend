@@ -57,3 +57,75 @@ export const fetchBookings = async ({ status, page, size }) => {
     return { success: false };
   }
 };
+
+
+
+export const getMyTourBookings = async ({ status, page = 0, size = 10 }) => {
+  try {
+    const params = { page, size };
+    if (status) params.status = status;
+
+    const response = await api.get("/traveller/tour/mytourbookings", {
+      params,
+    });
+
+    return {
+      success: true,
+      data: response.data.data,
+      total: response.data.totalBookings,
+    };
+  } catch (error) {
+    return {
+      success: false,
+      error:
+        error.response?.data?.message ||
+        error.message ||
+        "Failed to load bookings",
+    };
+  }
+};
+
+export const cancelTourBooking = async (bookingId) => {
+  try {
+    const response = await api.delete(
+      `/traveller/tour/${bookingId}/cancel`
+    );
+
+    return {
+      success: true,
+      data: response.data.data,
+    };
+  } catch (error) {
+    return {
+      success: false,
+      error:
+        error.response?.data?.message ||
+        error.message ||
+        "Failed to cancel booking",
+    };
+  }
+};
+export const getBookingDetails = async (bookingId) => {
+  try {
+    const response = await api.get("/traveller/tour/bookingDetails", {
+      params: { bookingId },
+    });
+
+    return {
+      success: true,
+      data: response.data.data,
+    };
+  } catch (error) {
+    return {
+      success: false,
+      error:
+        error.response?.data?.message ||
+        error.message ||
+        "Failed to fetch booking details",
+    };
+  }
+};
+
+
+
+

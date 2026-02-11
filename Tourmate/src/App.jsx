@@ -63,7 +63,7 @@ function App() {
           <Route path="tourdetails/:tourId" element={<TourDetails />} />
           <Route path="favorites" element={<FavoriteGuides />} />
           <Route path="bookings" element={<Bookings />} />
-          <Route path="bookingsdetails" element={<BookingDetails />} />
+          <Route path="bookingsdetails/:bookingId" element={<BookingDetails />} />
           <Route path="guideprofile/:guideId" element={<GuideProfile />} />
           <Route path="profile" element={<ProfileSettings />} />
           <Route path="support" element={<Support />} />

@@ -1,69 +1,42 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import { Calendar, Clock, MapPin, Users, Phone, Mail } from "lucide-react";
-import NirojSirImg from "../../assets/img/NirojSir.jpg";
-import Patan from "../../assets/img/Patan.jpg";
-import { useNavigate } from "react-router-dom";
+import { getBookingDetails } from "../../services/booking";
 
 export default function BookingDetails() {
+  const { bookingId } = useParams();
   const navigate = useNavigate();
-  const booking = {
-    id: 1,
-    status: "Upcoming Tour",
-    title: "Kathmandu Heritage Walking Tour",
-    image: Patan,
-    description:
-      "Explore the ancient wonders of Patan with an expert local historian. This immersive walking tour takes you through centuries of cultural heritage and iconic landmarks in Lalitpur.",
-    date: "Dec 18, 2025",
-    time: "9:00 AM",
-    duration: "3 hours",
-    meetingPoint: "Patan Durbar Square Gate",
-    guests: "2 Guests",
-    total: "$80",
-    guide: {
-      name: "Niroj Shrestha",
-      expertise: "Ancient History",
-      phone: "+977 9801234567",
-      email: "nirojshrestha@example.com",
-      image: NirojSirImg,
-    },
-    itinerary: [
-      {
-        time: "09:00 AM",
-        place: "Patan Durbar Square",
-        detail: "Meet at main entrance, tour briefing",
-      },
-      {
-        time: "10:00 AM",
-        place: "Golden Temple",
-        detail: "Explore ancient monastery architecture",
-      },
-      {
-        time: "11:00 AM",
-        place: "Kumbeshwar Temple",
-        detail: "Visit iconic temples and courtyards",
-      },
-      {
-        time: "12:00 PM",
-        place: "End of Tour",
-        detail: "Conclude near Mangalbazar",
-      },
-    ],
-    included: [
-      "Professional licensed guide",
-      "Entry fees to listed monuments",
-      "Group headsets for more than 5 people",
-      "Bottled water",
-    ],
-    notIncluded: ["Food and drinks", "Hotel pickup and drop-off", "Gratuities"],
-    requirements: [
-      "Comfortable walking shoes required",
-      "Moderate physical fitness needed",
-      "Valid ID required for all participants",
-      "Children must be accompanied by an adult",
-    ],
-    cancellation:
-      "Free cancellation up to 24 hours before the tour. No refund for cancellations made less than 24 hours before the start time.",
+  const [booking, setBooking] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const handleWhatsappCall = (phone) => {
+    if (!phone) return;
+
+    window.open(`https://web.whatsapp.com/send?phone=${phone}`, "_blank");
   };
+
+
+  useEffect(() => {
+    const fetchBooking = async () => {
+      setLoading(true);
+      try {
+        const res = await getBookingDetails(bookingId);
+        if (res.success) {
+          setBooking(res.data);
+        } else {
+          console.error(res.error);
+        }
+      } catch (err) {
+        console.error("Failed to fetch booking details", err);
+      }
+      setLoading(false);
+    };
+    fetchBooking();
+  }, [bookingId]);
+
+  if (loading) return <p className="text-center py-10">Loading booking...</p>;
+  if (!booking) return <p className="text-center py-10">Booking not found</p>;
+
+  const tour = booking.tour;
 
   return (
     <div className="p-6 max-w-6xl mx-auto">
@@ -78,8 +51,8 @@ export default function BookingDetails() {
       {/* Header Image */}
       <div className="relative w-full h-64 rounded-2xl overflow-hidden mb-6">
         <img
-          src={booking.image}
-          alt={booking.title}
+          src={tour?.tourPic ? `data:image/jpeg;base64,${tour.tourPic}` : "/placeholder.jpg"}
+          alt={tour?.name}
           className="w-full h-full object-cover"
         />
         <div className="absolute inset-0 bg-black/40 flex items-end p-6">
@@ -88,37 +61,40 @@ export default function BookingDetails() {
               {booking.status}
             </span>
             <h1 className="text-white text-3xl font-bold mt-3">
-              {booking.title}
+              {booking.tourName}
             </h1>
             <p className="text-gray-200 text-sm max-w-2xl mt-1">
-              {booking.description}
+              {tour?.description}
             </p>
+            <div className="mt-2 text-sm text-gray-200">
+              ⭐ {booking.averageRating} · {booking.reviewCount} reviews
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Booking + Guide in One Row */}
+      {/* Booking + Guide Row */}
       <div className="flex gap-6 mb-6">
         {/* Booking Info */}
         <div className="flex-1 bg-white p-6 rounded-2xl shadow-md">
           <h2 className="text-xl font-semibold mb-4">Booking Information</h2>
           <div className="grid grid-cols-2 gap-y-4 text-gray-700">
             <div className="flex items-center gap-2">
-              <Calendar size={18} /> {booking.date}
+              <Calendar size={18} /> {booking.startDate}
             </div>
             <div className="flex items-center gap-2">
-              <Clock size={18} /> {booking.time} · {booking.duration}
+              <Clock size={18} /> {booking.tour.duration}
             </div>
             <div className="flex items-center gap-2">
-              <MapPin size={18} /> {booking.meetingPoint}
+              <MapPin size={18} /> {tour?.location}
             </div>
             <div className="flex items-center gap-2">
-              <Users size={18} /> {booking.guests}
+              <Users size={18} /> {booking.travellers} Guests
             </div>
           </div>
           <div className="mt-4">
             <p className="text-lg font-semibold">Total Amount</p>
-            <p className="text-2xl font-bold">{booking.total}</p>
+            <p className="text-2xl font-bold">Rs. {booking.totalPrice}</p>
           </div>
         </div>
 
@@ -126,77 +102,88 @@ export default function BookingDetails() {
         <div className="w-80 bg-white p-6 rounded-2xl shadow-md">
           <div className="flex items-center gap-4 mb-4">
             <img
-              src={booking.guide.image}
+              src={booking.guide?.profilePic ? `data:image/jpeg;base64,${booking.guide.profilePic}` : "/placeholder.jpg"}
               className="w-16 h-16 rounded-full object-cover"
+              alt={booking.guideName}
             />
             <div>
-              <h2 className="text-lg font-semibold">{booking.guide.name}</h2>
-              <p className="text-gray-500 text-sm">{booking.guide.expertise}</p>
+              <h2 className="text-lg font-semibold">{booking.guideName}</h2>
+              <p className="text-gray-500 text-sm">Guide</p>
             </div>
           </div>
           <p className="flex items-center gap-2 text-gray-700 mb-1">
-            <Phone size={16} /> {booking.guide.phone}
+            <Phone size={16} /> {booking.guide?.phoneNumber || "N/A"}
           </p>
           <p className="flex items-center gap-2 text-gray-700 mb-4">
-            <Mail size={16} /> {booking.guide.email}
+            <Mail size={16} /> {booking.guide?.email || "N/A"}
           </p>
-          <button className="px-4 py-2 bg-blue-600 text-white rounded-xl w-full">
+          <button className="px-4 py-2 bg-blue-600 text-white rounded-xl w-full"
+          onClick={() => handleWhatsappCall(booking.guide?.phoneNumber)}>
             Call Guide
           </button>
         </div>
       </div>
 
-      {/* Itinerary with Icons */}
-      <div className="bg-white p-6 rounded-2xl shadow-md mb-6">
-        <h2 className="text-xl font-semibold mb-4">Tour Itinerary</h2>
-        {booking.itinerary.map((item, i) => (
-          <div key={i} className="flex gap-4 mb-4 items-start">
-            <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold">
-              {i + 1}
+      {/* Itinerary */}
+      {tour?.itineraries?.length > 0 && (
+        <div className="bg-white p-6 rounded-2xl shadow-md mb-6">
+          <h2 className="text-xl font-semibold mb-4">Tour Itinerary</h2>
+          {tour.itineraries.map((item, i) => (
+            <div key={i} className="flex gap-4 mb-4 items-start">
+              <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold">
+                {i + 1}
+              </div>
+              <div>
+                <p className="font-semibold text-blue-700">
+                  {item.time} — {item.title}
+                </p>
+                <p className="text-gray-600 text-sm">{item.description}</p>
+              </div>
             </div>
-            <div>
-              <p className="font-semibold text-blue-700">
-                {item.time} — {item.place}
-              </p>
-              <p className="text-gray-600 text-sm">{item.detail}</p>
-            </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
 
-      {/* Included / Not Included */}
+      {/* Included / Not Included / Important Info */}
       <div className="bg-white p-6 rounded-2xl shadow-md mb-6 grid grid-cols-2 gap-6">
-        <div>
-          <h2 className="text-xl font-semibold mb-3">Included</h2>
-          <ul className="space-y-2 text-gray-700 list-disc list-inside">
-            {booking.included.map((a, i) => (
-              <li key={i}>{a}</li>
-            ))}
-          </ul>
-        </div>
-        <div>
-          <h2 className="text-xl font-semibold mb-3">Not Included</h2>
-          <ul className="space-y-2 text-gray-700 list-disc list-inside">
-            {booking.notIncluded.map((a, i) => (
-              <li key={i}>{a}</li>
-            ))}
-          </ul>
-        </div>
+        {tour?.included?.length > 0 && (
+          <div>
+            <h2 className="text-xl font-semibold mb-3">Included</h2>
+            <ul className="space-y-2 text-gray-700 list-disc list-inside">
+              {tour.included.map((a, i) => (
+                <li key={i}>{a}</li>
+              ))}
+            </ul>
+          </div>
+        )}
+        {tour?.notIncluded?.length > 0 && (
+          <div>
+            <h2 className="text-xl font-semibold mb-3">Not Included</h2>
+            <ul className="space-y-2 text-gray-700 list-disc list-inside">
+              {tour.notIncluded.map((a, i) => (
+                <li key={i}>{a}</li>
+              ))}
+            </ul>
+          </div>
+        )}
       </div>
 
       {/* Important Info */}
-      <div className="bg-white p-6 rounded-2xl shadow-md mb-6">
-        <h2 className="text-xl font-semibold mb-3">Important Information</h2>
-        <ul className="list-disc list-inside text-gray-700 mb-4 space-y-1">
-          {booking.requirements.map((r, i) => (
-            <li key={i}>{r}</li>
-          ))}
-        </ul>
-        <hr className="border-t border-gray-300 my-4" />
-
-        <h3 className="text-lg font-semibold mb-1">Cancellation Policy</h3>
-        <p className="text-gray-700 text-sm">{booking.cancellation}</p>
-      </div>
+      {tour?.importantInformation?.length > 0 && (
+        <div className="bg-white p-6 rounded-2xl shadow-md mb-6">
+          <h2 className="text-xl font-semibold mb-3">Important Information</h2>
+          <ul className="list-disc list-inside text-gray-700 mb-4 space-y-1">
+            {tour.importantInformation.map((r, i) => (
+              <li key={i}>{r}</li>
+            ))}
+          </ul>
+          <hr className="border-t border-gray-300 my-4" />
+          <h3 className="text-lg font-semibold mb-1">Cancellation Policy</h3>
+          <p className="text-gray-700 text-sm">
+            Free cancellation up to 24 hours before the tour.
+          </p>
+        </div>
+      )}
     </div>
   );
 }
