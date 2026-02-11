@@ -41,6 +41,7 @@ import Support1 from "./pages/Admin/Support";
 import GuideTourPackage from "./pages/Guidedashboard/GuideTourPackages";
 import FindTour from "./pages/Usedashboard/FindTour";
 import TourDetails from "./components/Guidedashboard/TourPackages/TourDetails";
+import GuideSupport from "./components/Guidedashboard/GuideSupport";
 
 function App() {
   const [count, setCount] = useState(0);
@@ -85,6 +86,7 @@ function App() {
           <Route path="reviews" element={<GuideReview />} />\
           <Route path="availability" element={<Availability />} />
           <Route path="settings" element={<SettingsPage />} />
+          <Route path="support" element={<GuideSupport />} />
         </Route>
 
         <Route path="/dashboard/admin" element={<AdminLayout />}>
