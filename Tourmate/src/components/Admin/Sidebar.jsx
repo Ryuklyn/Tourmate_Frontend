@@ -9,6 +9,7 @@ import {
   Briefcase,
 } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const menuItems = [
   { label: "Dashboard", icon: <Home size={18} />, path: "/dashboard/admin" },
@@ -36,6 +37,7 @@ const menuItems = [
 
 export default function Sidebar() {
   const location = useLocation();
+  const navigate = useNavigate();
 
   return (
     <aside className="w-64 bg-[#0D1B2A] text-white h-screen p-6 relative">
@@ -61,8 +63,10 @@ export default function Sidebar() {
           );
         })}
       </ul>
-
-      <div className="absolute bottom-8 left-6 flex items-center cursor-pointer opacity-70 hover:opacity-100">
+      <div
+        onClick={() => navigate("/login")}
+        className="absolute bottom-8 left-6 flex items-center cursor-pointer opacity-70 hover:opacity-100"
+      >
         <LogOut size={18} className="mr-2" />
         Logout
       </div>
