@@ -49,11 +49,11 @@ const guideMenuItems = [
     icon: <HelpCircle size={18} />,
     label: "Support",
   },
-  {
-    to: "/dashboard/guide/settings",
-    icon: <Settings size={18} />,
-    label: "Settings",
-  },
+  // {
+  //   to: "/dashboard/guide/settings",
+  //   icon: <Settings size={18} />,
+  //   label: "Settings",
+  // },
 ];
 
 export default function GuideSidebar() {

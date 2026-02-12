@@ -147,7 +147,18 @@ export default function Support() {
             </tr>
           </thead>
           <tbody>
-            {messages.map((msg) => (
+          {messages.length === 0 ? (
+    <tr>
+      <td
+        colSpan={7} // spans all columns
+        className="p-6 text-center text-gray-500"
+      >
+        <MessageSquare className="mx-auto mb-2 text-orange-400" size={24} />
+        No support messages yet
+      </td>
+    </tr>
+  ) : (
+            messages.map((msg) => (
               <tr
                 key={msg.id}
                 className="border-t border-gray-200 hover:bg-gray-50 transition"
@@ -190,7 +201,8 @@ export default function Support() {
                   </button>
                 </td>
               </tr>
-            ))}
+            ))
+            )}
           </tbody>
         </table>
       </div>

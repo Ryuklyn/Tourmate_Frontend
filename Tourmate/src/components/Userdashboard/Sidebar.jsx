@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
 import {
   LayoutDashboard,
@@ -10,7 +10,7 @@ import {
   HelpCircle,
   Package,
 } from "lucide-react";
-
+import { getUserData } from "../../services/user";
 const menuItems = [
   {
     to: "/dashboard",
@@ -52,12 +52,30 @@ const menuItems = [
 ];
 
 export default function Sidebar() {
+  const [user, setUser] = useState(null);
+  const filteredMenuItems = menuItems.filter((item) => {
+    // Hide "Become a Guide" if NOT traveller
+    if (item.label === "Become a Guide" && user?.role !== "TRAVELLER") {
+      return false;
+    }
+    return true;
+  });
+  useEffect(() => {
+    const fetchUser = async () => {
+      const res = await getUserData();
+      if (res.success) {
+        setUser(res.data);
+      }
+    };
+    fetchUser();
+
+  }, []);
   return (
     <div className="w-60 bg-white h-[calc(100vh-56px)] shadow-sm flex flex-col justify-between">
       <div>
         <div className="p-4 text-xs uppercase font-semibold text-gray-400"></div>
         <ul className="space-y-1 mt-2">
-          {menuItems.map((item, i) => (
+          {filteredMenuItems.map((item, i) => (
             <li key={i}>
               <NavLink
                 to={item.to}

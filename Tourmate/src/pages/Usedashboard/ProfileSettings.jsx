@@ -17,6 +17,7 @@ import {  } from "../../services/user";
 import { updateProfile,getUserData, changeProfilePic } from "../../services/user";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Security from "../../components/Guidedashboard/Security";
 export default function ProfileSettings() {
   const [profileImage, setProfileImage] = useState(AvatarImg);
   const [isEditing, setIsEditing] = useState(false);
@@ -232,6 +233,7 @@ export default function ProfileSettings() {
 
         {/* RIGHT SIDE — PREFERENCES */}
         <div className="space-y-8">
+        <Security />
           {/* <div className="bg-white shadow-sm rounded-2xl p-8 border border-gray-200 relative overflow-hidden">
             <h2 className="text-xl font-semibold text-gray-800 mb-6">
               Preferences
@@ -283,6 +285,7 @@ export default function ProfileSettings() {
             </button>
           </div> */}
         </div>
+        
       </div>
     </div>
   );

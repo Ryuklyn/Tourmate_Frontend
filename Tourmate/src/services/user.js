@@ -47,23 +47,18 @@ export const updateProfile = async (userData) => {
 // Change user password
 export const changePassword = async ({ oldPassword, newPassword }) => {
   try {
-    const userId = localStorage.getItem("userId");
-    const response = await api.put(
-      `/user/changePassword?currentUserId=${userId}`,
-      { oldPassword, newPassword }
-    );
-    return { success: true, data: response.data };
+    const response = await api.put(`/user/change-password`, { oldPassword, newPassword });
+    // Backend returns { success: true, message: "Password changed successfully" }
+    return {
+      success: response.data.success,
+      message: response.data.message,
+    };
   } catch (error) {
-    console.error("Error changing password:", error);
-    const errorMessage =
-      error.response?.data?.error || // backend sends { error: "Incorrect Password" }
-      error.response?.data || // backend sends "User not found"
-      "Server error";
-
-    return { success: false, error: errorMessage };
+    // Backend returns { success: false, message: "Old password is incorrect" }
+    const message = error.response?.data?.message || "Server error";
+    return { success: false, message };
   }
 };
-
 // Change profile picture
 export const changeProfilePic = async (file, userId) => {
   try {

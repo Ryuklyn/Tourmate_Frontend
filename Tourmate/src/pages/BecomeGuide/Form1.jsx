@@ -30,23 +30,21 @@ export default function Form1() {
       const res = await getUserData();
       if (res.success) {
         const user = res.data;
-        
+
         setEmail(user.email || "");
         setPhone(user.phoneNumber || "");
         setFullName(`${user.firstName || ""} ${user.lastName || ""}`);
-  
+
         // optional: prefill profile image preview if exists
-        if (user.profilePic) {
-          setProfileImage({ file: null, preview: user.profilePic });
-        }
+
       } else {
         toast.error("Failed to load user data");
       }
     };
-  
+
     fetchUser();
   }, []);
-  
+
   const handleFileSelect = (e) => {
     const file = e.target.files[0];
     if (!file) return;
@@ -76,7 +74,7 @@ export default function Form1() {
 
 
   /* ------------------ FETCH ENUMS ------------------ */
-  
+
   useEffect(() => {
     const fetchEnums = async () => {
       try {
@@ -84,13 +82,13 @@ export default function Form1() {
           api.get("/user/enums/languages"),
           api.get("/user/enums/experience"),
         ]);
-  
+
         setAllLanguages(
           langsRes.data.map(l =>
             l.toLowerCase().replace(/_/g, " ").replace(/\b\w/g, c => c.toUpperCase())
           )
         );
-  
+
         setAllExperience(
           expRes.data.map(e =>
             e.toLowerCase().replace(/_/g, " ").replace(/\b\w/g, c => c.toUpperCase())
@@ -100,10 +98,10 @@ export default function Form1() {
         console.error("Failed to fetch enums", err);
       }
     };
-  
+
     fetchEnums();
   }, []);
-  
+
 
   /* ------------------ TOGGLES ------------------ */
   const toggleLanguage = (lang) => {
@@ -119,14 +117,14 @@ export default function Form1() {
   /* ------------------ SUBMIT ------------------ */
   const handleSubmit = (e) => {
     e.preventDefault(); // always prevent default first
-  
+
     // Validate phone number
     const phoneRegex = /^\+?\d{7,15}$/;
     if (!phoneRegex.test(phone)) {
       toast.warn("Invalid phone number.");
       return; // stop submission
     }
-  
+
     // Validate profile image
     if (!profileImage.file) {
       toast.warn("Please upload a profile picture.");
@@ -136,14 +134,14 @@ export default function Form1() {
       toast.warn("Please select at least one language.");
       return; // stop submission
     }
-  
+
     // Validate experience
     if (!experienceLevel) {
       toast.warn("Please select your experience level.");
       return; // stop submission
     }
     // Optional: you can also check other required fields here if needed
-  
+
     // If all validations pass, update context and navigate
     updateForm("personal", {
       fullName,
@@ -154,10 +152,10 @@ export default function Form1() {
       experience: experienceLevel,
       profileImage: profileImage.file,
     });
-  
+
     navigate("/dashboard/become-guide/form2");
   };
-  
+
 
   /* ------------------ STEPS ------------------ */
   const steps = [
@@ -219,19 +217,28 @@ export default function Form1() {
         {/* Profile Upload */}
         <label className="block font-medium mb-2">Profile Picture</label>
         <div className="border-2 border-dashed rounded-xl p-6 text-center cursor-pointer">
-          <input type="file" hidden id="upload" accept="image/*" onChange={handleFileSelect} required />
-          {!profileImage.preview ? (
-            <label htmlFor="upload" className="cursor-pointer">
-              <Upload size={32} className="mx-auto mb-2 text-gray-500" />
-              Click to upload a file
-            </label>
-          ) : (
-            <img
-              src={profileImage.preview}
-              alt="Preview"
-              className="w-32 h-32 mx-auto rounded-full object-cover border"
-            />
-          )}
+          <input
+            type="file"
+            hidden
+            id="upload"
+            accept="image/*"
+            onChange={handleFileSelect}
+          />
+
+          <label htmlFor="upload" className="cursor-pointer">
+            {!profileImage.preview ? (
+              <>
+                <Upload size={32} className="mx-auto mb-2 text-gray-500" />
+                <p>Click to upload a file</p>
+              </>
+            ) : (
+              <img
+                src={profileImage.preview}
+                alt="Preview"
+                className="w-32 h-32 mx-auto rounded-full object-cover border"
+              />
+            )}
+          </label>
         </div>
 
         {/* Form Inputs */}
@@ -252,28 +259,28 @@ export default function Form1() {
             </div>
 
             <div>
-            <label className="block text-gray-700 font-medium mb-1">
-              Email Address
-            </label>
-            <input
-              type="email"
-              value={email}
-              readOnly
-              className="w-full px-4 py-3 border rounded-lg bg-gray-100 text-gray-600 cursor-not-allowed"
-            />
-          </div>
+              <label className="block text-gray-700 font-medium mb-1">
+                Email Address
+              </label>
+              <input
+                type="email"
+                value={email}
+                readOnly
+                className="w-full px-4 py-3 border rounded-lg bg-gray-100 text-gray-600 cursor-not-allowed"
+              />
+            </div>
 
-          <div>
-            <label className="block text-gray-700 font-medium mb-1">
-              Phone Number
-            </label>
-            <input
-              type="tel"
-              value={phone}
-              readOnly
-              className="w-full px-4 py-3 border rounded-lg bg-gray-100 text-gray-600 cursor-not-allowed"
-            />
-          </div>
+            <div>
+              <label className="block text-gray-700 font-medium mb-1">
+                Phone Number
+              </label>
+              <input
+                type="tel"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                className="w-full px-4 py-3 border rounded-lg bg-gray-100 text-gray-600 cursor-not-allowed"
+              />
+            </div>
             <div>
               <label className="block text-gray-700 font-medium mb-1">
                 Location <span className="text-red-500">*</span>
@@ -364,8 +371,8 @@ export default function Form1() {
                   type="button"
                   onClick={() => selectExperience(exp.value)}
                   className={`px-4 py-2 rounded-lg border transition ${experienceLevel === exp.value
-                      ? "bg-blue-600 text-white border-blue-600"
-                      : "bg-white text-gray-700 hover:bg-blue-50"
+                    ? "bg-blue-600 text-white border-blue-600"
+                    : "bg-white text-gray-700 hover:bg-blue-50"
                     }`}
                 >
                   {exp.label}

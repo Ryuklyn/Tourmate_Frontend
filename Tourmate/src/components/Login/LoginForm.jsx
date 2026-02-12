@@ -26,7 +26,9 @@ const LoginForm = () => {
     const loginStatus = await doLogin(formData.email, formData.password);
 
     if (loginStatus.error) {
-      toast.error(loginStatus.error);
+      let errors = loginStatus.error;
+      toast.error(errors);
+
     } else {
       toast.success("Login successful, welcome!");
 

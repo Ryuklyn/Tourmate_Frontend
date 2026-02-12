@@ -1,4 +1,6 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { getUserData } from "../../services/user";
 
 const BecomeGuideContext = createContext(null);
 
@@ -29,7 +31,21 @@ export function BecomeGuideProvider({ children }) {
       accountNumber: "",
     },
   });
+  const [user, setUser] = useState(null);
+  useEffect(() => {
+    const fetchUser = async () => {
+      const res = await getUserData();
+      if (res.success) {
+        setUser(res.data);
+      }
+    };
+    fetchUser();
 
+  }, []);
+  const navigate = useNavigate();
+  if(user?.role !== "TRAVELLER"){
+    navigate("/dashboard");
+  }
   const updateForm = (section, data) => {
     setFormData(prev => ({
       ...prev,

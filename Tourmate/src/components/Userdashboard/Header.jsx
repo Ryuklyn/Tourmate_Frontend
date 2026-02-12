@@ -148,7 +148,8 @@ export default function Header({ role }) {
                 <p className="text-gray-400 text-xs">{user.email}</p>
               </div>
               <ul className="text-sm text-gray-600">
-                <li className="px-4 py-2 hover:bg-gray-50 cursor-pointer">
+                <li className="px-4 py-2 hover:bg-gray-50 cursor-pointer"
+                  onClick={() => navigate("/dashboard/profile")}>
                   Settings
                 </li>
                 <li className="px-4 py-2 hover:bg-gray-50 cursor-pointer"
