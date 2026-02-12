@@ -14,7 +14,11 @@ export default function AdventureCard({ booking }) {
       {/* Left: Tour Info */}
       <div className="flex items-center gap-4">
         <img
-          src={`data:image/jpeg;base64,${tour.tourPic}`}
+          src={
+            tour.tourPic
+              ? `data:image/jpeg;base64,${tour.tourPic}`
+              : "/images/placeholder.jpg" // your default image
+          }
           alt={tour.name}
           className="w-24 h-20 object-cover rounded-lg"
         />

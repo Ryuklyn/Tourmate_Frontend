@@ -1,11 +1,13 @@
 import React, { useState } from "react";
 import { Mail, Book, ChevronDown, ChevronUp, HelpCircle } from "lucide-react";
 import { sendSupport } from "../../services/support.js";
-
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 export default function HelpSupport() {
   const [subject, setSubject] = useState("");
   const [message, setMessage] = useState("");
   const [status, setStatus] = useState("");
+  
   const handleSendMessage = async () => {
     if (!subject || !message) {
       setStatus("Please fill in both subject and message.");
@@ -17,13 +19,16 @@ export default function HelpSupport() {
       const res = await sendSupport(subject, message, role); // JWT handled in interceptor
       if (res.success) {
         setStatus("Message sent successfully!");
+        toast.success("Message sent successfully!");
         setSubject("");
         setMessage("");
       } else {
         setStatus("Failed to send message: " + res.error);
+        toast.e
       }
     } catch (error) {
       setStatus("Error sending message: " + error.message);
+      toast.error("Error sending message: " + error.message);
     }
   };
   

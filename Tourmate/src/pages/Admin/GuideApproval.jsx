@@ -1,53 +1,72 @@
-
-// // GuideApproval.jsx
+// GuideApproval.jsx
 import { useEffect, useState } from "react";
 import {
   MapPin,
   Calendar,
   Briefcase,
-  DollarSign,
   Eye,
   CheckCircle,
   XCircle,
 } from "lucide-react";
 import GuideReviewModal from "../../components/Admin/GuideReviewModel";
+import RejectApplicationModal from "../../components/Admin/RejectApplicationModal";
 import { decideGuide, getPendingGuideRequest } from "../../services/admin/guideRegistration";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function GuideApproval() {
   const [selectedGuide, setSelectedGuide] = useState(null);
   const [guides, setGuides] = useState([]);
+  const [showRejectModal, setShowRejectModal] = useState(false);
+  const [rejectGuide, setRejectGuide] = useState(null);
 
+  // Fetch pending guides
   useEffect(() => {
     async function fetchPending() {
-      const res = await getPendingGuideRequest();
-      if (res.success && res.data && Array.isArray(res.data.data)) {
-        setGuides(res.data.data); // ✅ access the `data` array
-        console.log(res.data.data);
-      } else {
-        setGuides([]); // fallback to empty array
+      try {
+        const res = await getPendingGuideRequest();
+        if (res.success && res.data && Array.isArray(res.data.data)) {
+          setGuides(res.data.data);
+        } else {
+          setGuides([]);
+        }
+      } catch (err) {
+        toast.error("Failed to fetch pending guides.");
+        console.error(err);
       }
     }
     fetchPending();
   }, []);
-  const handleDecision = async (guideId, action) => {
-    const res = await decideGuide(guideId, action);
-    if (res.success) {
-      alert(`Guide ${action}d successfully`);
-      // Remove the guide from the list
-      setGuides(prev => prev.filter(g => g.guideId !== guideId));
-      // Close modal if it’s open
-      if (selectedGuide?.id === guideId) setSelectedGuide(null);
-    } else {
-      alert("Failed to process guide decision: " + res.error);
+
+  // Handle approve/reject decisions
+  const handleDecision = async (guideId, action, reason = "") => {
+    try {
+      if (action.toLowerCase() === "reject" && !reason.trim()) {
+        toast.error("Please provide a reason for rejection.");
+        return;
+      }
+
+      const res = await decideGuide(guideId, action, reason);
+
+      if (res?.success) {
+        toast.success(`Guide ${action}d successfully`);
+        setGuides(prev => prev.filter(g => g.guideId !== guideId));
+        if (selectedGuide?.guideId === guideId) setSelectedGuide(null);
+        if (rejectGuide?.guideId === guideId) setRejectGuide(null);
+        setShowRejectModal(false);
+      } else {
+        toast.error(`Failed to process guide decision: ${res?.data || "Unknown error"}`);
+      }
+    } catch (err) {
+      toast.error("An error occurred while processing the decision.");
+      console.error(err);
     }
   };
 
   return (
     <div className="p-6">
       <h1 className="text-3xl font-semibold">Guide Approvals</h1>
-      <p className="text-gray-600 mb-6">
-        Review and approve new guide applications
-      </p>
+      <p className="text-gray-600 mb-6">Review and approve new guide applications</p>
 
       <div className="grid grid-cols-3 gap-6">
         {guides.map((guide) => (
@@ -58,9 +77,8 @@ export default function GuideApproval() {
             {/* Header */}
             <div className="flex items-center gap-4 mb-4">
               <img
-
                 src={`data:image/jpeg;base64,${guide.profilePic}`}
-                alt={guide.fullame}
+                alt={guide.fullName}
                 className="w-16 h-16 rounded-full object-cover"
               />
               <div>
@@ -78,11 +96,11 @@ export default function GuideApproval() {
                 <Calendar size={16} /> Applied:
                 <span className="font-medium">
                   {guide.createdAt
-                    ? new Date(guide.createdAt).toLocaleString("en-US", {
-                      year: "numeric",
-                      month: "short",
-                      day: "numeric",
-                    })
+                    ? new Date(guide.createdAt).toLocaleDateString("en-US", {
+                        year: "numeric",
+                        month: "short",
+                        day: "numeric",
+                      })
                     : "N/A"}
                 </span>
               </p>
@@ -90,9 +108,8 @@ export default function GuideApproval() {
                 <Briefcase size={16} /> Experience:
                 <span className="font-medium">{guide.experience}</span>
               </p>
-              <p className="flex items-center gap-2">
-              <p className="text-xs text-green-700 font-semibold">Rs </p>Rate:
-                <span className="font-medium">{guide.price}</span>
+              <p className="flex items-center gap-2 text-xs text-green-700 font-semibold">
+                Rate: <span className="font-medium">Rs. {guide.price}</span>
               </p>
             </div>
 
@@ -113,9 +130,7 @@ export default function GuideApproval() {
 
             {/* Verification Status */}
             <div className="mt-4">
-              <h4 className="font-medium text-gray-400">
-                Verification Status:
-              </h4>
+              <h4 className="font-medium text-gray-400">Verification Status:</h4>
               <div className="flex flex-wrap gap-2 mt-2 text-sm">
                 {guide.governmentPic && (
                   <div className="flex items-center gap-2 text-[#0faf94] bg-green-200 px-3 py-1 rounded-full font-medium">
@@ -134,60 +149,50 @@ export default function GuideApproval() {
 
             {/* Footer Buttons */}
             <div className="flex items-center pt-4 mt-4 border-t border-gray-200 gap-1.5 justify-center">
-              {/* Review */}
               <button
                 onClick={() => setSelectedGuide(guide)}
-                className="flex items-center gap-1
-             text-orange-500 font-medium text-xs
-             hover:bg-orange-50
-             px-2 py-1
-             rounded-md border border-orange-200
-             whitespace-nowrap"
+                className="flex items-center gap-1 text-orange-500 font-medium text-xs hover:bg-orange-50 px-2 py-1 rounded-md border border-orange-200 whitespace-nowrap"
               >
-                <Eye size={14} />
-                Review
+                <Eye size={14} /> Review
               </button>
 
               <button
                 onClick={() => handleDecision(guide.guideId, "approve")}
-                className="flex items-center gap-1
-             text-[#0faf94] font-medium text-xs
-             hover:bg-green-50
-             px-2 py-1
-             rounded-md border border-green-200
-             whitespace-nowrap"
+                className="flex items-center gap-1 text-[#0faf94] font-medium text-xs hover:bg-green-50 px-2 py-1 rounded-md border border-green-200 whitespace-nowrap"
               >
-                <CheckCircle size={14} />
-                Approve
+                <CheckCircle size={14} /> Approve
               </button>
 
               <button
-                onClick={() => handleDecision(guide.guideId, "reject")}
-                className="flex items-center gap-1
-             text-red-600 font-medium text-xs
-             hover:bg-red-50
-             px-2 py-1
-             rounded-md border border-red-200
-             whitespace-nowrap"
+                onClick={() => {
+                  setRejectGuide(guide);
+                  setShowRejectModal(true);
+                }}
+                className="flex items-center gap-1 text-red-600 font-medium text-xs hover:bg-red-50 px-2 py-1 rounded-md border border-red-200 whitespace-nowrap"
               >
-                <XCircle size={14} />
-                Reject
+                <XCircle size={14} /> Reject
               </button>
             </div>
           </div>
         ))}
       </div>
 
-      {/* Modal */}
+      {/* Review Modal */}
       {selectedGuide && (
         <GuideReviewModal
           guide={selectedGuide}
           onClose={() => setSelectedGuide(null)}
-          onDecision={(guideId, action) => {
-            // 🔥 update state HERE
-            setGuides(prev => prev.filter(g => g.guideId !== guideId));
-            setSelectedGuide(null);
-          }}
+          onDecision={handleDecision}
+        />
+      )}
+
+      {/* Reject Modal */}
+      {showRejectModal && rejectGuide && (
+        <RejectApplicationModal
+          onClose={() => setShowRejectModal(false)}
+          onReject={(reason) =>
+            handleDecision(rejectGuide.guideId, "reject", reason)
+          }
         />
       )}
     </div>

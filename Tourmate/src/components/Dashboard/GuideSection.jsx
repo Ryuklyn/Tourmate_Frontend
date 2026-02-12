@@ -1,7 +1,7 @@
 import React from "react";
 import GuideCard from "./GuideCard";
 import NirojSirImg from "../../assets/img/NirojSir.jpg";
-
+//not used
 const GuidesSection = () => {
   const guides = [
     {

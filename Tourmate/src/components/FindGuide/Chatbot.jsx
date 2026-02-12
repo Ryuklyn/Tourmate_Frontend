@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { MessageCircle, X } from "lucide-react";
-
+//not used
 const Chatbot = () => {
   const [open, setOpen] = useState(false);
 

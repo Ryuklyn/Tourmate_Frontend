@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 import { Camera, Plus, X } from "lucide-react";
 import { getProfile, updateGuideInfo, updateProfilePic } from "../../services/guide/guideProfile";
 import { updateProfile } from "../../services/user";
-
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 export default function GuideProfileManage() {
   const [profile, setProfile] = useState({
     firstName: "",
@@ -64,21 +65,21 @@ export default function GuideProfileManage() {
 
     const res = await updateGuideInfo(guidePayload);
     if (res.success) {
-      alert("Profile info updated successfully");
+      toast.success("Profile info updated successfully");
     } else {
-      alert(`Error: ${res.error}`);
+      altoast.error(`Error: ${res.error}`);
     }
   };
 
   /* ================= SAVE PROFILE PIC ================= */
   const handleProfilePicUpload = async () => {
-    if (!profilePic) return alert("Select an image");
+    if (!profilePic) return toast.warn("Select an image");
 
     const res = await updateProfilePic(profilePic);
     if (res.success) {
-      alert("Profile picture updated successfully");
+      toast.success("Profile picture updated successfully");
     } else {
-      alert(`Error: ${res.error}`);
+      toast.error(`Error: ${res.error}`);
     }
   };
 

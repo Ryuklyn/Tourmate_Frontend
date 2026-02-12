@@ -1,22 +1,50 @@
+import { useState } from "react";
 import { X, Mail } from "lucide-react";
-
+import { sendEmail } from "../../services/admin/support";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 export default function SendEmailModal({ user, onClose }) {
+  const [subject, setSubject] = useState("");
+  const [message, setMessage] = useState("");
+  const [loading, setLoading] = useState(false);
+
   if (!user) return null;
+
+  const handleSend = async () => {
+    if (!subject || !message) {
+      toast.warn("Subject and message cannot be empty");
+      return;
+    }
+  
+    setLoading(true);
+  
+    try {
+      const result = await sendEmail({ to: user.email, subject, message });
+  
+      if (result.success) {
+        toast.success(result.message);
+        onClose();
+      } else {
+        toast.error(result.message);
+      }
+    } catch (error) {
+      toast.error("Something went wrong while sending the email");
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+  
 
   return (
     <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
       <div className="bg-white w-[450px] rounded-2xl p-6 relative">
-        <button
-          onClick={onClose}
-          className="absolute top-4 right-4 text-gray-400 hover:text-gray-600"
-        >
+        <button onClick={onClose} className="absolute top-4 right-4 text-gray-400 hover:text-gray-600">
           <X />
         </button>
 
         <h2 className="text-lg font-semibold">Send Email</h2>
-        <p className="text-sm text-gray-500 mb-4">
-          Send an email to {user.name}
-        </p>
+        <p className="text-sm text-gray-500 mb-4">Send an email to {user.name}</p>
 
         <div className="space-y-4 text-sm">
           <div>
@@ -31,6 +59,8 @@ export default function SendEmailModal({ user, onClose }) {
           <div>
             <label className="block mb-1">Subject</label>
             <input
+              value={subject}
+              onChange={(e) => setSubject(e.target.value)}
               placeholder="Enter email subject"
               className="w-full border border-gray-400 rounded-lg px-3 py-2 focus:ring-2 focus:ring-orange-400"
             />
@@ -40,6 +70,8 @@ export default function SendEmailModal({ user, onClose }) {
             <label className="block mb-1">Message</label>
             <textarea
               rows="4"
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
               placeholder="Write your message here..."
               className="w-full border border-gray-400 rounded-lg px-3 py-2"
             />
@@ -47,16 +79,17 @@ export default function SendEmailModal({ user, onClose }) {
         </div>
 
         <div className="flex justify-end gap-3 mt-6">
-          <button
-            onClick={onClose}
-            className="px-4 py-2 border border-gray-200 rounded-xl"
-          >
+          <button onClick={onClose} className="px-4 py-2 border border-gray-200 rounded-xl">
             Cancel
           </button>
 
-          <button className="px-4 py-2 bg-orange-400 text-white rounded-xl flex items-center gap-2">
+          <button
+            onClick={handleSend}
+            disabled={loading}
+            className="px-4 py-2 bg-orange-400 text-white rounded-xl flex items-center gap-2"
+          >
             <Mail className="w-4 h-4" />
-            Send Email
+            {loading ? "Sending..." : "Send Email"}
           </button>
         </div>
       </div>

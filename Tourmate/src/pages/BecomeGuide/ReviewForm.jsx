@@ -4,23 +4,21 @@ import StepProgress from "./StepProgress";
 import { useNavigate } from "react-router-dom";
 import { useBecomeGuide } from "./BecomeGuideContext";
 import { registerGuide } from "../../services/guideRegister";
-
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 export default function ReviewForm() {
   const navigate = useNavigate();
   const { formData } = useBecomeGuide(); 
   const { personal, verification, skills, banking } = formData;
 
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
+
 
   const handleSubmit = async () => {
     setLoading(true);
-    setError("");
-    setSuccess("");
+
 
     try {
-      const token = localStorage.getItem("AUTH_TOKEN");
       const userId = localStorage.getItem("userId");
 
       // Prepare guide data for backend
@@ -50,12 +48,15 @@ export default function ReviewForm() {
         
       );
 
-      console.log("Response:", response);
-      setSuccess("Guide registration submitted successfully!");
-      navigate("/dashboard");
+      toast.success("Guide registration submitted successfully!");
+
+      // Wait 2 seconds (2000 ms) before navigating
+      setTimeout(() => {
+        navigate("/dashboard/become-guide/submit-form");
+      }, 3000);
     } catch (err) {
       console.error(err);
-      setError("Failed to submit guide registration.");
+      toast.error("Failed to submit guide registration.");
     } finally {
       setLoading(false);
     }
@@ -180,8 +181,7 @@ export default function ReviewForm() {
           </label>
         </div>
 
-        {error && <p className="text-red-500 mb-4">{error}</p>}
-        {success && <p className="text-green-600 mb-4">{success}</p>}
+
 
         {/* --------------------------- BUTTONS --------------------------- */}
         <div className="flex justify-between">
@@ -201,6 +201,7 @@ export default function ReviewForm() {
           </button>
         </div>
       </div>
+      <ToastContainer position="top-right" autoClose={2500} />
     </div>
   );
 }

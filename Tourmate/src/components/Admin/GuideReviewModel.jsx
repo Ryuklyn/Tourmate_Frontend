@@ -20,7 +20,8 @@ import {
 } from "lucide-react";
 import RejectApplicationModal from "./RejectApplicationModal";
 import { decideGuide } from "../../services/admin/guideRegistration";
-
+import { toast} from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 export default function GuideReviewModal({ guide, onClose, onDecision }) {
   const [activeTab, setActiveTab] = useState("personal");
   const [zoomImage, setZoomImage] = useState(null);
@@ -30,11 +31,12 @@ export default function GuideReviewModal({ guide, onClose, onDecision }) {
     const res = await decideGuide(guide.guideId, action, reason);
 
     if (res.success) {
-      alert(`Guide ${action}d successfully`);
-      onDecision?.(guide.guideId, action); // 🔥 notify parent
+      const actionText = action.toLowerCase() === "approve" ? "approved" : "rejected";
+      toast.success(`Guide ${actionText} successfully`);
+      onDecision?.(guide.guideId, action); // notify parent
       onClose();
     } else {
-      alert("Failed to process guide decision: " + res.error);
+      toast.error("Failed to process guide decision: " + (res.error || "Unknown error"));
     }
   };
   const tabs = [
@@ -302,7 +304,7 @@ export default function GuideReviewModal({ guide, onClose, onDecision }) {
                   {/* Right: Hourly Rate */}
                   <div>
                     <div className="flex items-center gap-2 text-gray-500 text-sm mb-2">
-                  
+
                       Hourly Rate (Rs)
                     </div>
 

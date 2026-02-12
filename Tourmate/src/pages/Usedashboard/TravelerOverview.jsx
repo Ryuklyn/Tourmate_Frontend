@@ -23,7 +23,6 @@ export default function TravelerOverview() {
 
     if (res.success) {
       setUpcomingTrips(res.data.data);
-      console.log(res.data.data);
     } else {
       setUpcomingTrips([]);
 

@@ -14,7 +14,8 @@ import {
   Heart,
 } from "lucide-react";
 
-import Niroj from "../../../assets/img/NirojSir.jpg";
+import { toast} from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import BookingSidebar from "../../../pages/Usedashboard/GuideDetailComp/BookingSidebar";
 
 // demo purpose – normally use params or API
@@ -57,6 +58,7 @@ const TourDetails = () => {
         ...prev,
         favorited: !prev.favorited,
       }));
+
     }
   };
   

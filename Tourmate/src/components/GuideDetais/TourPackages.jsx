@@ -1,5 +1,5 @@
 import React from "react";
-
+//not used
 const tours = [
   {
     title: "Gothic Quarter Walking Tour",

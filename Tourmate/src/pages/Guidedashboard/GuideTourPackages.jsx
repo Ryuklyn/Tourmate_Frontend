@@ -49,7 +49,6 @@ export default function GuideTourPackage() {
     const fetchTours = async () => {
       const res = await getToursByGuide();
       if (res.success) setTours(res.data);
-      console.log(res);
       setLoading(false);
     };
     fetchTours();
@@ -57,17 +56,7 @@ export default function GuideTourPackage() {
   const handleTourCreated = (newTour) => {
     setTours(prev => [newTour, ...prev]); // add to top
   };
-  const handleDeleteTour = async (tourId) => {
-    if (!window.confirm("Are you sure you want to delete this tour?")) return;
-
-    const res = await deleteTourById(tourId);
-    if (res.success) {
-      setTours(prev => prev.filter(t => t.id !== tourId));
-      alert(res.message);
-    } else {
-      alert(res.message);
-    }
-  };
+ 
   if (loading) return <p>Loading tours...</p>;
   /* ================= TOUR DATA ================= */
   

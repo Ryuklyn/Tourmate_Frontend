@@ -49,3 +49,14 @@ export const markSupportAsSeen = async (id) => {
     };
   }
 };
+
+
+export const sendEmail = async ({ to, subject, message }) => {
+  try {
+    const response = await api.post("/admin/email/send", { to, subject, message });
+    return response.data; // { success: true/false, message: "..." }
+  } catch (error) {
+    console.error("Email sending failed:", error);
+    return { success: false, message: error.response?.data?.message || error.message };
+  }
+};

@@ -1,7 +1,8 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
-import { doLogin, handleLoginGoogle } from "../../services/auth";
+import { Link, useNavigate } from "react-router-dom";
+import { doLogin } from "../../services/auth";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const LoginForm = () => {
   const [formData, setFormData] = useState({ email: "", password: "" });
@@ -15,16 +16,28 @@ const LoginForm = () => {
   // Handle login form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Validation
+    if (!formData.email || !formData.password) {
+      toast.error("Please fill in both email and password");
+      return;
+    }
+
     const loginStatus = await doLogin(formData.email, formData.password);
-    
+
     if (loginStatus.error) {
-      alert(loginStatus.error);
-    }else if(localStorage.getItem("role") === "ADMIN") {
-      navigate("/dashboard/admin");
-    }else if(localStorage.getItem("role") === "GUIDE") {
-      navigate("/dashboard/guide");
+      toast.error(loginStatus.error);
     } else {
-      navigate("/dashboard");
+      toast.success("Login successful, welcome!");
+
+      const role = localStorage.getItem("role");
+      if (role === "ADMIN") {
+        navigate("/dashboard/admin");
+      } else if (role === "GUIDE") {
+        navigate("/dashboard/guide");
+      } else {
+        navigate("/dashboard");
+      }
     }
   };
 
@@ -67,7 +80,6 @@ const LoginForm = () => {
         </Link>
       </div>
 
-      {/* Sign In Button */}
       <button
         type="submit"
         className="w-full bg-blue-500 text-white py-2.5 rounded-lg font-semibold hover:bg-blue-700 transition"

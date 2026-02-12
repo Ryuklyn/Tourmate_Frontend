@@ -1,5 +1,5 @@
 import React from "react";
-
+//not used
 const AboutSection = () => {
   return (
     <div className="bg-white rounded-xl shadow-md p-6 mt-24">

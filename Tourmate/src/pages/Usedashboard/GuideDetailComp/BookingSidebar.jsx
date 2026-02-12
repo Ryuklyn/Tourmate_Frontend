@@ -2,7 +2,8 @@ import React, { useState, useEffect } from "react";
 import { Calendar, Users, Clock, Heart, ShieldCheck, X } from "lucide-react";
 import { toggleFavouriteGuide } from "../../../services/guideData";
 import { bookGuide, bookTour } from "../../../services/booking";
-
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 export default function BookingSidebar({ guide, selectedTour, clearSelectedTour }) {
   const today = new Date().toISOString().split("T")[0];
   const [date, setDate] = useState(today);
@@ -29,17 +30,14 @@ export default function BookingSidebar({ guide, selectedTour, clearSelectedTour 
     if (res.success) {
       setFavourite(prev => !prev); // toggle locally
     }
-    console.log(selectedTour);
-
   };
 
   const total = selectedTour ? selectedTour.price * groupSize : 0;
   const handleBookNow = async () => {
     if (!date) {
-      alert("Please select a date");
+      toast.warn("Please select a date");
       return;
     }
-    console.log(guide.guideId, selectedTour.id, groupSize, date);
     const res = await bookTour({
     guideId: guide.guideId,
     tourId: selectedTour.id,
@@ -50,9 +48,9 @@ export default function BookingSidebar({ guide, selectedTour, clearSelectedTour 
     });
 
     if (res.success) {
-      alert("Booking request sent successfully!");
+      toast.success("Booking request sent successfully!");
     } else {
-      alert(res.error);
+      toast.error(res.error);
     }
   };
   return (

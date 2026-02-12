@@ -3,7 +3,8 @@ import { useEffect, useState } from "react";
 import Modal from "./Modal";
 import { useNavigate } from "react-router-dom";
 import { createTour } from "../../../services/tour/tourData";
-
+import { toast} from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import api from "../../../utils/axiosInterceptor";
 
 export default function CreateTourModal({ onClose, onTourCreated }) {
@@ -120,7 +121,7 @@ export default function CreateTourModal({ onClose, onTourCreated }) {
     e.preventDefault();
 
     if (!name || !location || !description) {
-      alert("Please fill all required fields");
+      toast.warn("Please fill all required fields");
       return;
     }
 
@@ -150,15 +151,16 @@ export default function CreateTourModal({ onClose, onTourCreated }) {
       const res = await createTour(formData);
       console.log(tourObj);
       if (res.status === "success") {
+        toast.success("Tour created successfully");
         onTourCreated?.(res.data);
         onClose();
         navigate("/dashboard/guide/tourpackages");
       } else {
-        alert(res.message);
+        toast.warn(res.message);
       }
     } catch (err) {
       console.error(err);
-      alert("Failed to create tour");
+      toast.error("Failed to create tour");
     } finally {
       setLoading(false);
     }

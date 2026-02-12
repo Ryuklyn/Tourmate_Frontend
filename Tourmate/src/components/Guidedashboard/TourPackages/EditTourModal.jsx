@@ -3,7 +3,8 @@ import { useEffect, useState } from "react";
 import Modal from "./Modal";
 import { editTour } from "../../../services/tour/tourData";
 import { useNavigate } from "react-router-dom";
-
+import { toast} from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import api from "../../../utils/axiosInterceptor";
 
 export default function EditTourModal({ tour, onClose, onUpdated }) {
@@ -148,8 +149,31 @@ useEffect(() => {
   // ===== SUBMIT =====
   const handleSaveChanges = async (e) => {
     e.preventDefault();
+    
+    // ===== BASIC VALIDATION =====
+    if (!name.trim() || !location.trim() || !duration.trim() || !maxGuests || !price) {
+      toast.error("Please fill in all required fields");
+      return;
+    }
+  
+    if (itineraries.length === 0) {
+      toast.error("Please add at least one itinerary stop");
+      return;
+    }
+  
+    // Optionally check languages and categories
+    if (selectedLanguages.length === 0) {
+      toast.error("Select at least one language");
+      return;
+    }
+  
+    if (selectedCategories.length === 0) {
+      toast.error("Select at least one category");
+      return;
+    }
+  
     setLoading(true);
-
+  
     const updatedTour = {
       name,
       location,
@@ -162,30 +186,32 @@ useEffect(() => {
       included,
       notIncluded,
       importantInformation,
-      languages: selectedLanguages.map(l => l.value),   // ✅
-      categories: selectedCategories.map(c => c.value), // ✅
+      languages: selectedLanguages.map(l => l.value),
+      categories: selectedCategories.map(c => c.value),
     };
-
+  
     const formData = new FormData();
     formData.append("tour", JSON.stringify(updatedTour));
     if (imageFile) formData.append("tourPic", imageFile);
-
+  
     try {
       const res = await editTour(tour.id, formData);
       if (res.status === "success") {
+        toast.success("Tour updated successfully");
         onUpdated?.(res.data);
         onClose();
         navigate("/dashboard/guide/tourpackages");
       } else {
-        alert(res.message || "Update failed");
+        toast.error(res.message || "Update failed");
       }
     } catch (err) {
       console.error(err);
-      alert("Failed to update tour");
+      toast.error("Failed to update tour");
     } finally {
       setLoading(false);
     }
   };
+  
 
   return (
     <Modal

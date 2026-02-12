@@ -22,7 +22,6 @@ export default function TourPackages({ guideId, selectedTour, setSelectedTour,ac
   const handleProceed = () => {
     if (!activeTour) {
       toast.warn("Please select a tour first");
-      console.log("No tour selected");
       return;
     }
 

@@ -1,11 +1,15 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Search, MapPin, Clock, Users } from "lucide-react";
 import api from "../../utils/axiosInterceptor";
 import { fetchBookings } from "../../services/booking";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const GuideBookings = () => {
   const [activeTab, setActiveTab] = useState("upcoming");
   const [bookings, setBookings] = useState([]);
+  const navigate = useNavigate();
   const [counts, setCounts] = useState({
     upcoming: 0,
     requested: 0,
@@ -61,24 +65,47 @@ const GuideBookings = () => {
 
   // Action handlers
   const handleComplete = async (id) => {
-    await api.put(`/guides/tour/bookings/${id}/complete`);
-    refreshBookings();
-    loadCounts();
+    try {
+      await api.put(`/guides/tour/bookings/${id}/complete`);
+      toast.success("Booking marked as completed ✅");
+      refreshBookings();
+      loadCounts();
+    } catch (error) {
+      toast.error("Failed to complete booking ❌");
+    }
   };
+  
   const handleReject = async (id) => {
-    await api.put(`/guides/tour/bookings/${id}/reject`);
-    refreshBookings();
-    loadCounts();
+    try {
+      await api.put(`/guides/tour/bookings/${id}/reject`);
+      toast.success("Booking rejected successfully");
+      refreshBookings();
+      loadCounts();
+    } catch (error) {
+      toast.error("Failed to reject booking");
+    }
   };
+  
   const handleAccept = async (id) => {
-    await api.put(`/guides/tour/bookings/${id}/accept`);
-    refreshBookings();
-    loadCounts();
+    try {
+      await api.put(`/guides/tour/bookings/${id}/accept`);
+      toast.success("Booking accepted successfully 🎉");
+      refreshBookings();
+      loadCounts();
+    } catch (error) {
+      toast.error("Failed to accept booking");
+    }
   };
+  
   const handleCancel = async (id) => {
-    await api.put(`/guides/tour/bookings/${id}/cancel`);
-    refreshBookings();
-    loadCounts();
+    try {
+      await api.put(`/guides/tour/bookings/${id}/cancel`);
+      toast.success("Booking cancelled successfully");
+      refreshBookings();
+      loadCounts();
+    } catch (error) {
+      toast.error("Failed to cancel booking");
+    }
   };
 
   return (
@@ -169,7 +196,7 @@ const GuideBookings = () => {
             </div>
 
             <div className="flex items-center gap-3">
-              <button className="px-4 py-2 border-2 border-[#0faf94] rounded-lg text-gray-600 hover:bg-gray-100">
+              <button onClick={() => navigate(`/dashboard/bookingsdetails/${item.bookingId}`)} className="px-4 py-2 border-2 border-[#0faf94] rounded-lg text-gray-600 hover:bg-gray-100">
                 View Details
               </button>
 

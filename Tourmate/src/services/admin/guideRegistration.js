@@ -18,10 +18,10 @@ export const getPendingGuideRequest = async () => {
 };
 
 // Approve or reject a guide
-export const decideGuide = async (guideId, action) => {
+export const decideGuide = async (guideId, action, reason) => {
   try {
     const res = await api.post(`/admin/guides/${guideId}/decision`, null, {
-      params: { action },
+      params: { action, reason },
     });
     return { success: true, data: res.data };
   } catch (err) {

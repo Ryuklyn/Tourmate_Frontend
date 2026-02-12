@@ -8,7 +8,8 @@ import {
   UserCheck,
 } from "lucide-react";
 import { sendSupport } from "../../services/support";
-
+import { toast} from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 export default function GuideSupport() {
   const [subject, setSubject] = useState("");
   const [message, setMessage] = useState("");
@@ -23,14 +24,14 @@ export default function GuideSupport() {
       const role = "GUIDE";
       const res = await sendSupport(subject, message, role); // JWT handled in interceptor
       if (res.success) {
-        setStatus("Message sent successfully!");
         setSubject("");
         setMessage("");
+        toast.success("Message sent successfully!");
       } else {
-        setStatus("Failed to send message: " + res.error);
+        toast.error("Failed to send message");
       }
     } catch (error) {
-      setStatus("Error sending message: " + error.message);
+      console.error("Error sending message: " + error.message);
     }
   };
   const faqs = [
@@ -158,7 +159,7 @@ export default function GuideSupport() {
           >
             Send Message
           </button>
-          {status && <p className="text-sm text-gray-600 mt-2">{status}</p>}
+
 
         </div>
       </div>

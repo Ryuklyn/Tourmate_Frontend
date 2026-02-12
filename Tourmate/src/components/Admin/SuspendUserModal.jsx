@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { suspendGuide, suspendTraveller } from "../../services/admin/UserManagement";
-
+import { toast} from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 export default function SuspendUserModal({ user, onClose, type, onSuccess }) {
   if (!user) return null;
 
@@ -24,6 +25,8 @@ export default function SuspendUserModal({ user, onClose, type, onSuccess }) {
     setLoading(false);
 
     if (res.success) {
+      toast.success(res.data.message);
+      console.log(res.data);
       onSuccess?.();
       onClose();
     } else {

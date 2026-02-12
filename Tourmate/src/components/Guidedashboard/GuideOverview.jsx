@@ -7,24 +7,35 @@ import { getGuideDashboard } from "../../services/guide/dashboard";
 import { fetchBookings } from "../../services/booking";
 import api from "../../utils/axiosInterceptor";
 import formatDateTime from "../../utils/dateUtil";
-
+import { toast} from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 export default function GuideOverview() {
   const [dashboard, setDashboard] = useState({});
   const [bookings, setBookings] = useState([]);
   const getInitials = (firstName = "", lastName = "") =>
     `${firstName.charAt(0)}${lastName.charAt(0)}`.toUpperCase();
 
-  const handleReject = async (id) => {
-    await api.put(`/guides/tour/bookings/${id}/reject`);
-    fetchBookingsRequests();
-    loadCounts();
-  };
-
-  const handleAccept = async (id) => {
-    await api.put(`/guides/tour/bookings/${id}/accept`);
-    fetchBookingsRequests();
-    loadCounts();
-  };
+    const handleBooking = async (id, action) => {
+      try {
+        if (action === "accept") {
+          await api.put(`/guides/tour/bookings/${id}/accept`);
+          toast.success("Booking accepted successfully");
+        } else if (action === "reject") {
+          await api.put(`/guides/tour/bookings/${id}/reject`);
+          toast.success("Booking rejected successfully");
+        } else {
+          toast.error("Invalid action");
+          return;
+        }
+    
+        // Refresh data
+        fetchBookingsRequests();
+      } catch (error) {
+        console.error(error);
+        toast.error("Something went wrong. Please try again.");
+      }
+    };
+    
   const fetchDashboard = async () => {
     const res = await getGuideDashboard();
     if (res.success) {
@@ -132,8 +143,8 @@ export default function GuideOverview() {
                 name={`${booking.user.firstName} ${booking.user.lastName}`}
                 tour={booking.tourName}
                 datePrice={`${formatDateTime(booking.startDate)} • Rs ${booking.totalPrice}`}
-                onAccept={() => handleAccept(booking.bookingId)}
-                onReject={() => handleReject(booking.bookingId)}
+                onAccept={() => handleBooking(booking.bookingId, "accept")}
+                onReject={() => handleBooking(booking.bookingId, "reject")}
               />
             ))}
           </div>

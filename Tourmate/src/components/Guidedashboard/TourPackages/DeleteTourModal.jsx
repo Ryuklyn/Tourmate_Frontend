@@ -1,7 +1,8 @@
 import { useEffect } from "react";
 import { deleteTourById } from "../../../services/tour/tourData";
 import Modal from "./Modal";
-
+import { toast} from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 export default function DeleteTourModal({ tour, onClose, onDeleted }) {
   const handleDelete = async () => {
     if (!tour) return;
@@ -11,15 +12,13 @@ export default function DeleteTourModal({ tour, onClose, onDeleted }) {
 
     const res = await deleteTourById(tour.id);
     if (res.success) {
+      toast.success("Tour deleted successfully!");
       onDeleted(tour.id); // notify parent to remove from state
       onClose();
     } else {
-      alert(res.message);
+      toast.error(res.message);
     }
   };
-  useEffect(() => {
-    console.log(tour);
-  })
 
   return (
     <Modal

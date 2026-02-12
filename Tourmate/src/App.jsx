@@ -46,11 +46,14 @@ import GuideSupport from "./components/Guidedashboard/GuideSupport";
 import VerifyEmail from "./components/Signup/VerifyEmail";
 import ForgotPassword from "./components/PasswordReset/ForgotPassword";
 import ResetPassword from "./components/PasswordReset/ResetPassword";
+import { ToastContainer } from "react-toastify";
 
 function App() {
   const [count, setCount] = useState(0);
 
   return (
+    <>
+    <ToastContainer position="top-right" autoClose={2500} />
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<TourMateLanding />} />
@@ -115,6 +118,7 @@ function App() {
         </Route>
       </Routes>
     </BrowserRouter>
+    </>
   );
 }
 

@@ -15,7 +15,8 @@ import {
 import AvatarImg from "../../assets/img/Avatar.jpg";
 import {  } from "../../services/user";
 import { updateProfile,getUserData, changeProfilePic } from "../../services/user";
-
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 export default function ProfileSettings() {
   const [profileImage, setProfileImage] = useState(AvatarImg);
   const [isEditing, setIsEditing] = useState(false);
@@ -57,10 +58,10 @@ export default function ProfileSettings() {
   const handleSaveProfile = async () => {
     const res = await updateProfile(form);
     if (res.success) {
-      alert("Profile updated successfully");
+      toast.success("Profile updated successfully");
       setIsEditing(false);
     } else {
-      alert("Error updating profile: " + res.error);
+      toast.error("Error updating profile: " + res.error);
     }
   };
   const handleImageUpload = async (e) => {
@@ -73,7 +74,7 @@ export default function ProfileSettings() {
     const userId = localStorage.getItem("userId");
     const res = await changeProfilePic(file, userId);
     if (!res.success) {
-      alert("Failed to upload profile picture: " + res.error);
+      toast.error("Failed to upload profile picture: " + res.error);
     }
   };
   const handleChange = (e) => {

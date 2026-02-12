@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   ShieldCheck,
   Heart,
@@ -8,15 +8,22 @@ import {
   Star,
   Clock,
 } from "lucide-react";
+import { toggleFavouriteGuide } from "../../../services/guideData";
 
 export default function GuideHeader({ guide }) {
   const imageSrc = guide.profilePic
     ? `data:image/jpeg;base64,${guide.profilePic}`
     : "/default-avatar.png";
   const [saved, setSaved] = useState(false);
+  useEffect(() => {
+    setSaved(guide?.favorited ?? false);
+  }, [guide]);
+  const handleSave = async () => {
 
-  const handleSave = () => {
-    setSaved(!saved);
+    const res = await toggleFavouriteGuide(guide.guideId);
+    if (res.success) {
+      setSaved(!saved);
+    }
     // 👉 future ma API call yaha garna sakxau
     // console.log("Guide saved:", !saved);
   };

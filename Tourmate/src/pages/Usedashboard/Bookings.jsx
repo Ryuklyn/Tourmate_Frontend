@@ -9,7 +9,8 @@ import {
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { getMyTourBookings, cancelTourBooking } from "../../services/booking";
-
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 // Tabs mapped to backend BookingStatus
 const TABS = {
   REQUESTED: "PENDING",
@@ -38,6 +39,7 @@ export default function Bookings() {
     try {
       await cancelTourBooking(bookingId);
       setBookings((prev) => prev.filter((b) => b.bookingId !== bookingId));
+      toast.success("Booking cancelled successfully!");
     } catch (err) {
       console.error(err);}
   };

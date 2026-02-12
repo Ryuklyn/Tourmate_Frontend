@@ -58,8 +58,6 @@ export default function UserManage() {
     if (guidesRes.success) {
       setGuides(guidesRes.data.data);
     }
-    console.log(usersRes);
-    console.log(guidesRes);
     setLoading(false);
   };
   useEffect(() => {

@@ -82,16 +82,12 @@ export default function SubmitForm() {
         </div>
 
         {/* Buttons */}
-        <div className="flex justify-between mt-10">
+        <div className="mt-10">
           <button
             onClick={() => navigate("/dashboard")}
-            className="w-1/2 mr-3 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-100 transition"
+            className="w-full py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-100 transition"
           >
             Return Home
-          </button>
-
-          <button className="w-1/2 ml-3 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
-            Save Confirmation
           </button>
         </div>
 
