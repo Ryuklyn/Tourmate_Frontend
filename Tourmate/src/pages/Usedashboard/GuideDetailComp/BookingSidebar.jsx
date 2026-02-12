@@ -59,7 +59,7 @@ export default function BookingSidebar({ guide, selectedTour, clearSelectedTour 
     <div className="bg-white rounded-xl shadow-md p-6 sticky top-6">
       {/* Price Top */}
       <div className="text-center">
-        <h2 className="text-3xl font-bold text-blue-600 mb-1">${selectedTour?.price || 0}</h2>
+        <h2 className="text-3xl font-bold text-blue-600 mb-1">RS. {selectedTour?.price || 0}</h2>
         <p className="text-gray-500 mb-6">per hour</p>
       </div>
 
@@ -124,8 +124,8 @@ export default function BookingSidebar({ guide, selectedTour, clearSelectedTour 
       {selectedTour && (
         <div className="text-gray-700 text-sm">
           <p>
-            ${selectedTour.price} × {groupSize} people
-            <span className="float-right font-semibold">${total}</span>
+            Rs.{selectedTour.price} × {groupSize} people
+            <span className="float-right font-semibold">RS.{total}</span>
           </p>
           <p className="text-xs text-gray-500 mt-1">
             Duration: {selectedTour.duration} 
@@ -135,7 +135,7 @@ export default function BookingSidebar({ guide, selectedTour, clearSelectedTour 
 
 
           <h3 className="text-xl font-semibold mt-2 mb-4">
-            Total <span className="float-right text-blue-600">${total}</span>
+            Total <span className="float-right text-blue-600">Rs. {total}</span>
           </h3>
 
 

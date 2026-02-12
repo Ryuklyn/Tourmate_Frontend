@@ -14,7 +14,6 @@ import {
   Calendar,
   ImageIcon,
   ShieldAlert,
-  DollarSign,
   FileText,
   Building2,
   Info,
@@ -303,8 +302,8 @@ export default function GuideReviewModal({ guide, onClose, onDecision }) {
                   {/* Right: Hourly Rate */}
                   <div>
                     <div className="flex items-center gap-2 text-gray-500 text-sm mb-2">
-                      <DollarSign size={16} />
-                      Hourly Rate
+                  
+                      Hourly Rate (Rs)
                     </div>
 
                     <div className="flex items-baseline gap-2">

@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 import Sidebar from "../../components/Userdashboard/Sidebar";
 import Header from "../../components/Userdashboard/Header";
-import AltHeader from "../../components/Userdashboard/AltHeader";
 import { authenticateRole, validateAuthToken } from "../../services/auth";
 
 export default function TravelerLayout() {

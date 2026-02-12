@@ -34,12 +34,12 @@ export default function CommissionSettingsModal({ rate, setRate, onClose }) {
         </p>
 
         <div className="rounded-lg bg-gray-50 p-3 text-sm">
-          <p>Guide requests: ₹1,000</p>
+          <p>Guide requests: Rs 1,000</p>
           <p className="text-red-500">
-            Commission ({rate}%): -₹{(rate * 1000) / 100}
+            Commission ({rate}%): -Rs {(rate * 1000) / 100}
           </p>
           <p className="font-semibold text-green-600">
-            Guide receives: ₹{1000 - (rate * 1000) / 100}
+            Guide receives: Rs {1000 - (rate * 1000) / 100}
           </p>
         </div>
 

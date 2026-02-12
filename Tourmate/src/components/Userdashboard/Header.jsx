@@ -10,7 +10,7 @@ import NotificationDropdown from "../Admin/NotificationDropdown";
 export default function Header({ role }) {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [activeRole, setActiveRole] = useState(role);
-  const [profileImage, setProfileImage] = useState("/https://api.dicebear.com/7.x/personas/svg?seed=John");
+  const [profileImage, setProfileImage] = useState("/default-avatar.png");
   const [user, setUser] = useState({});
   const [open, setOpen] = useState(false);
   const dropdownRef = useRef(null);

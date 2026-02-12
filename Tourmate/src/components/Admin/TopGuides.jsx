@@ -11,32 +11,7 @@ export default function TopGuides() {
   useEffect(() => {
     fetchTopGuides();
   },[])
-  // const guides = [
-  //   {
-  //     name: "Marco Rivera",
-  //     location: "Rome, Italy",
-  //     rating: 4.9,
-  //     earnings: "$12,450",
-  //   },
-  //   {
-  //     name: "Yuki Tanaka",
-  //     location: "Tokyo, Japan",
-  //     rating: 4.8,
-  //     earnings: "$11,200",
-  //   },
-  //   {
-  //     name: "Pierre Dubois",
-  //     location: "Paris, France",
-  //     rating: 4.9,
-  //     earnings: "$10,800",
-  //   },
-  //   {
-  //     name: "Ana Santos",
-  //     location: "Barcelona, Spain",
-  //     rating: 4.7,
-  //     earnings: "$9,650",
-  //   },
-  // ];
+
 
   return (
     <div className="bg-white p-6 rounded-xl shadow border border-gray-300">
@@ -86,7 +61,7 @@ export default function TopGuides() {
               </div>
 
               {/* EARNINGS */}
-              <div className="font-semibold text-gray-900">{item.earnings}</div>
+              <div className="font-semibold text-gray-900">Rs {item.earnings}</div>
             </div>
           </li>
         ))}

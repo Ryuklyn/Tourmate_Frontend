@@ -1,19 +1,28 @@
-import React, { useState } from "react";
-import { Upload, CheckCircle } from "lucide-react";
+import React, { useState, useEffect } from "react";
+import { Upload } from "lucide-react";
 import StepProgress from "./StepProgress";
 import { useNavigate } from "react-router-dom";
 import { useBecomeGuide } from "./BecomeGuideContext";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function Form2() {
   const navigate = useNavigate();
-  const { updateForm } = useBecomeGuide();
+  const { updateForm, formData } = useBecomeGuide();
 
   /* ------------------ STATES ------------------ */
-  const [otpSent, setOtpSent] = useState(false);
   const [govId, setGovId] = useState("");
   const [dob, setDob] = useState("");
   const [idFile, setIdFile] = useState(null);
-  const [error, setError] = useState("");
+
+  /* ------------------ PREFILL IF AVAILABLE ------------------ */
+  useEffect(() => {
+    if (formData.verification) {
+      setGovId(formData.verification.governmentNumber || "");
+      setDob(formData.verification.dob || "");
+      setIdFile(formData.verification.governmentPic || null);
+    }
+  }, [formData]);
 
   /* ------------------ FILE UPLOAD ------------------ */
   const handleFileUpload = (e) => {
@@ -26,25 +35,34 @@ export default function Form2() {
     e.preventDefault();
 
     if (!govId || !dob || !idFile) {
-      setError("All fields are required");
+      toast.warn("All fields are required");
       return;
     }
 
-    setError("");
+    // Gov ID format check (8-12 alphanumeric)
+    if (!/^[A-Za-z0-9]{8,12}$/.test(govId)) {
+      toast.warn("Invalid Government ID format");
+      return;
+    }
+
+    // Age validation: minimum 18 years
+    const today = new Date();
+    const birthDate = new Date(dob);
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const m = today.getMonth() - birthDate.getMonth();
+    if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) age--;
+    if (age < 18) {
+      toast.warn("You must be at least 18 years old");
+      return;
+    }
 
     updateForm("verification", {
       governmentNumber: govId,
-      dob: dob,
+      dob,
       governmentPic: idFile,
     });
 
     navigate("/dashboard/become-guide/form3");
-  };
-
-  /* ------------------ OTP MOCK ------------------ */
-  const handleSendCode = () => {
-    setOtpSent(true);
-    setTimeout(() => setOtpSent(false), 4000);
   };
 
   return (
@@ -55,14 +73,6 @@ export default function Form2() {
       />
 
       <div className="w-full max-w-3xl bg-white shadow-xl rounded-2xl p-10 mt-6 relative">
-        {/* OTP Toast */}
-        {otpSent && (
-          <div className="absolute bottom-4 right-4 bg-blue-600 text-white px-4 py-2 rounded-lg text-sm flex items-center gap-2 shadow-lg">
-            <CheckCircle size={18} />
-            Verification code sent
-          </div>
-        )}
-
         <h2 className="text-3xl font-bold">Identity Verification</h2>
         <p className="text-gray-500 mt-1 mb-6">
           We need to verify your identity
@@ -78,16 +88,26 @@ export default function Form2() {
             <label className="border-2 border-dashed border-gray-300 rounded-xl p-10 flex flex-col items-center justify-center cursor-pointer hover:border-blue-500">
               <Upload size={40} />
               <p className="mt-2 text-gray-600">
-                {idFile ? idFile.name : "Click to upload file"}
+                {idFile
+                  ? idFile.name || "Previously uploaded file"
+                  : "Click to upload file"}
               </p>
               <input
                 type="file"
                 accept="image/*,.pdf"
                 hidden
                 onChange={handleFileUpload}
-                required
               />
             </label>
+
+            {/* Preview if image */}
+            {idFile && idFile.type && idFile.type.startsWith("image/") && (
+              <img
+                src={URL.createObjectURL(idFile)}
+                alt="ID Preview"
+                className="w-32 h-32 object-cover rounded-md mt-2"
+              />
+            )}
           </div>
 
           {/* ------------------ GOV ID ------------------ */}
@@ -118,10 +138,6 @@ export default function Form2() {
             />
           </div>
 
-          {error && (
-            <p className="text-red-500 font-medium text-sm">{error}</p>
-          )}
-
           {/* ------------------ BUTTONS ------------------ */}
           <div className="flex justify-between mt-8">
             <button
@@ -134,7 +150,6 @@ export default function Form2() {
 
             <button
               type="submit"
-              onClick={handleSendCode}
               className="px-8 py-3 bg-blue-600 text-white rounded-lg"
             >
               Continue
@@ -142,6 +157,7 @@ export default function Form2() {
           </div>
         </form>
       </div>
+      <ToastContainer position="top-right" autoClose={2500} />
     </div>
   );
 }

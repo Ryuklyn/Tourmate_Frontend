@@ -69,7 +69,7 @@ const TourCard = ({ tour, onToggleFavourite }) => {
           </div>
           <div className="flex items-center gap-1">
             <Users size={14} className="text-blue-500" />
-            {tour.bookings} reviews
+            {tour.bookings ?? 0} bookings
           </div>
         </div>
 
@@ -90,7 +90,7 @@ const TourCard = ({ tour, onToggleFavourite }) => {
         {/* Price */}
         <div className="flex items-center justify-between mt-6">
           <div>
-            <p className="text-blue-600 text-2xl font-bold">{tour.price}</p>
+            <p className="text-blue-600 text-2xl font-bold">Rs.{tour.price}</p>
             <p className="text-xs text-gray-500">per package</p>
           </div>
 

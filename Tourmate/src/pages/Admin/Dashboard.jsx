@@ -70,7 +70,7 @@ export default function Dashboard() {
           title="Revenue"
           value={
             dashboard?.revenue != null
-              ? `$${dashboard.revenue.toLocaleString()}`
+              ? `Rs.${dashboard.revenue.toLocaleString()}`
               : "—"
           }
           percentage={

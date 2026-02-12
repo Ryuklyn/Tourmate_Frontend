@@ -11,6 +11,7 @@ export function BecomeGuideProvider({ children }) {
       languages: [],
       experience: "", // single selection now
       profileImage: null,
+      location: "",
     },
     verification: {
       governmentNumber: "", // ✅ updated

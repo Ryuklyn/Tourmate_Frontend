@@ -37,7 +37,9 @@ export default function TravelerOverview() {
     {
       title: "Upcoming Trips",
       value: dashboard.upcomingTrips,
-      subtitle: `Next trip in ${dashboard.nextTripInDays} days`,
+      subtitle: dashboard.nextTripInDays != null
+        ? `Next trip in ${dashboard.nextTripInDays} days`
+        : "No trips planned",
       icon: <CalendarDays className="w-6 h-6 text-green-600" />,
     },
     {
@@ -81,11 +83,16 @@ export default function TravelerOverview() {
         <h2 className="text-xl font-semibold flex items-center gap-2 mb-4">
           <Map className="w-5 h-5 text-green-600" /> Upcoming Adventures
         </h2>
-        <div className="flex flex-col gap-4">
-          {upcomingTrips.map((booking, i) => (
-            <AdventureCard key={booking.bookingId} booking={booking} />
-          ))}
-        </div>
+
+        {upcomingTrips.length > 0 ? (
+          <div className="flex flex-col gap-4">
+            {upcomingTrips.map((booking) => (
+              <AdventureCard key={booking.bookingId} booking={booking} />
+            ))}
+          </div>
+        ) : (
+          <p className="text-gray-500 italic">No upcoming adventures planned.</p>
+        )}
       </div>
 
       {/* Recent Searches */}

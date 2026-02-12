@@ -3,7 +3,8 @@ import { Info } from "lucide-react";
 import StepProgress from "./StepProgress";
 import { useNavigate } from "react-router-dom";
 import { useBecomeGuide } from "./BecomeGuideContext";
-
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 export default function Form4() {
   const navigate = useNavigate();
   const { updateForm } = useBecomeGuide();
@@ -12,27 +13,55 @@ export default function Form4() {
   const [holderName, setHolderName] = useState("");
   const [accNumber, setAccNumber] = useState("");
   const [confirmAcc, setConfirmAcc] = useState("");
-  const [error, setError] = useState("");
 
   /* ------------------ SUBMIT ------------------ */
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    if (accNumber !== confirmAcc) {
-      setError("Account numbers do not match");
+  
+    if (!bankName.trim()) {
+      toast.warn("Bank name is required");
       return;
     }
-
-    setError("");
-
+  
+    if (!holderName.trim()) {
+      toast.warn("Account holder name is required");
+      return;
+    }
+  
+    if (!accNumber.trim()) {
+      toast.warn("Account number is required");
+      return;
+    }
+  
+    if (!/^\d+$/.test(accNumber)) {
+      toast.warn("Account number must contain only digits");
+      return;
+    }
+  
+    if (accNumber.length < 8) {
+      toast.warn("Account number must be at least 8 digits");
+      return;
+    }
+  
+    if (!confirmAcc.trim()) {
+      toast.warn("Please confirm your account number");
+      return;
+    }
+  
+    if (accNumber !== confirmAcc) {
+      toast.warn("Account numbers do not match");
+      return;
+    }
+  
     updateForm("banking", {
       bankName,
       holderName,
       accountNumber: accNumber,
     });
-
+  
     navigate("/dashboard/become-guide/review-form");
   };
+  
 
   return (
     <div className="bg-[#f5f9ff] min-h-screen flex flex-col items-center py-10 px-4">
@@ -90,7 +119,7 @@ export default function Form4() {
               Account Number <span className="text-red-500">*</span>
             </label>
             <input
-              type="text"
+              type="number"
               className="w-full border rounded-lg px-4 py-3"
               value={accNumber}
               onChange={(e) => setAccNumber(e.target.value)}
@@ -104,7 +133,7 @@ export default function Form4() {
               Confirm Account Number <span className="text-red-500">*</span>
             </label>
             <input
-              type="text"
+              type="number"
               className="w-full border rounded-lg px-4 py-3"
               value={confirmAcc}
               onChange={(e) => setConfirmAcc(e.target.value)}
@@ -112,9 +141,7 @@ export default function Form4() {
             />
           </div>
 
-          {error && (
-            <p className="text-red-500 text-sm font-medium">{error}</p>
-          )}
+
 
           {/* Buttons */}
           <div className="flex justify-between mt-10">
@@ -135,6 +162,8 @@ export default function Form4() {
           </div>
         </form>
       </div>
+      <ToastContainer position="top-right" autoClose={2500} />
+
     </div>
   );
 }

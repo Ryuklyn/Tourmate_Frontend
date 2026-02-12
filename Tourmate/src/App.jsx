@@ -43,6 +43,9 @@ import GuideTourPackage from "./pages/Guidedashboard/GuideTourPackages";
 import FindTour from "./pages/Usedashboard/FindTour";
 import TourDetails from "./components/Guidedashboard/TourPackages/TourDetails";
 import GuideSupport from "./components/Guidedashboard/GuideSupport";
+import VerifyEmail from "./components/Signup/VerifyEmail";
+import ForgotPassword from "./components/PasswordReset/ForgotPassword";
+import ResetPassword from "./components/PasswordReset/ResetPassword";
 
 function App() {
   const [count, setCount] = useState(0);
@@ -55,6 +58,9 @@ function App() {
         <Route path="/signup" element={<SignupPage />} />
         <Route path="/find-guide" element={<FindGuidePage />} />
         <Route path="/oauth2/redirect" element={<OAuth />} />
+        <Route path="/verify" element={<VerifyEmail />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
 
         {/*Traveler Guide Dashboard*/}
         <Route path="/dashboard" element={<TravelerLayout />}>

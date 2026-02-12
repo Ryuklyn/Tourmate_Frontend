@@ -138,7 +138,7 @@ export default function Bookings() {
                     className="w-6 h-6 rounded-full object-cover"
                   />
                   <span className="font-medium">{b.guideName}</span>
-                  <span className="text-orange-500 font-medium">
+                  <span className="text-green-500 font-medium">
                     {b.paymentStatus}
                   </span>
 
@@ -169,7 +169,7 @@ export default function Bookings() {
               {/* Bottom */}
               <div className="flex items-center justify-between pt-4">
                 <div>
-                  <p className="text-2xl font-bold text-orange-600">
+                  <p className="text-2xl font-bold text-green-600">
                     Rs. {b.totalPrice}
                   </p>
                   <p className="text-xs uppercase text-gray-400 tracking-wide">

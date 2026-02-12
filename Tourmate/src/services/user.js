@@ -1,21 +1,17 @@
 
 import api from "../utils/axiosInterceptor";
-import CONFIG from "../utils/config";
 // Register a new user
 export const registerUser = async (newUser) => {
-  
   try {
-
     const response = await api.post(`auth/register`, newUser);
     if (response.data.success) {
-      return response.data; // { success: true/false, message: "..." }
+      return response.data; // { success: true, message: "..." }
     } else {
-      console.error("Registration failed:", response.data.message);
       return { success: false, message: response.data.message };
     }
   } catch (error) {
     console.error("Registration failed:", error);
-    return { success: false, message: error.message };
+    return { success: false, message: error.response?.data?.message || error.message };
   }
 };
 

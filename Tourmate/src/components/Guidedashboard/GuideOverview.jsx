@@ -65,8 +65,8 @@ export default function GuideOverview() {
 
         <StatCard
           title="Monthly Earnings"
-          value={`$ ${dashboard.monthlyEarnings}`}
-          icon={<DollarSign className="w-6 h-6 text-[#0faf94]" />}
+          value={`Rs. ${dashboard.monthlyEarnings}`}
+          
           extra={(() => {
             const change = dashboard.earningsChangePercent;
             const isPositive = change > 0;
@@ -131,7 +131,7 @@ export default function GuideOverview() {
                 )}
                 name={`${booking.user.firstName} ${booking.user.lastName}`}
                 tour={booking.tourName}
-                datePrice={`${formatDateTime(booking.startDate)} • $${booking.totalPrice}`}
+                datePrice={`${formatDateTime(booking.startDate)} • Rs ${booking.totalPrice}`}
                 onAccept={() => handleAccept(booking.bookingId)}
                 onReject={() => handleReject(booking.bookingId)}
               />

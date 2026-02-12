@@ -160,6 +160,9 @@ const GuideBookings = () => {
                 <p className="flex items-center gap-1">
                   <Clock className="h-4 w-4" /> {item.startDate}
                 </p>
+                <p className="flex items-center gap-1">
+                <p className="text-xs text-green-500  font-semibold">Rs {item.totalPrice}</p>
+                </p>
               </div>
 
               <p className="text-sm text-gray-700 mt-1">👤 {item.user.firstName} {item.user.lastName}</p>

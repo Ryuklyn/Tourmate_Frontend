@@ -43,12 +43,7 @@ export default function GuideTourPackage() {
     { label: "Total Tours", value: 5, icon: MapPin, color: "text-emerald-600" },
     { label: "Active Tours", value: 4, icon: Users, color: "text-green-600" },
     { label: "Total Bookings", value: 74, icon: Users, color: "text-blue-600" },
-    {
-      label: "Total Revenue",
-      value: "$2,150",
-      icon: DollarSign,
-      color: "text-orange-500",
-    },
+
   ];
   useEffect(() => {
     const fetchTours = async () => {
@@ -155,9 +150,9 @@ export default function GuideTourPackage() {
 
               <div className="flex items-center justify-between pt-2 border-t border-gray-200">
                 <div>
-                  <p className="text-emerald-600 font-semibold">{tour.price}</p>
+                  <p className="text-emerald-600 font-semibold">Rs .{tour.price}</p>
                   <p className="text-xs text-gray-500">
-                    {tour.bookings} bookings
+                    per person
                   </p>
                 </div>
 

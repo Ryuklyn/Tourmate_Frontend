@@ -1,6 +1,4 @@
-import api from "../../utils/axiosInterceptor";
-import { v4 as uuidv4 } from "uuid";
-import CryptoJS from "crypto-js";
+
 import { handleEsewaPayment } from "../../services/payment";
 
 export default function AdventureCard({ booking }) {
@@ -23,6 +21,7 @@ export default function AdventureCard({ booking }) {
         <div>
           <h3 className="font-semibold">{tourName}</h3>
           <p className="text-sm text-gray-500">with {guideName}</p>
+          <p className="text-xs text-green-500">Rs {totalPrice}</p>
           <p className="text-xs text-gray-400">{startDate}</p>
         </div>
       </div>

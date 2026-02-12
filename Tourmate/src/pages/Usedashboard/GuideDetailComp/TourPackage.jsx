@@ -91,7 +91,7 @@ export default function TourPackages({ guideId, selectedTour, setSelectedTour,ac
                 <p className="text-gray-600 text-sm mt-1">{t.duration}</p>
 
                 <div className="flex items-center justify-between mt-3">
-                  <p className="text-blue-600 font-semibold">$ {t.price}</p>
+                  <p className="text-blue-600 font-semibold">Rs. {t.price}</p>
 
                   <button
                     onClick={(e) => {

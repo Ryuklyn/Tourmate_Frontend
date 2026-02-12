@@ -1,10 +1,11 @@
-// components/SignupForm.jsx
 import { useState } from "react";
 import { Mail, Lock, Phone } from "lucide-react";
 import InputField from "./InputField";
 import Button from "./Button";
-import { registerUser } from "../../services/user";
+import { registerUser } from "../../services/user"; // make sure this is the async service
 import { useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const SignupForm = () => {
   const navigate = useNavigate();
@@ -28,31 +29,43 @@ const SignupForm = () => {
 
   const handleSubmit = async () => {
     if (formData.password !== formData.confirmPassword) {
-      alert("Passwords do not match!");
+      toast.warn("Passwords do not match!");
       return;
     }
+
     if (!formData.agreeToTerms) {
-      alert("Please agree to the Terms of Service and Privacy Policy");
+      toast.warn("Please agree to the Terms of Service and Privacy Policy");
       return;
     }
+
     const phoneRegex = /^\+?\d{7,15}$/;
     if (!phoneRegex.test(formData.phoneNumber)) {
-      alert("Invalid phone number.");
+      toast.warn("Invalid phone number.");
       return;
     }
-    const registerStatus = registerUser(formData);
-    if (registerStatus) {
-      setFormData({
-        firstName: "",
-        lastName: "",
-        email: "",
-        password: "",
-        confirmPassword: "",
-        agreeToTerms: false,
-      });
-      navigate("/login");
-    }else{
-      navigate("/signup"); 
+
+    try {
+      const registerStatus = await registerUser(formData); // ✅ must await
+
+      if (registerStatus.success) {
+        toast.success("Registration successful! Please check your email to verify your account.");
+        setFormData({
+          firstName: "",
+          lastName: "",
+          email: "",
+          phoneNumber: "",
+          password: "",
+          confirmPassword: "",
+          agreeToTerms: false,
+        });
+        setTimeout(() => {
+          navigate("/login");
+        }, 3000); // 3 seconds
+      } else {
+        toast.warn(registerStatus.message || "Registration failed.");
+      }
+    } catch (error) {
+      toast.warn("Something went wrong. Please try again.");
     }
   };
 
@@ -85,8 +98,7 @@ const SignupForm = () => {
         onChange={handleChange}
       />
 
-      
-        <InputField
+      <InputField
         label="Phone Number"
         type="number"
         name="phoneNumber"
@@ -95,7 +107,6 @@ const SignupForm = () => {
         value={formData.phoneNumber}
         onChange={handleChange}
       />
-
 
       <InputField
         label="Password"
@@ -140,6 +151,7 @@ const SignupForm = () => {
       </div>
 
       <Button onClick={handleSubmit}>Create Account</Button>
+      <ToastContainer position="bottom-right" autoClose={2500} />
     </div>
   );
 };

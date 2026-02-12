@@ -129,7 +129,7 @@ export default function RevenueChart() {
         bodyColor: "#fff",
         padding: 12,
         displayColors: false,
-        callbacks: { label: (ctx) => `$${ctx.raw.toLocaleString()}` },
+        callbacks: { label: (ctx) => `Rs ${ctx.raw.toLocaleString()}` },
       },
     },
     scales: {
@@ -138,9 +138,9 @@ export default function RevenueChart() {
         suggestedMax: Math.max(...chartDataArray.map(d => d.revenue)) * 1.2,
         ticks: {
           callback: val => {
-            if (val >= 1_000_000) return `$${(val/1_000_000).toFixed(1)}M`;
-            if (val >= 1_000) return `$${(val/1_000).toFixed(0)}k`;
-            return `$${val}`;
+            if (val >= 1_000_000) return `Rs ${(val/1_000_000).toFixed(1)}M`;
+            if (val >= 1_000) return `Rs ${(val/1_000).toFixed(0)}k`;
+            return `Rs ${val}`;
           },
           color: "#6b7280",
         },
@@ -227,11 +227,11 @@ export default function RevenueChart() {
       <div className="grid grid-cols-3 gap-4 mb-6">
         <div className="bg-orange-50 rounded-xl p-4">
           <p className="text-xs text-gray-500">Total Revenue</p>
-          <p className="text-lg font-semibold">${totalRevenue.toLocaleString()}</p>
+          <p className="text-lg font-semibold">Rs {totalRevenue.toLocaleString()}</p>
         </div>
         <div className="bg-gray-50 rounded-xl p-4">
           <p className="text-xs text-gray-500">Avg / Month</p>
-          <p className="text-lg font-semibold">${avgRevenue.toLocaleString()}</p>
+          <p className="text-lg font-semibold">Rs {avgRevenue.toLocaleString()}</p>
         </div>
         <div className="bg-gray-50 rounded-xl p-4">
           <p className="text-xs text-gray-500">Best Month</p>

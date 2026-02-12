@@ -91,7 +91,7 @@ export default function GuideApproval() {
                 <span className="font-medium">{guide.experience}</span>
               </p>
               <p className="flex items-center gap-2">
-                <DollarSign size={16} /> Rate:
+              <p className="text-xs text-green-700 font-semibold">Rs </p>Rate:
                 <span className="font-medium">{guide.price}</span>
               </p>
             </div>

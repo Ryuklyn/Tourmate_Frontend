@@ -4,8 +4,10 @@ import { Upload, CheckCircle, Circle } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { X } from "lucide-react";
 import api from "../../utils/axiosInterceptor";
-
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { useBecomeGuide } from "./BecomeGuideContext";
+import { getUserData } from "../../services/user";
 
 export default function Form1() {
   const navigate = useNavigate();
@@ -15,13 +17,36 @@ export default function Form1() {
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
+  const [location, setLocation] = useState("");
+
 
   /* ------------------ PROFILE IMAGE ------------------ */
   const [profileImage, setProfileImage] = useState({
     file: null,
     preview: null,
   });
-
+  useEffect(() => {
+    const fetchUser = async () => {
+      const res = await getUserData();
+      if (res.success) {
+        const user = res.data;
+        
+        setEmail(user.email || "");
+        setPhone(user.phoneNumber || "");
+        setFullName(`${user.firstName || ""} ${user.lastName || ""}`);
+  
+        // optional: prefill profile image preview if exists
+        if (user.profilePic) {
+          setProfileImage({ file: null, preview: user.profilePic });
+        }
+      } else {
+        toast.error("Failed to load user data");
+      }
+    };
+  
+    fetchUser();
+  }, []);
+  
   const handleFileSelect = (e) => {
     const file = e.target.files[0];
     if (!file) return;
@@ -78,6 +103,7 @@ export default function Form1() {
   
     fetchEnums();
   }, []);
+  
 
   /* ------------------ TOGGLES ------------------ */
   const toggleLanguage = (lang) => {
@@ -92,19 +118,46 @@ export default function Form1() {
 
   /* ------------------ SUBMIT ------------------ */
   const handleSubmit = (e) => {
-    e.preventDefault();
-
+    e.preventDefault(); // always prevent default first
+  
+    // Validate phone number
+    const phoneRegex = /^\+?\d{7,15}$/;
+    if (!phoneRegex.test(phone)) {
+      toast.warn("Invalid phone number.");
+      return; // stop submission
+    }
+  
+    // Validate profile image
+    if (!profileImage.file) {
+      toast.warn("Please upload a profile picture.");
+      return; // stop submission
+    }
+    if (selectedLanguages.length === 0) {
+      toast.warn("Please select at least one language.");
+      return; // stop submission
+    }
+  
+    // Validate experience
+    if (!experienceLevel) {
+      toast.warn("Please select your experience level.");
+      return; // stop submission
+    }
+    // Optional: you can also check other required fields here if needed
+  
+    // If all validations pass, update context and navigate
     updateForm("personal", {
       fullName,
       email,
       phone,
+      location,
       languages: selectedLanguages,
       experience: experienceLevel,
       profileImage: profileImage.file,
     });
-
+  
     navigate("/dashboard/become-guide/form2");
   };
+  
 
   /* ------------------ STEPS ------------------ */
   const steps = [
@@ -199,32 +252,42 @@ export default function Form1() {
             </div>
 
             <div>
+            <label className="block text-gray-700 font-medium mb-1">
+              Email Address
+            </label>
+            <input
+              type="email"
+              value={email}
+              readOnly
+              className="w-full px-4 py-3 border rounded-lg bg-gray-100 text-gray-600 cursor-not-allowed"
+            />
+          </div>
+
+          <div>
+            <label className="block text-gray-700 font-medium mb-1">
+              Phone Number
+            </label>
+            <input
+              type="tel"
+              value={phone}
+              readOnly
+              className="w-full px-4 py-3 border rounded-lg bg-gray-100 text-gray-600 cursor-not-allowed"
+            />
+          </div>
+            <div>
               <label className="block text-gray-700 font-medium mb-1">
-                Email Address <span className="text-red-500">*</span>
+                Location <span className="text-red-500">*</span>
               </label>
               <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                type="String"
+                value={location}
+                onChange={(e) => setLocation(e.target.value)}
                 className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
-                placeholder="Enter email address"
+                placeholder="Enter Location"
                 required
               />
             </div>
 
-            <div>
-              <label className="block text-gray-700 font-medium mb-1">
-                Phone Number <span className="text-red-500">*</span>
-              </label>
-              <input
-                type="number"
-                value={phone}
-                onChange={(e) => setPhone(e.target.value)}
-                className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
-                placeholder="Enter phone number"
-                required
-              />
-            </div>
 
             <div className="relative w-full">
               <label className="block text-gray-700 font-medium mb-1">
@@ -326,6 +389,7 @@ export default function Form1() {
           </div>
         </form>
       </div>
+      <ToastContainer position="top-right" autoClose={2500} />
     </div>
   );
 }

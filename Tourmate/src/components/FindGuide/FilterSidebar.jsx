@@ -53,7 +53,7 @@ const FilterSidebar = ({ filters, setFilters }) => {
               setFilters({ ...filters, minPrice: Number(e.target.value), page: 0 })
             }
             className="w-1/2 border border-gray-300 rounded-md px-2 py-1 focus:outline-none focus:ring-2 focus:ring-blue-400"
-            placeholder="Min $"
+            placeholder="Min Rs"
           />
           <input
             type="number"
@@ -63,11 +63,11 @@ const FilterSidebar = ({ filters, setFilters }) => {
               setFilters({ ...filters, maxPrice: Number(e.target.value), page: 0 })
             }
             className="w-1/2 border border-gray-300 rounded-md px-2 py-1 focus:outline-none focus:ring-2 focus:ring-blue-400"
-            placeholder="Max $"
+            placeholder="Max Rs"
           />
         </div>
         <p className="text-sm text-gray-500 mt-1">
-          ${filters.minPrice} - ${filters.maxPrice}/hour
+          Rs.{filters.minPrice} - Rs.{filters.maxPrice}/hour
         </p>
       </div>
 

@@ -36,7 +36,7 @@ export default function EarningsOverview() {
         <div className="border border-gray-300 rounded-xl p-5 shadow-sm bg-white">
           <p className="text-gray-500">This Month</p>
           <h2 className="text-3xl font-bold mt-2 text-[#0faf94]">
-            ${earnings.monthlyEarnings?.toLocaleString() || 0}
+            Rs.{earnings.monthlyEarnings?.toLocaleString() || 0}
           </h2>
           <p className="text-gray-500 text-sm mt-1">
             {(() => {
@@ -59,14 +59,14 @@ export default function EarningsOverview() {
         {/* Total Earnings */}
         <div className="border border-gray-300 rounded-xl p-5 shadow-sm bg-white">
           <p className="text-gray-500">Total Earnings</p>
-          <h2 className="text-3xl font-bold mt-2 text-[#0faf94]">{earnings.totalEarnings}</h2>
+          <h2 className="text-3xl font-bold mt-2 text-[#0faf94]">Rs. {earnings.totalEarnings}</h2>
           <p className="text-gray-500 text-sm">All time earnings</p>
         </div>
 
         {/* Pending Payout */}
         <div className="border border-gray-300 rounded-xl p-5 shadow-sm bg-white">
           <p className="text-gray-500">Pending Payout</p>
-          <h2 className="text-3xl font-bold mt-2 text-[#0faf94]">{earnings.pendingPayout}</h2>
+          <h2 className="text-3xl font-bold mt-2 text-[#0faf94]">Rs. {earnings.pendingPayout}</h2>
           <p className="text-gray-500 text-sm mt-1">Available in 3 days</p>
         </div>
       </div>
@@ -87,7 +87,7 @@ export default function EarningsOverview() {
               </div>
 
               <div className="flex flex-col items-end">
-                <p className="font-semibold">{t.amount}</p>
+                <p className="font-semibold">Rs. {t.amount}</p>
                 <span
                   className={`px-3 py-1 mt-1 text-xs rounded-full font-medium ${statusColor[t.status]
                     }`}

@@ -12,36 +12,7 @@ export default function RecentBookings() {
   useEffect(() => {
     fetchData();
   }, []);
-  //  data = [
-  //   {
-  //     tour: "Rome Historical Tour",
-  //     name: "Sarah Wilson",
-  //     date: "Dec 15, 2024",
-  //     price: "$450",
-  //     status: "Confirmed",
-  //   },
-  //   {
-  //     tour: "Tokyo Food Adventure",
-  //     name: "James Chen",
-  //     date: "Dec 18, 2024",
-  //     price: "$320",
-  //     status: "Pending",
-  //   },
-  //   {
-  //     tour: "Paris Art Walk",
-  //     name: "Emma Davis",
-  //     date: "Dec 20, 2024",
-  //     price: "$280",
-  //     status: "Confirmed",
-  //   },
-  //   {
-  //     tour: "Barcelona Architecture",
-  //     name: "Alex Murphy",
-  //     date: "Dec 22, 2024",
-  //     price: "$390",
-  //     status: "Cancelled",
-  //   },
-  // ];
+
 
   return (
     <div className="bg-white p-6 rounded-xl shadow border border-gray-200">
@@ -74,14 +45,14 @@ export default function RecentBookings() {
             <div>
               <p className="font-semibold text-gray-800">{item.tourName}</p>
               <p className="text-sm text-gray-600 mt-1">
-                {item.travelerName} • {item.bookingDate}
+                {item.travelerName} • {new Date(item.bookingDate).toLocaleString()}
               </p>
             </div>
 
             {/* Right Section */}
             <div className="text-right">
               <p className="text-lg font-semibold text-gray-800">
-                {item.totalPrice}
+                Rs {item.totalPrice}
               </p>
 
               <span

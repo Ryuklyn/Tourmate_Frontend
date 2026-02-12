@@ -79,7 +79,6 @@ const TourDetails = () => {
 
  
   if (!selectedtour) return null;
-  // console.log("Rendering TourDetails with tour:", selectedtour.included[0]);
   return (
     <div className="w-full">
       {/* HERO */}
@@ -108,7 +107,7 @@ const TourDetails = () => {
               <MapPin size={16} /> {tour.location}
             </div>
             <div className="flex items-center gap-1">
-              <Star size={16} className="text-yellow-400" /> 4.9 (234 reviews)
+              <Star size={16} className="text-yellow-400" /> {tour.averageRating} ({tour.totalReviews})
             </div>
           </div>
         </div>
@@ -137,8 +136,8 @@ const TourDetails = () => {
           <section>
             <div className="flex items-center gap-5">
               <img
-                src={Niroj}
-                alt="Guide"
+                src={`data:image/*;base64,${guide?.profilePic}`}
+                alt={guide?.fullName}
                 className="w-32 h-32 rounded-xl object-cover"
               />
 
@@ -165,13 +164,15 @@ const TourDetails = () => {
                   </div>
 
                   <div className="flex items-center gap-1">
-                    <Clock size={16} className="text-gray-600" />
-                    <span>Responds in 1 hour</span>
+                    {/* <Clock size={16} className="text-gray-600" /> */}
+                    {/* <span>Responds in 1 hour</span> */}
+                    <span></span>
+
                   </div>
                 </div>
 
                 <p className="text-sm text-gray-600 mt-1">
-                  Member since 2019 — 340 tours completed
+                  {/* Member since 2019 — 340 tours completed */}
                 </p>
               </div>
             </div>

@@ -3,7 +3,8 @@ import { X } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import StepProgress from "./StepProgress";
 import api from "../../utils/axiosInterceptor";
-
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { useBecomeGuide } from "./BecomeGuideContext";
 
 export default function Form3() {
@@ -56,15 +57,36 @@ export default function Form3() {
   /* ------------------ SUBMIT ------------------ */
   const handleSubmit = (e) => {
     e.preventDefault();
-
+  
+    if (selectedSpeciality.length === 0) {
+      toast.warn("Please select at least one specialization");
+      return;
+    }
+  
+    if (!hourlyRate || Number(hourlyRate) <= 0) {
+      toast.warn("Please enter a valid hourly rate");
+      return;
+    }
+  
+    if (!bio.trim()) {
+      toast.warn("Professional bio is required");
+      return;
+    }
+  
+    if (bio.trim().length < 20) {
+      toast.warn("Bio must be at least 20 characters long");
+      return;
+    }
+  
     updateForm("skills", {
-      specialities: selectedSpeciality.map(s => s.value), // ✅ ENUM VALUES
+      specialities: selectedSpeciality.map(s => s.value),
       hourlyRate,
       bio,
     });
-
+  
     navigate("/dashboard/become-guide/form4");
   };
+  
 
   return (
     <div className="bg-[#f5f9ff] min-h-screen flex flex-col items-center py-10 px-4">
@@ -136,7 +158,7 @@ export default function Form3() {
           {/* ------------------ RATE ------------------ */}
           <div>
             <label className="block font-medium mb-2">
-              Hourly Rate (USD) 
+              Hourly Rate (Nepali Rupees) 
             </label>
             <input
               type="number"
@@ -182,6 +204,8 @@ export default function Form3() {
           </div>
         </form>
       </div>
+      <ToastContainer position="top-right" autoClose={2500} />
+
     </div>
   );
 }

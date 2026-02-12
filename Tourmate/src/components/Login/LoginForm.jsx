@@ -62,7 +62,7 @@ const LoginForm = () => {
         <label className="flex items-center gap-2 text-gray-600">
           <input type="checkbox" /> Remember me
         </label>
-        <Link to="#A" className="text-blue-600 hover:underline">
+        <Link to="/forgot-password" className="text-blue-600 hover:underline">
           Forget Password?
         </Link>
       </div>

@@ -43,7 +43,7 @@ const GuideCard = ({ guide, onToggleFavourite }) => {
 
         <div className="flex justify-between items-center mt-3">
           <p className="text-blue-600 font-bold text-lg">
-            ${guide.price}
+            Rs.{guide.price}
           </p>
         </div>
 

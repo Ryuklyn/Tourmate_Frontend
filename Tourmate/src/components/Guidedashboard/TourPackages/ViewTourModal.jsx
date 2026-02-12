@@ -61,7 +61,7 @@ const ViewTourModal = ({ tour, onClose }) => {
                 Max {tour.maxGuests} guests
               </span>
               <span className="flex items-center gap-2">
-              Price  <span className="text-green-600 font-semibold">  {tour.price}</span>
+              Price  <span className="text-green-600 font-semibold">   Rs. {tour.price}</span>
               </span>
               
             </div>

@@ -231,7 +231,7 @@ export default function CreateTourModal({ onClose, onTourCreated }) {
                   <input
                     type="number"
                     className="border border-gray-300 rounded-lg px-3 py-2 text-sm"
-                    placeholder="Price ($)"
+                    placeholder="Price (Rs.)"
                     value={price}
                     onChange={(e) => setPrice(e.target.value)}
                   />

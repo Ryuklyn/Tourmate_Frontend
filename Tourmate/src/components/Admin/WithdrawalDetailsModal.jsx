@@ -83,17 +83,17 @@ export default function WithdrawalDetailsModal({ data, onClose }) {
         <div className="mt-5 rounded-xl border border-gray-200 bg-gray-50 p-4 text-sm">
           <div className="flex justify-between font-medium">
             <span>Requested Amount</span>
-            <span>₹{data.amount}</span>
+            <span>Rs{data.amount}</span>
           </div>
 
           <div className="mt-2 flex justify-between text-red-500">
             <span>Commission (10%)</span>
-            <span>-₹{data.commission}</span>
+            <span>-Rs{data.commission}</span>
           </div>
 
           <div className="mt-3 flex justify-between border-t border-gray-200 pt-3 font-semibold text-green-600">
             <span>Net Amount</span>
-            <span>₹{data.net}</span>
+            <span>Rs{data.net}</span>
           </div>
         </div>
         {/* ---------- STATUS ---------- */}

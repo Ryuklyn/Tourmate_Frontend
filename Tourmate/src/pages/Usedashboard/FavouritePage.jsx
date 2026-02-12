@@ -117,7 +117,7 @@ export default function FavoritesPage() {
 
                   <div className="flex items-center gap-1 text-sm mt-2">
                     <Star className="text-yellow-500 fill-yellow-500" size={16} />
-                    {fav.averageRating > 0 ? fav.averageRating.toFixed(1) : "New"} ({fav.totalReviews})
+                    {fav.averageRating > 0 ? fav.averageRating.toFixed(1) : "0"} ({fav.totalReviews} reviews)
                   </div>
 
                   <div className="mt-4 flex gap-3">
@@ -150,7 +150,7 @@ export default function FavoritesPage() {
                 key={item.id}
                 className="relative bg-white rounded-2xl shadow p-4 min-w-[300px]"
               >
-<button
+                <button
                   onClick={() => handleUnfavouriteTour(tour.id)}
                   className="absolute top-3 right-3 p-2 rounded-full hover:scale-110 transition z-10"
                 >
@@ -168,7 +168,7 @@ export default function FavoritesPage() {
                     className="w-full h-full object-cover"
                   />
                 </div>
-                
+
                 <h2 className="text-lg font-semibold mt-3">{tour.name}</h2>
                 <button
                   onClick={() => handleUnfavouriteTour(tour.id)}
@@ -184,7 +184,9 @@ export default function FavoritesPage() {
 
                 {/* Price */}
                 <p className="flex items-center text-blue-600 font-bold mt-3 text-lg">
-                  <DollarSign size={18} className="mr-1" />
+                  <span className="text-green-600 font-semibold text-sm mr-1">
+                    Rs.
+                  </span>
                   {tour.price}
                 </p>
 

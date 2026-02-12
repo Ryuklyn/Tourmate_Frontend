@@ -258,7 +258,7 @@ useEffect(() => {
                     value={price}
                     onChange={(e) => setPrice(e.target.value)}
                     className="border border-gray-400 rounded-lg px-3 py-2 text-sm"
-                    placeholder="Price"
+                    placeholder="Price (Rs.)"
                   />
                 </div>
 

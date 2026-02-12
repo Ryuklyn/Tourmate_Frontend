@@ -35,7 +35,10 @@ export default function ReviewForm() {
         bio: skills.bio,
         price: Number(skills.hourlyRate), // convert to number
         governmentNumber: verification.governmentNumber,
-        dob: verification.dob // "YYYY-MM-DD" is fine
+        dob: verification.dob, // "YYYY-MM-DD" is fine
+        accountHolderName: banking.holderName,
+        accountNumber: banking.accountNumber,
+        bankName: banking.bankName
       };
       
 
@@ -91,11 +94,15 @@ export default function ReviewForm() {
               <CheckCircle size={18} className="text-green-600" /> Phone: {personal.phone}
             </li>
             <li className="flex items-center gap-2">
+              <CheckCircle size={18} className="text-green-600" /> Location: {personal.location}
+            </li>
+            <li className="flex items-center gap-2">
               <CheckCircle size={18} className="text-green-600" /> Languages: {personal.languages.join(", ")}
             </li>
             <li className="flex items-center gap-2">
               <CheckCircle size={18} className="text-green-600" /> Experience: {personal.experience}
             </li>
+
           </ul>
         </div>
 
@@ -131,7 +138,7 @@ export default function ReviewForm() {
               <CheckCircle size={18} className="text-green-600" /> Specializations: {skills.specialities.join(", ")}
             </li>
             <li className="flex items-center gap-2">
-              <CheckCircle size={18} className="text-green-600" /> Hourly Rate: ${skills.hourlyRate}/hr
+              <CheckCircle size={18} className="text-green-600" /> Hourly Rate: Rs. {skills.hourlyRate}/hr
             </li>
             {skills.bio && (
               <li className="flex items-center gap-2">
