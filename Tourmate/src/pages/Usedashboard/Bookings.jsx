@@ -141,7 +141,7 @@ export default function Bookings() {
                   />
                   <span className="font-medium">{b.guideName}</span>
                   <span className="text-green-500 font-medium">
-                    {b.paymentStatus}
+                   Payment {b.paymentStatus}
                   </span>
 
                   <span className="text-orange-500 font-medium">

@@ -16,7 +16,7 @@ import { Range, getTrackBackground } from "react-range";
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Tooltip);
 
-const monthNames = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
 function fillMissingMonths(data) {
   if (!data || data.length === 0) return [];
@@ -60,7 +60,7 @@ export default function RevenueChart() {
   const chartRef = useRef(null);
   const [revenueData, setRevenueData] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [showMissingMonths, setShowMissingMonths] = useState(true);
+  const [showMissingMonths, setShowMissingMonths] = useState(false);
   const [selectedYear, setSelectedYear] = useState("all");
   const [monthRange, setMonthRange] = useState([0, 11]);
 
@@ -85,7 +85,12 @@ export default function RevenueChart() {
   }, [filledData]);
 
   const chartDataArray = useMemo(() => filledData.slice(monthRange[0], monthRange[1] + 1), [filledData, monthRange]);
+  const safeMax = Math.max(0, filledData.length - 1);
 
+  const safeRange = [
+    Math.min(monthRange[0], safeMax),
+    Math.min(monthRange[1], safeMax),
+  ];
   const totalRevenue = useMemo(() => chartDataArray.reduce((sum, r) => sum + r.revenue, 0), [chartDataArray]);
   const avgRevenue = useMemo(() => chartDataArray.length ? totalRevenue / chartDataArray.length : 0, [chartDataArray, totalRevenue]);
   const bestMonth = useMemo(() => {
@@ -138,8 +143,8 @@ export default function RevenueChart() {
         suggestedMax: Math.max(...chartDataArray.map(d => d.revenue)) * 1.2,
         ticks: {
           callback: val => {
-            if (val >= 1_000_000) return `Rs ${(val/1_000_000).toFixed(1)}M`;
-            if (val >= 1_000) return `Rs ${(val/1_000).toFixed(0)}k`;
+            if (val >= 1_000_000) return `Rs ${(val / 1_000_000).toFixed(1)}M`;
+            if (val >= 1_000) return `Rs ${(val / 1_000).toFixed(0)}k`;
             return `Rs ${val}`;
           },
           color: "#6b7280",
@@ -161,15 +166,15 @@ export default function RevenueChart() {
           <p className="text-sm text-gray-500">Monthly revenue performance</p>
         </div>
         <div className="flex items-center gap-1 text-green-600 text-sm font-medium">
-          <TrendingUp size={16}/> Live
+          <TrendingUp size={16} /> Live
         </div>
       </div>
 
       {/* Controls */}
       <div className="flex flex-wrap items-center gap-6 mb-6">
         <label className="flex items-center gap-2">
-          <input type="checkbox" checked={showMissingMonths} onChange={e => setShowMissingMonths(e.target.checked)} className="h-4 w-4 text-orange-500 border-gray-300 rounded"/>
-          <span className="text-gray-700 text-sm font-medium">Show missing months</span>
+          <input type="checkbox" checked={showMissingMonths} onChange={e => setShowMissingMonths(e.target.checked)} className="h-4 w-4 text-orange-500 border-gray-300 rounded" />
+          <span className="text-gray-700 text-sm font-medium">Show All months</span>
         </label>
 
         <div className="flex items-center gap-2">
@@ -182,46 +187,67 @@ export default function RevenueChart() {
       </div>
 
       {/* Month Range Slider */}
-      {filledData.length > 1 && (
-        <div className="my-4">
-          <p className="text-gray-700 text-sm font-medium mb-2">Select Month Range:</p>
-          <Range
-            values={monthRange}
-            step={1}
-            min={0}
-            max={filledData.length - 1}
-            onChange={setMonthRange}
-            renderTrack={({ props, children }) => (
-              <div
-                {...props}
-                style={{
-                  ...props.style,
-                  height: "8px",
-                  width: "100%",
-                  background: getTrackBackground({
-                    values: monthRange,
-                    colors: ["#ddd", "#f97316", "#ddd"],
-                    min: 0,
-                    max: filledData.length - 1,
-                  }),
-                  borderRadius: "8px",
-                  marginTop: "10px",
-                }}
-              >
-                {children}
-              </div>
-            )}
-            renderThumb={({ props }) => (
-              <div {...props} className="h-5 w-5 bg-orange-500 rounded-full shadow-lg border-2 border-white"/>
-            )}
-          />
-          <div className="flex justify-between mt-2 text-xs text-gray-500">
-            {filledData.map((d, i) => (
-              <span key={i} className="flex-1 text-center">{d.label.split(" ")[0]}</span>
-            ))}
+      {/* Month Range Slider */}
+{filledData.length > 1 && (
+  <div className="my-4">
+    <p className="text-gray-700 text-sm font-medium mb-2">
+      Select Month Range:
+    </p>
+
+    <Range
+      values={safeRange}
+      step={1}
+      min={0}
+      max={safeMax}
+      onChange={setMonthRange}
+      renderTrack={({ props, children }) => {
+        const { key, ...rest } = props;
+
+        return (
+          <div
+            key={key}
+            {...rest}
+            style={{
+              ...rest.style,
+              height: "8px",
+              width: "100%",
+              background: getTrackBackground({
+                values: safeRange, // ✅ use safeRange
+                colors: ["#ddd", "#f97316", "#ddd"],
+                min: 0,
+                max: safeMax, // ✅ use safeMax
+              }),
+              borderRadius: "8px",
+              marginTop: "10px",
+            }}
+          >
+            {children}
           </div>
-        </div>
-      )}
+        );
+      }}
+      renderThumb={({ props }) => {
+        const { key, ...rest } = props;
+
+        return (
+          <div
+            key={key}
+            {...rest}
+            className="h-5 w-5 bg-orange-500 rounded-full shadow-lg border-2 border-white"
+          />
+        );
+      }}
+    />
+
+    <div className="flex justify-between mt-2 text-xs text-gray-500">
+      {filledData.map((d, i) => (
+        <span key={i} className="flex-1 text-center">
+          {d.label.split(" ")[0]}
+        </span>
+      ))}
+    </div>
+  </div>
+)}
+
 
       {/* KPI Row */}
       <div className="grid grid-cols-3 gap-4 mb-6">
@@ -246,7 +272,7 @@ export default function RevenueChart() {
             Loading revenue data…
           </div>
         ) : (
-          <Line ref={chartRef} data={data} options={options}/>
+          <Line ref={chartRef} data={data} options={options} />
         )}
       </div>
     </div>

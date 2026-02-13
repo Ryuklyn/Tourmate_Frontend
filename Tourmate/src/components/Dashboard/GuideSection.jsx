@@ -1,8 +1,10 @@
 import React from "react";
 import GuideCard from "./GuideCard";
 import NirojSirImg from "../../assets/img/NirojSir.jpg";
+import { useNavigate } from "react-router-dom";
 //not used
 const GuidesSection = () => {
+  const navigate = useNavigate();
   const guides = [
     {
       name: "Niroj Shrestha",
@@ -57,10 +59,10 @@ const GuidesSection = () => {
       </div>
 
       <div className="flex justify-center space-x-4">
-        <button className="border border-gray-300 text-gray-700 px-6 py-2 rounded-md hover:bg-gray-50">
+        <button onClick={() => navigate("/dashboard/findguide")} className="border border-gray-300 text-gray-700 px-6 py-2 rounded-md hover:bg-gray-50">
           Load More
         </button>
-        <button className="bg-purple-500 text-white px-6 py-2 rounded-md hover:bg-purple-600">
+        <button onClick={() => navigate("/dashboard/findguide")} className="bg-purple-500 text-white px-6 py-2 rounded-md hover:bg-purple-600">
           Explore All Guides
         </button>
       </div>

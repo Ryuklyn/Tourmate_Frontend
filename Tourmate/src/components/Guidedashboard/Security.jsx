@@ -19,7 +19,8 @@ export default function Security() {
   const handleSubmit = async () => {
     const { currentPassword, newPassword, confirmPassword } = form;
   
-    if (!currentPassword || !newPassword || !confirmPassword) {
+    // ✅ Only validate new password fields
+    if (!newPassword || !confirmPassword) {
       toast.error("All fields are required");
       return;
     }
@@ -34,32 +35,29 @@ export default function Security() {
       return;
     }
   
-    if (currentPassword === newPassword) {
-      toast.error("New password cannot be same as current password");
-      return;
-    }
-  
+    // No need to check currentPassword in frontend
+    // But still send it to backend
     try {
       const res = await changePassword({
-        oldPassword: currentPassword,
+        oldPassword: currentPassword, // can be empty for Google users
         newPassword,
       });
-      
+  
       if (res.success) {
-        toast.success(res.message); // now displays "Password changed successfully 🎉"
+        toast.success(res.message); // Password changed successfully
         setTimeout(() => doLogout(navigate), 3000);
         setForm({ currentPassword: "", newPassword: "", confirmPassword: "" });
       } else {
-        toast.error(res.message); // now displays proper backend error
+        toast.error(res.message);
       }
     } catch (error) {
-      // ✅ Properly handle Axios error
       const message =
         error.response?.data?.message || "Failed to update password";
       toast.error(message);
       console.error("Error changing password:", message);
     }
   };
+  
   
 
   return (

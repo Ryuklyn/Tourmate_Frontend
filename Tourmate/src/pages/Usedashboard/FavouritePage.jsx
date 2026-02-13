@@ -190,7 +190,7 @@ export default function FavoritesPage() {
                   {tour.price}
                 </p>
 
-                <button className="w-full py-2 bg-blue-600 text-white rounded-lg mt-4">
+                <button onClick={() => navigate(`/dashboard/tourdetails/${tour.id}`)} className="w-full py-2 bg-blue-600 text-white rounded-lg mt-4">
                   View Package
                 </button>
               </div>

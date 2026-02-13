@@ -26,6 +26,7 @@ const HowItWorksSection = () => {
   ];
 
   return (
+    <section id="how-it-works">
     <div className="bg-gray-50 py-16 px-4">
       <div className="max-w-6xl mx-auto">
         <h3 className="text-3xl font-bold text-center text-gray-900 mb-2">
@@ -51,6 +52,7 @@ const HowItWorksSection = () => {
         </div>
       </div>
     </div>
+    </section>
   );
 };
 

@@ -40,7 +40,8 @@ export default function Sidebar() {
   const navigate = useNavigate();
 
   return (
-    <aside className="w-64 bg-[#0D1B2A] text-white h-screen p-6 relative">
+    <aside className="w-64 min-w-64 flex-shrink-0 bg-[#0D1B2A] text-white h-screen p-6 relative">
+
       <h2 className="text-2xl font-semibold mb-10">Tourmate</h2>
 
       <ul className="space-y-2">

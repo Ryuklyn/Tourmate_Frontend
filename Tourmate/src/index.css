@@ -5,7 +5,13 @@
 
 /* Optional: define global styles using Tailwind classes */
 body {
-  font-family: "Sora", system-ui, sans-serif;
+  font-family:
+    "Poppins",
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
 }
 
 /* @layer base {

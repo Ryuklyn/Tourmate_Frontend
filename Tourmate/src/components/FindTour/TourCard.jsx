@@ -37,7 +37,7 @@ const TourCard = ({ tour, onToggleFavourite }) => {
         <button
           type="button"
           className="absolute bottom-3 right-3 z-20
-          w-12 h-12
+          w-10 h-10
           bg-white rounded-full! shadow-md
           flex items-center justify-center"
           onClick={() => onToggleFavourite(tour.id)}

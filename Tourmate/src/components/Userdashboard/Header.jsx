@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { authenticateRole, doLogout, validateAuthToken } from "../../services/auth";
 import { getUserData } from "../../services/user";
 import NotificationDropdown from "../Admin/NotificationDropdown";
-
+import TourmateLogo from "../../assets/img/TourmateLogo.png";
 
 export default function Header({ role }) {
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -74,7 +74,16 @@ export default function Header({ role }) {
   return (
     <header className="flex items-center justify-between bg-white px-6 py-3 shadow-sm">
       {/* Left - Logo */}
-      <div className="text-xl font-bold text-blue-600">TourMate</div>
+<div className="flex items-center gap-2 items-center text-xl font-bold text-blue-600">
+  <img
+    src={TourmateLogo}
+    onClick={() => navigate("/dashboard")}
+    alt="TourMate Logo"
+    className="h-12 w-auto object-contain cursor-pointer"
+  />
+  <span>TourMate</span>
+</div>
+
 
       {/* Right - Buttons + Icons */}
       <div className="flex items-center gap-4">
@@ -126,7 +135,7 @@ export default function Header({ role }) {
         <div className="relative cursor-pointer" onClick={() => setOpen(!open)}>
           <Bell size={22} />
           <span className="absolute -top-2 -right-2 bg-orange-500 text-white text-xs rounded-full px-1.5">
-          {unreadCount}
+            {unreadCount}
           </span>
         </div>
 

@@ -114,14 +114,14 @@ const GuideBookings = () => {
       <p className="text-gray-500 mt-1">Manage your tour bookings and schedule</p>
 
       {/* Search Bar */}
-      <div className="mt-5 relative max-w-full">
+      {/* <div className="mt-5 relative max-w-full">
         <Search className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
         <input
           type="text"
           placeholder="Search bookings by tourist name or tour..."
           className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:outline-none"
         />
-      </div>
+      </div> */}
 
       {/* Tabs */}
       <div className="w-full flex justify-left mt-6">

@@ -77,7 +77,7 @@ export default function GuideSupport() {
       </div>
 
       {/* Top Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-8 w-full max-w-4xl">
+      {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-8 w-full max-w-4xl">
         <div className="bg-white shadow rounded-2xl p-6 flex flex-col items-center text-center">
           <Mail className="w-10 h-10 text-[#0faf94]" />
           <h2 className="font-semibold mt-3">Guide Support Email</h2>
@@ -97,7 +97,7 @@ export default function GuideSupport() {
             View Resources
           </button>
         </div>
-      </div>
+      </div> */}
 
       {/* FAQ Section */}
       <div className="bg-white shadow rounded-2xl p-6 w-full max-w-4xl mt-10">

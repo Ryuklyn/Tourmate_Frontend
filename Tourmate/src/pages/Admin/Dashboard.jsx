@@ -34,7 +34,7 @@ export default function Dashboard() {
       <div className="grid grid-cols-4 gap-6 mb-8">
         <StatCard
           icon={<Users />}
-          title="Total Travelers"
+          title="Total Users"
           value={dashboard?.totalTravelers?.toLocaleString() ?? "—"}
           percentage={
             dashboard?.travelersChange != null

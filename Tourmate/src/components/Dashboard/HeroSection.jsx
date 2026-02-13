@@ -8,11 +8,11 @@ const HeroSection = () => {
   const navigate = useNavigate();
 
   const handleFindGuide = () => {
-    navigate("/find-guide");
+    navigate("/dashboard/findguide");
   };
 
   const handleBecomeGuide = () => {
-    navigate("/signup");
+    navigate("/dashboard/become-guide");
   };
 
   return (

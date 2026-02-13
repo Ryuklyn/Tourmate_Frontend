@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Calendar, Clock, MapPin, Users, Phone, Mail } from "lucide-react";
 import { getBookingDetails } from "../../services/booking";
+import { handleEsewaPayment } from "../../services/payment";
 
 export default function BookingDetails() {
   const { bookingId } = useParams();
@@ -14,7 +15,9 @@ export default function BookingDetails() {
     window.open(`https://web.whatsapp.com/send?phone=${phone}`, "_blank");
   };
 
-
+  const handlePaymentClick = async (totalPrice, bookingId) => {
+    await handleEsewaPayment(totalPrice, bookingId);
+  };
   useEffect(() => {
     const fetchBooking = async () => {
       setLoading(true);
@@ -92,9 +95,45 @@ export default function BookingDetails() {
               <Users size={18} /> {booking.travellers} Guests
             </div>
           </div>
-          <div className="mt-4">
+          {/* <div className="mt-4">
             <p className="text-lg font-semibold">Total Amount</p>
             <p className="text-2xl font-bold">Rs. {booking.totalPrice}</p>
+            <span className="text-green-500 font-medium">
+              Payment {booking.paymentStatus}
+            </span>
+          </div>
+          <button
+            onClick={() => handlePaymentClick(booking.totalPrice, booking.id)}
+            className="px-4 py-2 text-sm bg-green-600 text-white rounded-lg hover:bg-green-700"
+            disabled={booking.paymentStatus === "PAID"}
+          >
+            {booking.paymentStatus === "PAID" ? "Paid" : "Pay"}
+          </button> */}
+          <div className="mt-4 border-t border-gray-200 pt-4">
+            <div className="flex justify-between items-center">
+              {/* Left side: Total Amount */}
+              <div>
+                <p className="text-lg font-semibold">Total Amount</p>
+                <p className="text-2xl font-bold">Rs. {booking.totalPrice}</p>
+                <span className="text-green-500 font-medium">
+                  Payment {booking.paymentStatus}
+                </span>
+              </div>
+
+              {/* Right side: Pay button */}
+              <div className="flex items-center space-x-2">
+                <button
+                  onClick={() => handlePaymentClick(booking.totalPrice, booking.id)}
+                  className={`px-4 py-2 text-sm rounded-lg text-white ${booking.paymentStatus === "PAID"
+                      ? "bg-gray-400 cursor-not-allowed"
+                      : "bg-green-600 hover:bg-green-700"
+                    }`}
+                  disabled={booking.paymentStatus === "PAID"}
+                >
+                  {booking.paymentStatus === "PAID" ? "Paid" : "Pay"}
+                </button>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -118,7 +157,7 @@ export default function BookingDetails() {
             <Mail size={16} /> {booking.guide?.email || "N/A"}
           </p>
           <button className="px-4 py-2 bg-blue-600 text-white rounded-xl w-full"
-          onClick={() => handleWhatsappCall(booking.guide?.phoneNumber)}>
+            onClick={() => handleWhatsappCall(booking.guide?.phoneNumber)}>
             Call Guide
           </button>
         </div>
